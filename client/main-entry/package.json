@@ -7,7 +7,7 @@
   "private": true,
   "scripts": {
     "watch": "webpack --mode=development --watch --progress --hide-modules",
-    "build": "rm -rf ./dist && tsc -p tsconfig.build.json && cross-env NODE_ENV=production webpack --mode=production --progress --hide-modules && node ./dist/beforeBuild.js && cp -R ./src/static/* ./dist/public",
+    "build": "rm -rf ./dist && tsc -p tsconfig.build.json && cross-env NODE_ENV=production webpack --config ./dist/webpack.config.js --mode=production --progress --hide-modules && node ./dist/beforeBuild.js && cp -R ./src/static/* ./dist/public",
     "dev": "nodemon ./dist/app.js",
     "start": "cross-env NODE_ENV=production node ./dist/app.js"
   },
