@@ -1,6 +1,6 @@
 import Roles from './Roles';
 import UserRoles from './UserRoles';
-import { Table, Column, Model, HasMany, BelongsToMany, Length, Default, Index } from 'sequelize-typescript';
+import { Table, Column, Model, BelongsToMany, Length, Default, Index } from 'sequelize-typescript';
 
 @Table
 export default class User extends Model<User>
