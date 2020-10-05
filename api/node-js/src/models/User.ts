@@ -1,8 +1,10 @@
 import Roles from './Roles';
-import {Table, Column, Model, HasMany ,Length, Default, Index} from 'sequelize-typescript';
+import UserRoles from './UserRoles';
+import { Table, Column, Model, HasMany, BelongsToMany, Length, Default, Index } from 'sequelize-typescript';
 
 @Table
-export default class User extends Model<User> {
+export default class User extends Model<User>
+{
 
     @Index
     @Column
@@ -22,6 +24,7 @@ export default class User extends Model<User> {
     @Column
     status: number;
 
-    @HasMany(() => Roles)
+    @BelongsToMany(() => Roles, () => UserRoles)
     roles: Roles[]
+    
 }

@@ -6,6 +6,14 @@ import commonConfig from '../config/_common';
 import * as validationManager from '../utils/validationManager';
 
 /**
+ * Действия по умолчанию.
+ */
+export const executeDefaults = (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.path);
+    next();
+};
+
+/**
  * Добавление возможности создания
  * кросс-доменных запросов к приложению.
  */

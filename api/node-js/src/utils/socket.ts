@@ -1,25 +1,39 @@
-const socketIo      = require('socket.io');
-const OutputManager = require('../helpers/OutputManager');
+import * as io from 'socket.io';
+import socketIo from 'socket.io';
+import { Server } from 'http';
+import OutputManager from '../helpers/OutputManager';
+import { Express } from 'express';
 
-const ConfigService     = require('../helpers/ConfigService');
-const PORT              = ConfigService.getSocketPort();
+export default class SocketManager
+{
+    protected io: SocketIO.Server; 
 
-module.exports = {
-    io: null,
-    init: httpServer => {
+    protected port: number;
+    
+    public constructor(httpServer: Server, port: number = 80)
+    {
         this.io = socketIo(httpServer);
 
-        this.io.listen(PORT);
+        this.port = port;
+    }
 
-        OutputManager.showServerInit(PORT, 'Web socket');
-        
-        return this.io;
-    },
-    getIO: () => {
-        if (! this.io) {
-            throw new Error('Socket server is not defined');
+    public init(callback: Function | null = null): void
+    {
+        this.io.listen(this.port);
+
+        if (callback instanceof Function) {
+            callback(this);
         }
+    }
 
+    public getIO(): SocketIO.Server
+    {
         return this.io;
     }
-};
+
+    public getPort(): number
+    {
+        return this.port;
+    }
+
+}

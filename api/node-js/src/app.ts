@@ -1,39 +1,36 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express from 'express';
 import bodyParser from 'body-parser';
 import sequelize from './database/setup';
+import SocketManager from './utils/socket';
+import ConfigService from './helpers/ConfigService';
 
-import * as midlleware from './middleware/kernel';
+import * as middleware from './middleware/kernel';
 import errorMiddleware from './middleware/errorMiddleware';
 
-const relations = require('./database/relations');
-
-const socketServer = require('./utils/socket');
-
-const ConfigService     = require('./helpers/ConfigService');
-const PORT              = ConfigService.getPort();
-
-const OutputManager = require('./helpers/OutputManager');
+import OutputManager from './helpers/OutputManager';
 
 import authRoutes from './routes/auth';
 import siteRoutes from './routes/site';
 
 async function initServer() {
+    
+    const PORT          = ConfigService.getPort();
+    const SOCKET_PORT   = ConfigService.getSocketPort();
+    
     const app = await express()
         .use(bodyParser.json())
-        .use((req, res, next) => {
-            console.log(req.path);
-            next();
-        })
+        .use(middleware.executeDefaults)
         .use('/auth', authRoutes)
-        .use(siteRoutes, midlleware.provideCORS, errorMiddleware)
+        .use(siteRoutes, middleware.provideCORS, errorMiddleware)
         .listen(PORT, () => OutputManager.showServerInit(PORT));
 
-    socketServer.init(app);
+    const socketServer = new SocketManager(app, SOCKET_PORT);
+
+    socketServer.init(
+        (socketManager: SocketManager) => OutputManager.showServerInit(socketManager.getPort(), 'Web socket')
+    );
 };
 
-relations.defineRelations();
-
 sequelize
-    .sync(/*{force: true}*/)
+    .sync({force: true})
     .then(initServer);
-
