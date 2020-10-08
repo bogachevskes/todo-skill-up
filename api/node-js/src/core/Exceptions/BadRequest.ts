@@ -4,8 +4,8 @@ import Codes from '../../config/codes';
 
 export default class BadRequest extends HTTPException
 {
-    constructor(message?: string, ...rest: any[]) {
-        super(Codes.CODE_BAD_REQUEST, message || Messages.BAD_REQUEST, ...rest);
+    constructor(message?: string, data: any[] = [], ...rest: any[]) {
+        super(Codes.CODE_BAD_REQUEST, message || Messages.BAD_REQUEST, data, ...rest);
     }
     
 }

@@ -4,17 +4,18 @@ import jwt from 'jsonwebtoken';
 import commonConfig from '../config/_common';
 import BadRequest from '../core/Exceptions/BadRequest';
 import NotFound from '../core/Exceptions/NotFound';
-import User from '../models/User';
+
+import User from '../entity/User';
 
 /**
  * Минимальная длина поля name.
- * @const {integer}
+ * @const { integer }
  */
 const NAME_MIN_INPUT_LENGTH = 5;
 
 /**
  * Минимальная длина поля password.
- * @const {integer}
+ * @const { integer }
  */
 const PASSWORD_MIN_INPUT_LENGTH = 5;
 
@@ -23,12 +24,12 @@ const PASSWORD_MIN_INPUT_LENGTH = 5;
  */
 export const provideValidation = (req, next) => {
     const errors = validationResult(req);
-    
+
     if (errors.isEmpty()) {
         return true;
     }
 
-    throw new BadRequest('Данные не валидны');
+    throw new BadRequest('Данные не валидны', errors.array());
 };
 
 /**
@@ -61,11 +62,9 @@ export const provideModelCondition = (condition, errorData = 'Запрашива
  * @param { User } user модель пользователя
  * @return { string }
  */
-export const createUserToken = (user) => {
+export const createUserToken = (user: User) => {
     
-    console.log(commonConfig.TOKEN_SECRET_WORD);
-    
-    return jwt.sign(
+    const sign = jwt.sign(
         {
             email: user.email,
             userId: user.id,
@@ -75,6 +74,8 @@ export const createUserToken = (user) => {
             expiresIn: commonConfig.TOKEN_EXPIRATION_TIME,
         }
     );
+
+    return sign;
 }
 
 /**
@@ -90,9 +91,7 @@ export const validateEmail = (checkUnique = true) => {
         }
     
         query.custom(async (value, {req}) => {
-            // const existingUser = await User.findByEmail(value);
-
-            const existingUser = true;
+            const existingUser = await User.findByEmail(value);
         
             if (existingUser) {
                 throw new Error('Пользователь с такой почтой уже существует');

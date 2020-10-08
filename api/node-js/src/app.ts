@@ -1,6 +1,7 @@
+import "reflect-metadata";
+import * as typeorm from 'typeorm';
 import express from 'express';
 import bodyParser from 'body-parser';
-import sequelize from './database/setup';
 import SocketManager from './utils/socket';
 import ConfigService from './helpers/ConfigService';
 
@@ -31,6 +32,8 @@ async function initServer() {
     );
 };
 
-sequelize
-    .sync({force: true})
-    .then(initServer);
+(async () => {
+    const connection = await typeorm.createConnection();
+    connection.synchronize(false);
+    initServer();
+})();
