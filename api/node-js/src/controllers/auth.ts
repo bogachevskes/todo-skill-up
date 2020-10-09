@@ -2,7 +2,7 @@ import { RequestHandler, Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
 import * as validationManager from '../utils/validationManager';
 
-import User from '../entity/User';
+import UserRepository from '../repository/UserRepository';
 
 export const signup: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     
@@ -10,7 +10,7 @@ export const signup: RequestHandler = async (req: Request, res: Response, next: 
 
     const hashedPassword = await bcrypt.hash(req.body.password, 12);
 
-    await User.createNew(req.body.name, req.body.email, hashedPassword);
+    await UserRepository.createNew(req.body.name, req.body.email, hashedPassword);
 
     return res.status(201)
         .json({
@@ -21,7 +21,7 @@ export const signup: RequestHandler = async (req: Request, res: Response, next: 
 export const login: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     validationManager.provideValidation(req, next);
 
-    const user = await User.findByEmail(req.body.email);
+    const user = await UserRepository.findByEmail(req.body.email);
 
     validationManager.provideModelCondition(user, 'Пользователь не найден');
 

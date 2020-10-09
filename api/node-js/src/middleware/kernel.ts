@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import User from '../entity/User';
+import UserRepository from '../repository/UserRepository';
 
 import commonConfig from '../config/_common';
 import * as validationManager from '../utils/validationManager';
@@ -41,7 +41,7 @@ export const authOnly = async (req: Request, res: Response, next: NextFunction) 
 
     validationManager.provideAuthentication(decodedToken);
 
-    const user = await User.findById(decodedToken.userId);
+    const user = await UserRepository.findById(decodedToken.userId);
 
     validationManager.provideModelCondition(user);
 

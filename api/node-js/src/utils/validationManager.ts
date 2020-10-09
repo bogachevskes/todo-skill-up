@@ -5,6 +5,7 @@ import commonConfig from '../config/_common';
 import BadRequest from '../core/Exceptions/BadRequest';
 import NotFound from '../core/Exceptions/NotFound';
 
+import UserRepository from '../repository/UserRepository';
 import User from '../entity/User';
 
 /**
@@ -91,7 +92,7 @@ export const validateEmail = (checkUnique = true) => {
         }
     
         query.custom(async (value, {req}) => {
-            const existingUser = await User.findByEmail(value);
+            const existingUser = await UserRepository.findByEmail(value);
         
             if (existingUser) {
                 throw new Error('Пользователь с такой почтой уже существует');
