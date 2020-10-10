@@ -2,8 +2,6 @@ export default class CommandContext
 {
     protected params: object = {};
 
-    protected errors: object = {};
-
     public set(key: string, value: any): void
     {
         this.params[key] = value;
