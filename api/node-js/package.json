@@ -30,6 +30,7 @@
     "nodemailer-sendgrid-transport": "^0.2.0",
     "reflect-metadata": "^0.1.13",
     "socket.io": "^2.3.0",
+    "ts-node": "^9.0.0",
     "typeorm": "^0.2.28",
     "winston": "^3.2.1",
     "winston-daily-rotate-file": "^4.4.2"

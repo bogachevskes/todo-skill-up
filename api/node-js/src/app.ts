@@ -13,6 +13,8 @@ import OutputManager from './helpers/OutputManager';
 import authRoutes from './routes/auth';
 import siteRoutes from './routes/site';
 
+const dbConf = require('./config/_db');
+
 async function initServer() {
     
     const PORT          = ConfigService.getPort();
@@ -34,6 +36,6 @@ async function initServer() {
 
 (async () => {
     const connection = await typeorm.createConnection();
-    connection.synchronize(false);
+    connection.synchronize(dbConf.sync);
     initServer();
 })();
