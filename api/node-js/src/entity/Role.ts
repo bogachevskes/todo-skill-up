@@ -1,11 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn, Index, ManyToMany, JoinTable } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, Index, ManyToMany, JoinTable, BaseEntity } from 'typeorm';
 import User from './User';
 
 @Index('idx-roles_name', ['name'])
 @Index('idx-roles_created_at', ['createdAt'])
 @Index('idx-roles_updated_at', ['updatedAt'])
 @Entity('roles')
-export default class Roles
+export default class Roles extends BaseEntity
 {
     @PrimaryGeneratedColumn({ unsigned: true })
     id: number;

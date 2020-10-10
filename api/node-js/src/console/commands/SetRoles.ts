@@ -1,10 +1,14 @@
-import CommandInterface from '../base/CommandInterface';
-import CommandContext from '../base/CommandContext';
+import ManageUserRole from './ManageUserRole';
+import UserRepository from '../../repository/UserRepository';
 
-export default class SetRoles implements CommandInterface
+export default class SetRoles extends ManageUserRole
 {
-    public execute(context: CommandContext): void
+    /**
+     * @see BaseCommand
+     */
+    protected async handle(): Promise<void>
     {
-        console.log(console.log(context));
+        await UserRepository.assignRoleIfNotExists(this.user, this.role);
     }
+
 }

@@ -39,7 +39,7 @@ export default class CommandKernel
      * @param  knownCommands
      * @return void
      */
-    protected loadCommandList(knownCommands: object)
+    protected loadCommandList(knownCommands: object): void
     {
         this.commandsList = knownCommands;
     }
@@ -91,7 +91,7 @@ export default class CommandKernel
      * @param  object knownCommands конфигурация команд
      * @return void
      */
-    public handle(knownCommands: object): void
+    public async handle(knownCommands: object): Promise<void>
     {
         this.loadCommandList(knownCommands);
         
@@ -103,7 +103,30 @@ export default class CommandKernel
 
         this.buildContext();
 
-        this.command.execute(this.context);
+        try {
+            
+            await this.command.execute(this.context);
+
+        } catch (error) {
+            const errorMessage = (error as Error).message;
+
+            console.log("\x1b[31m", `Выполнение команды завершилось ошибкой. Текст ошибки - ${errorMessage}`);
+
+            return;
+        }
+
+        console.log("\x1b[32m", `Команда ${this.commandName} выполнена успешно`);
+        
+    }
+
+    /**
+     * Завершение выполнения команды.
+     * 
+     * @return void
+     */
+    public terminate(): void
+    {
+        process.exit();
     }
 
 }

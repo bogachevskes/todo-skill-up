@@ -1,4 +1,4 @@
-const db = require('./config/_db');
+const db = require('./dist/config/_db');
 
 module.exports = {
     "type": 'mysql',
@@ -7,8 +7,9 @@ module.exports = {
     "username": db.user,
     "password": db.password,
     "database": db.database,
-    "logging": true,
+    "logging": db.logging,
+    "synchronize": db.sync,
     "entities": [
-        "src/entity/**/*.ts"
+        "dist/entity/**/*.js"
     ],
 }

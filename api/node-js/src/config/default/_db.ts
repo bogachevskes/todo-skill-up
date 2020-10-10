@@ -4,5 +4,6 @@ module.exports = {
     user: 'user_name',
     password: 'password',
     database: 'database_name',
+    logging: true,
     sync: false,
 };
