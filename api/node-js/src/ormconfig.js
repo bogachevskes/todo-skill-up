@@ -1,4 +1,4 @@
-const db = require('./src/config/_db');
+const db = require('./config/_db');
 
 module.exports = {
     "type": 'mysql',

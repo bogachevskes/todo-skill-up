@@ -4,6 +4,7 @@
   "description": "Default nodeJS server setup",
   "main": "app.js",
   "scripts": {
+    "console": "./dist/console.js",
     "build": "rm -rf ./dist && tsc -p tsconfig.build.json && cp -R ./src/public ./dist/",
     "dev": "nodemon ./src/app.ts",
     "start": "cross-env NODE_ENV=production node ./dist/app.js"
