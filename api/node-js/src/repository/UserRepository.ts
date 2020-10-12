@@ -1,6 +1,7 @@
-import { Repository, getConnection, } from 'typeorm';
+import { Repository } from 'typeorm';
 import User from '../entity/User';
 import Role from '../entity/Role';
+import UsersRoleRepository from './UsersRoleRepository';
 
 export default class UserRepository
 {
@@ -79,36 +80,9 @@ export default class UserRepository
     }
 
     /**
-     * Есть роль у пользователя?
-     * 
-     * @param userId 
-     * @param roleId
-     * @return Promise<void>
-     */
-    public static async hasRole(userId: number, roleId: number): Promise<boolean>
-    {
-        const result = await User.createQueryBuilder('user')
-            .leftJoinAndSelect('user.roles', 'role')
-            .where("user.id = :userId and role.id = :roleId", { userId, roleId })
-            .getCount();
-        
-        return Boolean(result);
-    }
-
-    /**
-     * @param userId 
-     * @param roleId
-     * @return Promise<void>
-     */
-    public static async hasNoRole(userId: number, roleId: number): Promise<boolean>
-    {
-        return await ! this.hasRole(userId, roleId);
-    }
-
-    /**
      * Есть роли у пользователя?
      * 
-     * @param userId
+     * @param  userId
      * @return Promise<void>
      */
     public static async hasRoles(userId): Promise<boolean>
@@ -124,11 +98,11 @@ export default class UserRepository
     /**
      * Добавить пользователю роль.
      * 
-     * @param user 
-     * @param role 
+     * @param  user 
+     * @param  role 
      * @return Promise<void>
      */
-    public static async assignRole(user: User, role: Role)
+    public static async assignRole(user: User, role: Role): Promise<void>
     {
         const userRoles = await user.roles;
 
@@ -140,17 +114,37 @@ export default class UserRepository
     /**
      * Добавить пользователю роль, если ее нет.
      * 
-     * @param user 
-     * @param role 
-     * @return Promise<void>
+     * @param  user 
+     * @param  role 
+     * @return Promise<boolean>
      */
-    public static async assignRoleIfNotExists(user: User, role: Role): Promise<void>
+    public static async assignRoleIfNotExists(user: User, role: Role): Promise<boolean>
     {
-        if (await this.hasRole(user.id, role.id)) {
-            return;
+        if (await UsersRoleRepository.hasRole(user.id, role.id)) {
+            return false;
         }
 
         await this.assignRole(user, role);
+
+        return true;
+    }
+
+    /**
+     * Удалить роль если назначена.
+     * 
+     * @param  user 
+     * @param  role
+     * @return Promise<void>
+     */
+    public static async unsetRoleIfExists(user: User, role: Role): Promise<boolean>
+    {
+        if (await UsersRoleRepository.hasNoRole(user.id, role.id)) {
+            return false;
+        }
+
+        await UsersRoleRepository.unsetRole(user, role);
+
+        return true;
     }
 
 }

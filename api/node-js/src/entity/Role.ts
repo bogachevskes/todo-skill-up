@@ -35,6 +35,6 @@ export default class Roles extends BaseEntity
     @JoinTable({
         name: 'user_roles',
     })
-    users: User[];
+    public users: User[];
 
 }
