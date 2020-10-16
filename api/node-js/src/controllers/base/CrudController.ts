@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import Controller from './Controller';
 import RouteData from './RouteData';
-import AutoBind from '../../core/decorators/AutoBind';
+import AutoBind from '../../core/Decorators/AutoBind';
 
 export default abstract class CrudController extends Controller
 {
