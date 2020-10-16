@@ -20,7 +20,8 @@ export const executeDefaults = (req: Request, res: Response, next: NextFunction)
 export const provideCORS = (req: Request, res: Response, next: NextFunction) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-BASE-AUTH');
+
     next();
 };
 
@@ -29,15 +30,14 @@ export const provideCORS = (req: Request, res: Response, next: NextFunction) => 
  * авторизованных пользователей.
  */
 export const authOnly = async (req: Request, res: Response, next: NextFunction) => {
-    const authHeader = req.get('Authorization');
+    
+    const token  = req.get('X-BASE-AUTH');
 
-    validationManager.provideAuthentication(authHeader);
+    validationManager.provideAuthentication(token);
     
     let decodedToken;
 
-    const token = authHeader!.split(' ')[1];
-
-    decodedToken = jwt.verify(token, commonConfig.TOKEN_SECRET_WORD);
+    decodedToken = jwt.verify(token!, commonConfig.TOKEN_SECRET_WORD);
 
     validationManager.provideAuthentication(decodedToken);
 

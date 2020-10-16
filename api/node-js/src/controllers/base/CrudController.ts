@@ -7,31 +7,27 @@ export default abstract class CrudController extends Controller
 {
     /**
      * @param req
-     * @param res
      * @return Promise<object[]>
      */
-    protected abstract async list(req: Request, res: Response): Promise<object[]>
+    protected abstract async list(req: Request): Promise<object[]>
 
     /**
-     * @param req 
-     * @param res
+     * @param req
      * @return Promise<object>
      */
-    protected abstract async create(req: Request, res: Response): Promise<object>
+    protected abstract async create(req: Request): Promise<object>
 
     /**
-     * @param req 
-     * @param res
+     * @param req
      * @return Promise<object>
      */
-    protected abstract async update(req: Request, res: Response): Promise<object>
+    protected abstract async update(req: Request): Promise<object>
 
     /**
-     * @param req 
-     * @param res
+     * @param req
      * @return Promise<boolean>
      */
-    protected abstract async delete(req: Request, res: Response): Promise<boolean>
+    protected abstract async delete(req: Request): Promise<boolean>
     
     /**
      * @see Controller
@@ -57,7 +53,7 @@ export default abstract class CrudController extends Controller
     public async actionList(req: Request, res: Response): Promise<Response>
     {
         return res.json({
-            items: await this.list(req, res),
+            items: await this.list(req),
         });
     }
 
@@ -72,7 +68,7 @@ export default abstract class CrudController extends Controller
     public async actionCreate(req: Request, res: Response): Promise<Response>
     {
         return res.json({
-            item: await this.create(req, res),
+            item: await this.create(req),
         });
     }
 
@@ -87,7 +83,7 @@ export default abstract class CrudController extends Controller
     public async actionUpdate(req: Request, res: Response): Promise<Response>
     {
         return res.json({
-            item: await this.update(req, res),
+            item: await this.update(req),
         });
     }
 
@@ -102,7 +98,7 @@ export default abstract class CrudController extends Controller
     public async actionDelete(req: Request, res: Response): Promise<Response>
     {
         return res.json({
-            success: await this.delete(req, res),
+            success: await this.delete(req),
         });
     }
 

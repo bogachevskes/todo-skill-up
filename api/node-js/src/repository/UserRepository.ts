@@ -132,4 +132,14 @@ export default class UserRepository
         return true;
     }
 
+    /**
+     * Возвращает задания пользователя.
+     * 
+     * @return Promise<object[]>
+     */
+    public async getTodos(): Promise<object[]>
+    {
+        return [{}];
+    }
+
 }

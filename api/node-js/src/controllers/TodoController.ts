@@ -1,29 +1,50 @@
 import { Request, Response, NextFunction } from 'express';
 import CrudController from './base/CrudController';
-import RouteData from './base/RouteData';
+import BadRequest from '../core/Exceptions/BadRequest';
+import User from '../entity/User';
+import UserRepository from '../repository/UserRepository';
 
 export default class TodoController extends CrudController
 {
+    protected userRepo: UserRepository;
+    
     public constructor()
     {
         super('/todo');
     }
 
     /**
-     * @see CrudController
+     * Определение репозитория пользователя.
+     * 
+     * @param  Request req
+     * @return void
      */
-    protected async list(req: Request, res: Response): Promise<object[]>
+    protected defineUserRepo(req: Request): void
     {
-        return new Promise(function(resolve, reject) {
-            resolve([{}]);
-        });
+        if (! (req['user'] instanceof User)) {
+            throw new BadRequest('Пользователь не определен');
+        }
+
+        this.userRepo = new UserRepository(req['user']);
     }
 
     /**
      * @see CrudController
      */
-    protected async create(req: Request, res: Response): Promise<object>
+    protected async list(req: Request): Promise<object[]>
     {
+        this.defineUserRepo(req);
+        
+        return await this.userRepo.getTodos();
+    }
+
+    /**
+     * @see CrudController
+     */
+    protected async create(req: Request): Promise<object>
+    {
+        this.defineUserRepo(req);
+        
         return new Promise(function(resolve, reject) {
             return resolve({});
         });
@@ -32,8 +53,10 @@ export default class TodoController extends CrudController
     /**
      * @see CrudController
      */
-    protected async update(req: Request, res: Response): Promise<object>
+    protected async update(req: Request): Promise<object>
     {
+        this.defineUserRepo(req);
+        
         return new Promise(function(resolve, reject) {
             return resolve({});
         });
@@ -42,8 +65,10 @@ export default class TodoController extends CrudController
     /**
      * @see CrudController
      */
-    protected async delete(req: Request, res: Response): Promise<boolean>
+    protected async delete(req: Request): Promise<boolean>
     {
+        this.defineUserRepo(req);
+        
         return new Promise(function(resolve, reject) {
             return resolve(true);
         });
