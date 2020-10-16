@@ -43,7 +43,8 @@ export default class TodoItem extends BaseEntity
 
     @Column("timestamp", {
         name: 'planned_complition_at',
-        default: () => null,
+        comment: 'Планируемая дата выполнения',
+        nullable: true,
     })
     public plannedComplitionAt: Date | null;
 
