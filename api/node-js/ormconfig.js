@@ -10,6 +10,6 @@ module.exports = {
     "logging": db.logging,
     "synchronize": db.sync,
     "entities": [
-        "dist/entity/**/*.js"
+        "dist/entity/**/*.js",
     ],
 }

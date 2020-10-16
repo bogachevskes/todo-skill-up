@@ -5,18 +5,18 @@ import commonConfig from '../config/_common';
 import BadRequest from '../core/Exceptions/BadRequest';
 import NotFound from '../core/Exceptions/NotFound';
 
-import UserRepository from '../repository/UserRepository';
 import User from '../entity/User';
+import UserRepository from '../repository/UserRepository';
 
 /**
  * Минимальная длина поля name.
- * @const { integer }
+ * @const number
  */
 const NAME_MIN_INPUT_LENGTH = 5;
 
 /**
  * Минимальная длина поля password.
- * @const { integer }
+ * @const number
  */
 const PASSWORD_MIN_INPUT_LENGTH = 5;
 
@@ -60,8 +60,8 @@ export const provideModelCondition = (condition, errorData = 'Запрашива
 /**
  * Создает токен для пользователя
  * 
- * @param { User } user модель пользователя
- * @return { string }
+ * @param User user
+ * @return string
  */
 export const createUserToken = (user: User) => {
     

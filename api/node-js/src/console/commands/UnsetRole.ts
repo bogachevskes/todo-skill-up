@@ -8,7 +8,9 @@ export default class UnsetRole extends ManageUserRole
      */
     protected async handle(): Promise<void>
     {
-        await UserRepository.unsetRoleIfExists(this.user, this.role);
+        const repo = new UserRepository(this.user);
+        
+        await repo.unsetRoleIfExists(this.role);
     }
 
 }

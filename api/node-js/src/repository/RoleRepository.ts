@@ -1,34 +1,16 @@
-import { Repository } from 'typeorm';
 import Role from '../entity/Role';
 
 export default class RoleRepository
 {
-    protected repository: Repository<Role>;
-
-    protected constructor()
-    {
-        this.repository = Role.getRepository();
-    }
-
-    /**
-     * @return Repository<Role>
-     */
-    protected static getRepository(): Repository<Role>
-    {
-        const builder = new this;
-
-        return builder.repository;
-    }
-
     /**
      * Поиск по ид.
      * 
-     * @param  string id
+     * @param  number id
      * @return Promise<Role|null>
      */
-    static async findById(id: number): Promise<Role|null>
+    public static async findById(id: number): Promise<Role|null>
     {
-        const role = await this.getRepository().findOne({ where: { id } });
+        const role = await Role.findOne({ where: { id } });
 
         if (role instanceof Role) {
             return role;
@@ -45,9 +27,7 @@ export default class RoleRepository
      */
     public static async findByName(name: string): Promise<Role|null>
     {
-        const role = await
-            this.getRepository()
-            .findOne({where: { name }});
+        const role = await Role.findOne({where: { name }});
 
         if (role instanceof Role) {
             return role;
@@ -60,9 +40,9 @@ export default class RoleRepository
      * Создание нового пользователя.
      * 
      * @param  string name
-     * @return Promise<Role>
+     * @return Promise<Role|null>
      */
-    public static async createNew(name: string)
+    public static async createNew(name: string): Promise<Role|null>
     {
         const role = new Role;
 

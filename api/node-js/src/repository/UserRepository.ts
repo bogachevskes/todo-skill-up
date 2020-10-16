@@ -1,36 +1,26 @@
-import { Repository } from 'typeorm';
 import User from '../entity/User';
 import Role from '../entity/Role';
 import UsersRoleRepository from './UsersRoleRepository';
 
+
 export default class UserRepository
 {
-    protected repository: Repository<User>;
-
-    protected constructor()
+    protected user: User;
+    
+    public constructor(user: User)
     {
-        this.repository = User.getRepository();
+        this.user = user;
     }
-
-    /**
-     * @return Repository<User>
-     */
-    protected static getRepository(): Repository<User>
-    {
-        const builder = new this;
-
-        return builder.repository;
-    }
-
+    
     /**
      * Поиск по ид пользователя.
      * 
      * @param  string id
-     * @return Promise<User|null>
+     * @return Promise<UserRepository|null>
      */
-    static async findById(id: number): Promise<User|null>
+    public static async findById(id: number): Promise<User|null>
     {
-        const user = await this.getRepository().findOne({ where: { id } });
+        const user = await User.findOne({ where: { id } });
 
         if (user instanceof User) {
             return user;
@@ -43,13 +33,11 @@ export default class UserRepository
      * Поиск по почте пользователя.
      * 
      * @param  string email 
-     * @return Promise<User|null>
+     * @return romise<User|null>
      */
     public static async findByEmail(email: string): Promise<User|null>
     {
-        const user = await
-            this.getRepository()
-            .findOne({where: { email }});
+        const user = await User.findOne({where: { email }});
 
         if (user instanceof User) {
             return user;
@@ -64,7 +52,7 @@ export default class UserRepository
      * @param  string name 
      * @param  string email 
      * @param  string password 
-     * @return Promise<User>
+     * @return Promise<UserRepository>
      */
     public static async createNew(name: string, email: string, password: string): Promise<User>
     {
@@ -80,51 +68,49 @@ export default class UserRepository
     }
 
     /**
-     * Есть роли у пользователя?
+     * Есть роли?
      * 
-     * @param  userId
      * @return Promise<void>
      */
-    public static async hasRoles(userId): Promise<boolean>
+    public async hasRoles(): Promise<boolean>
     {
-        const result = await Role.createQueryBuilder('role')
+        const result = await
+            Role.createQueryBuilder('role')
             .leftJoinAndSelect('role.users', 'user')
-            .where("user.id = :userId", { userId })
+            .where("user.id = :userId", { userId: this.user.id })
             .getCount();
 
         return Boolean(result);
     }
 
     /**
-     * Добавить пользователю роль.
+     * Добавить роль.
      * 
-     * @param  user 
      * @param  role 
      * @return Promise<void>
      */
-    public static async assignRole(user: User, role: Role): Promise<void>
+    public async assignRole(role: Role): Promise<void>
     {
-        const userRoles = await user.roles;
+        const userRoles = await this.user.roles;
 
         userRoles.push(role);
         
-        await user.save();
+        await this.user.save();
     }
 
     /**
-     * Добавить пользователю роль, если ее нет.
+     * Добавить роль, если ее нет.
      * 
-     * @param  user 
      * @param  role 
      * @return Promise<boolean>
      */
-    public static async assignRoleIfNotExists(user: User, role: Role): Promise<boolean>
+    public async assignRoleIfNotExists(role: Role): Promise<boolean>
     {
-        if (await UsersRoleRepository.hasRole(user.id, role.id)) {
+        if (await UsersRoleRepository.hasRole(this.user.id, role.id)) {
             return false;
         }
 
-        await this.assignRole(user, role);
+        await this.assignRole(role);
 
         return true;
     }
@@ -132,17 +118,16 @@ export default class UserRepository
     /**
      * Удалить роль если назначена.
      * 
-     * @param  user 
      * @param  role
-     * @return Promise<void>
+     * @return Promise<boolean>
      */
-    public static async unsetRoleIfExists(user: User, role: Role): Promise<boolean>
+    public async unsetRoleIfExists(role: Role): Promise<boolean>
     {
-        if (await UsersRoleRepository.hasNoRole(user.id, role.id)) {
+        if (await UsersRoleRepository.hasNoRole(this.user.id, role.id)) {
             return false;
         }
 
-        await UsersRoleRepository.unsetRole(user, role);
+        await UsersRoleRepository.unsetRole(this.user, role);
 
         return true;
     }

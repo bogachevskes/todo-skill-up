@@ -99,11 +99,11 @@ export default class CommandKernel
         
         this.resolveCommandName();
         
-        this.defineCommand();
-
-        this.buildContext();
-
         try {
+        
+            this.defineCommand();
+
+            this.buildContext();
             
             await this.command.execute(this.context);
 

@@ -8,7 +8,9 @@ export default class SetRoles extends ManageUserRole
      */
     protected async handle(): Promise<void>
     {
-        await UserRepository.assignRoleIfNotExists(this.user, this.role);
+        const repo = new UserRepository(this.user);
+        
+        await repo.assignRoleIfNotExists(this.role);
     }
 
 }

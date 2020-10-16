@@ -1,42 +1,23 @@
-import { Repository, SelectQueryBuilder } from 'typeorm';
+import { SelectQueryBuilder } from 'typeorm';
 import UserRole from '../entity/UserRole';
 import User from '../entity/User';
 import Role from '../entity/Role';
 
 export default class UsersRoleRepository
 {
-    protected repository: Repository<UserRole>;
-
-    protected constructor()
-    {
-        this.repository = UserRole.getRepository();
-    }
-
-    /**
-     * @return Repository<User>
-     */
-    protected static getRepository(): Repository<UserRole>
-    {
-        const builder = new this;
-
-        return builder.repository;
-    }
-
     /**
      * @return SelectQueryBuilder<UserRole>
      */
     protected static getQueryBuilder(): SelectQueryBuilder<UserRole>
     {
-        const builder = new this;
-
         return UserRole.createQueryBuilder('user_role');
     }
 
     /**
      * Удаление роли у пользователя.
      * 
-     * @param  user 
-     * @param  role
+     * @param  UserRepository user 
+     * @param  RoleRepository role
      * @return Promise<boolean>
      */
     public static async unsetRole(user: User, role: Role): Promise<boolean>
