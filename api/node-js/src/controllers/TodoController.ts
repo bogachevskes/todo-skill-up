@@ -1,26 +1,52 @@
 import { Request, Response, NextFunction } from 'express';
-import Controller from './base/Controller';
+import CrudController from './base/CrudController';
 import RouteData from './base/RouteData';
 
-export default class TodoController extends Controller
+export default class TodoController extends CrudController
 {
     public constructor()
     {
         super('/todo');
-        this.initializeRoutes();
     }
 
-    protected defineRoutes(): RouteData[]
+    /**
+     * @see CrudController
+     */
+    protected async list(req: Request, res: Response): Promise<object[]>
     {
-        return [
-            new RouteData('get', 'list'),
-        ];
-    }
-    
-    public async actionList(req: Request, res: Response): Promise<Response>
-    {
-        return res.json({
-            items: {},
+        return new Promise(function(resolve, reject) {
+            resolve([{}]);
         });
     }
+
+    /**
+     * @see CrudController
+     */
+    protected async create(req: Request, res: Response): Promise<object>
+    {
+        return new Promise(function(resolve, reject) {
+            return resolve({});
+        });
+    }
+
+    /**
+     * @see CrudController
+     */
+    protected async update(req: Request, res: Response): Promise<object>
+    {
+        return new Promise(function(resolve, reject) {
+            return resolve({});
+        });
+    }
+
+    /**
+     * @see CrudController
+     */
+    protected async delete(req: Request, res: Response): Promise<boolean>
+    {
+        return new Promise(function(resolve, reject) {
+            return resolve(true);
+        });
+    }
+
 }
