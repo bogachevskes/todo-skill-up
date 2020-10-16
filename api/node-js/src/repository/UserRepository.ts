@@ -1,6 +1,8 @@
 import User from '../entity/User';
 import Role from '../entity/Role';
+import TodoItem from '../entity/TodoItem';
 import UsersRoleRepository from './UsersRoleRepository';
+import TodoItemRepository from './TodoItemRepository';
 
 
 export default class UserRepository
@@ -16,7 +18,7 @@ export default class UserRepository
      * Поиск по ид пользователя.
      * 
      * @param  string id
-     * @return Promise<UserRepository|null>
+     * @return Promise<User|null>
      */
     public static async findById(id: number): Promise<User|null>
     {
@@ -33,7 +35,7 @@ export default class UserRepository
      * Поиск по почте пользователя.
      * 
      * @param  string email 
-     * @return romise<User|null>
+     * @return Promise<User|null>
      */
     public static async findByEmail(email: string): Promise<User|null>
     {
@@ -52,7 +54,7 @@ export default class UserRepository
      * @param  string name 
      * @param  string email 
      * @param  string password 
-     * @return Promise<UserRepository>
+     * @return Promise<User>
      */
     public static async createNew(name: string, email: string, password: string): Promise<User>
     {
@@ -70,7 +72,7 @@ export default class UserRepository
     /**
      * Есть роли?
      * 
-     * @return Promise<void>
+     * @return Promise<boolean>
      */
     public async hasRoles(): Promise<boolean>
     {
@@ -135,11 +137,11 @@ export default class UserRepository
     /**
      * Возвращает задания пользователя.
      * 
-     * @return Promise<object[]>
+     * @return Promise<TodoItem[]>
      */
-    public async getTodos(): Promise<object[]>
+    public async getTodos(): Promise<TodoItem[]>
     {
-        return [{}];
+        return TodoItemRepository.findByUserId(this.user.id);
     }
 
 }
