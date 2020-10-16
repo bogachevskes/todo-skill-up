@@ -13,10 +13,14 @@ import OutputManager from './helpers/OutputManager';
 import authRoutes from './routes/auth';
 import siteRoutes from './routes/site';
 
+import TodoItemController from './controllers/TodoController';
+
 const dbConf = require('./config/_db');
 
 async function initServer() {
-    
+
+    const todoController = new TodoItemController;
+
     const PORT          = ConfigService.getPort();
     const SOCKET_PORT   = ConfigService.getSocketPort();
     
@@ -25,6 +29,7 @@ async function initServer() {
         .use(middleware.executeDefaults)
         .use('/auth', authRoutes)
         .use(siteRoutes, middleware.provideCORS, errorMiddleware)
+        .use(todoController.getPath(), todoController.getRouter(), middleware.provideCORS, errorMiddleware)
         .listen(PORT, () => OutputManager.showServerInit(PORT));
 
     const socketServer = new SocketManager(app, SOCKET_PORT);
