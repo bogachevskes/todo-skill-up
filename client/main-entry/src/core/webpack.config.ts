@@ -58,6 +58,7 @@ module.exports = {
             '@common-components': path.resolve(__dirname, '../src/components/common'),
             '@login-page-components': path.resolve(__dirname, '../src/components/common/login-page'),
             '@libs': path.resolve(__dirname, '../src/common/libs'),
+            '@services': path.resolve(__dirname, '../src/core/services'),
             '@router': path.resolve(__dirname, '../src/router'),
             '@store': path.resolve(__dirname, '../src/store'),
             '@axios': path.resolve(__dirname, '../src/axios'),

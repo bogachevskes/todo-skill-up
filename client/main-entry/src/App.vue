@@ -8,7 +8,7 @@
     export default {
         components: {
             'app-main-layout': MainLayout,
-        }
+        },
     }
 </script>
 

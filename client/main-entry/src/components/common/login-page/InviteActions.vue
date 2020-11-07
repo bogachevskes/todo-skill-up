@@ -11,6 +11,7 @@
             >
                 Список задач
             </router-link>
+            <a class="button is-danger" v-if="isLogged" @click="logout">Выйти</a>
             <router-link
                 v-if="notLogged"
                 class="button"
@@ -57,6 +58,13 @@
             notLogged: function () {
                 return ! this.isLogged;
             },
+        },
+        methods: {
+            logout: function () {
+                this.$userStorage.flushData();
+
+                this.$store.dispatch('setUserData', this.$userStorage.getUserData());
+            }
         },
     }
 </script>

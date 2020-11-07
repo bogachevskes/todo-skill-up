@@ -11,6 +11,6 @@
         "baseUrl": "./core",
         "incremental": true,
         "strictNullChecks": true,
-        "esModuleInterop": true
+        "esModuleInterop": true,
     },
 }

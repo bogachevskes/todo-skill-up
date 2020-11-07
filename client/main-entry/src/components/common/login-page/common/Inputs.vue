@@ -215,8 +215,12 @@
                 
                 axios.post('auth/login', this.formData)
                     .then(result => {
+                        this.$userStorage.fillStorage(result.data);
+                        
                         this.setOffLoading('onLoginLoading');
-                        this.$store.dispatch('setUserData', result.data);
+
+                        this.$store.dispatch('setUserData', this.$userStorage.getUserData());
+                        
                         this.$router.push('/');
 
                         return this;

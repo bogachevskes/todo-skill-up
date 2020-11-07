@@ -8,7 +8,7 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
     state: {
         token: null,
-        user_id: null,
+        userId: null,
     },
     getters: {
         notLogged: function (state) {
@@ -19,20 +19,17 @@ export const store = new Vuex.Store({
         }
     },
     mutations: {
-        authUser: function (state, userData) {
+        setUserState: function (state, userData) {
             state.token = userData.token;
-            state.user_id = userData.userId;
-            
-            localStorage.setItem('token', userData.token);
-            localStorage.setItem('user_id', userData.userId);
+            state.userId = userData.userId;
         },
     },
     actions: {
         setUserData: function ({commit}, userData) {
-            commit('authUser', userData);
+            commit('setUserState', userData);
 
             return this;
-        }
+        },
     },
     modules: {
         router: router,
