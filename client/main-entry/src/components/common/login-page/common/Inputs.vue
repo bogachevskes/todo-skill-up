@@ -217,6 +217,7 @@
                     .then(result => {
                         this.setOffLoading('onLoginLoading');
                         this.$store.dispatch('setUserData', result.data);
+                        this.$router.push('/');
 
                         return this;
                     })

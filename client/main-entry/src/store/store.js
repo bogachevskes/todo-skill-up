@@ -9,15 +9,22 @@ export const store = new Vuex.Store({
     state: {
         token: null,
         user_id: null,
-        userData: null,
     },
     getters: {
-
+        notLogged: function (state) {
+            return state.token === null || state.user_id === null
+        },
+        isLogged: function (_state, getters) {
+            return ! getters.notLogged;
+        }
     },
     mutations: {
         authUser: function (state, userData) {
             state.token = userData.token;
             state.user_id = userData.userId;
+            
+            localStorage.setItem('token', userData.token);
+            localStorage.setItem('user_id', userData.userId);
         },
     },
     actions: {

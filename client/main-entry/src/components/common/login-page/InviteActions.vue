@@ -2,6 +2,17 @@
     <div class="navbar-item">
         <div class="buttons">
             <router-link
+                v-if="isLogged"
+                class="button"
+                :to="getTodoListRoute"
+                tag="a"
+                active-class="is-primary"
+                exact
+            >
+                Список задач
+            </router-link>
+            <router-link
+                v-if="notLogged"
                 class="button"
                 :to="getHomeRoute"
                 tag="a"
@@ -12,6 +23,7 @@
             </router-link>
 
             <router-link
+                v-if="notLogged"
                 class="button"
                 :to="getLoginRoute"
                 tag="a"
@@ -37,7 +49,14 @@
             ...mapGetters({
                 getHomeRoute: 'getHomeRoute',
                 getLoginRoute: 'getLoginRoute',
+                getTodoListRoute: 'getTodoListRoute',
             }),
+            isLogged: function () {
+                return this.$store.getters.isLogged;
+            },
+            notLogged: function () {
+                return ! this.isLogged;
+            },
         },
     }
 </script>

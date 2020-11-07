@@ -1,6 +1,7 @@
 import {
     ROUTE_HOME,
     ROUTE_LOGIN,
+    ROUTE_TODO_LIST,
 } from '@router/routes';
 
 const getters = {
@@ -38,6 +39,9 @@ const getters = {
     },
     getLoginRoute: function (state, getters) {
         return getters.getRoute(ROUTE_LOGIN);
+    },
+    getTodoListRoute: function (_state, getters) {
+        return getters.getRoute(ROUTE_TODO_LIST);
     },
 };
 

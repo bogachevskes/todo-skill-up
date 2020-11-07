@@ -20,7 +20,6 @@
 
 <script>
     import Navbar from './common/Navbar';
-    import LoginPage from './common/LoginPage';
     import Footer from './common/Footer';
     import ErrorModal from '@common-components/modals/Error';
     import SuccessModal from '@common-components/modals/Success';
@@ -28,7 +27,6 @@
     export default {
         components: {
             'app-navbar': Navbar,
-            'app-login-page': LoginPage,
             'app-footer': Footer,
             'app-success-modal': SuccessModal,
             'app-error-modal': ErrorModal,

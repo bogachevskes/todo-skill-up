@@ -4,7 +4,7 @@
             <div class="container">
                 <div class="columns is-vcentered">
                     <app-invite></app-invite>
-                    <app-register></app-register>
+                    <app-register v-if="notLogged"></app-register>
                 </div>
             </div>
         </div>
@@ -24,6 +24,11 @@
         beforeRouteLeave: function (to, from, next) {
             eventBus.hideInviteIntro();
             next();
+        },
+        computed: {
+            notLogged: function () {
+                return ! this.$store.getters.isLogged;
+            },
         },
     }
 </script>

@@ -6,7 +6,7 @@
                     <div class="column is-6-tablet is-7-desktop is-8-widescreen">
                         <app-project-title></app-project-title>
                     </div>
-                    <app-login></app-login>
+                    <app-login v-if="notLogged"></app-login>
                 </div>
             </div>
         </div>
@@ -21,6 +21,11 @@
         components: {
             'app-project-title': ProjectTitle,
             'app-login': Login,
+        },
+        computed: {
+            notLogged: function () {
+                return ! this.$store.getters.isLogged;
+            },
         },
     }
 </script>
