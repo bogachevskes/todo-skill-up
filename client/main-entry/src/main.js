@@ -12,6 +12,8 @@ import MixinLoader from '@helpers/MixinLoader';
 
 import 'bulma/css/bulma.css';
 
+import axios from '@axios/base';
+
 Vue.use(VueRouter);
 
 const router = new VueRouter({
@@ -47,10 +49,9 @@ new Vue({
     router: router,
     userStorage: mixins.userStorage,
     render: h => h(App),
-    beforeCreate() {
-        this.$userStorage = this.$options.userStorage;
-    },
     created: function () {
         this.$store.dispatch('setUserData', this.$userStorage.getUserData());
+
+        axios.defaults.headers.common['X-BASE-AUTH'] = this.$store.getters.getToken;
     }
 });

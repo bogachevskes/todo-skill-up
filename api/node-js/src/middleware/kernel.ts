@@ -19,9 +19,15 @@ export const executeDefaults = (req: Request, res: Response, next: NextFunction)
  */
 export const provideCORS = (req: Request, res: Response, next: NextFunction) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-BASE-AUTH');
+    res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept, X-BASE-AUTH');
 
+    if ('OPTIONS' == req.method) {
+        res.sendStatus(204);
+
+        return;
+    }
+    
     next();
 };
 
@@ -47,5 +53,5 @@ export const authOnly = async (req: Request, res: Response, next: NextFunction) 
 
     req['user'] = user;
     
-    return next();
+    next();
 };

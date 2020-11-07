@@ -9,8 +9,12 @@ export const store = new Vuex.Store({
     state: {
         token: null,
         userId: null,
+        cards: [],
     },
     getters: {
+        getToken: function (state) {
+            return state.token;
+        },
         notLogged: function (state) {
             return state.token === null || state.user_id === null
         },
@@ -23,12 +27,16 @@ export const store = new Vuex.Store({
             state.token = userData.token;
             state.userId = userData.userId;
         },
+        setUserCards: function (state, cards) {
+            state.cards = cards;
+        },
     },
     actions: {
         setUserData: function ({commit}, userData) {
             commit('setUserState', userData);
-
-            return this;
+        },
+        setCards: function ({commit}, cards) {
+            commit('setUserCards', cards);
         },
     },
     modules: {

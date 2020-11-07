@@ -212,7 +212,7 @@
             },
             login: function () {
                 this.setOnLoading('onLoginLoading');
-                
+
                 axios.post('auth/login', this.formData)
                     .then(result => {
                         this.$userStorage.fillStorage(result.data);

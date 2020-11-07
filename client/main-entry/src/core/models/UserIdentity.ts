@@ -8,6 +8,7 @@ export default class UserIdentity extends CommandContext
         this.setMultiple({
             token: null,
             userId: null,
+            cards: [],
         });
     }
 }

@@ -1,4 +1,7 @@
+import axios from '../../axios/base';
 import UserIdentity from '../models/UserIdentity';
+import TodoItem from '../models/TodoItem';
+import TodoItemService from './TodoItemService';
 
 export default class UserStorageLoader
 {
@@ -14,7 +17,7 @@ export default class UserStorageLoader
 
     protected constructor() {
         this.storage = localStorage;
-        this.identity = new UserIdentity();
+        this.identity = new UserIdentity;
         this.loadIdentityKeys();
         this.fillFomStorage();
     }
@@ -92,6 +95,28 @@ export default class UserStorageLoader
     {
         this.flushStorage();
         this.fillFomStorage();
+    }
+
+    public loadTodoItems(callback: Function|null): void
+    {
+        axios.get('todo/list')
+        .then(result => {
+            const cards = TodoItemService.createCards(result.data.items);
+            
+            this.identity.set('cards', cards);
+
+            if (callback instanceof Function) {
+                callback();
+            }
+        })
+        .catch(error => {
+            // TODO: Добавить хендлер
+        });
+    }
+
+    public getTodoItems(): TodoItem[]
+    {
+        return this.identity.get('cards');
     }
     
     public static getInstance(): UserStorageLoader

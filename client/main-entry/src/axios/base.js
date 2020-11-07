@@ -6,6 +6,3 @@ const instance = axios.create({
 });
 
 export default instance;
-
-/** установка заголовков */
-//instance.defaults.headers.common['Authorisation'] = 'token';
