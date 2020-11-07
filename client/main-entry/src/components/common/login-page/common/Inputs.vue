@@ -221,7 +221,7 @@
 
                         this.$store.dispatch('setUserData', this.$userStorage.getUserData());
                         
-                        this.$router.push('/');
+                        this.$router.push('/todo-list');
 
                         return this;
                     })

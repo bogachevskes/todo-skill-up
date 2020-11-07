@@ -29,6 +29,7 @@ const routes = [
         name: ROUTE_TODO_LIST,
         components: {
             default: TodoListPage,
+            'invite-actions': InviteActions,
         },
     }
 ];

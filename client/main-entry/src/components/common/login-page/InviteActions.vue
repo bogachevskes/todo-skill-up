@@ -2,12 +2,11 @@
     <div class="navbar-item">
         <div class="buttons">
             <router-link
-                v-if="isLogged"
+                v-if="isLogged && (! isOnTodoPage)"
                 class="button"
                 :to="getTodoListRoute"
                 tag="a"
                 active-class="is-primary"
-                exact
             >
                 Список задач
             </router-link>
@@ -58,12 +57,17 @@
             notLogged: function () {
                 return ! this.isLogged;
             },
+            isOnTodoPage: function () {
+                return this.$route.path === '/todo-list';
+            }
         },
         methods: {
             logout: function () {
                 this.$userStorage.flushData();
 
                 this.$store.dispatch('setUserData', this.$userStorage.getUserData());
+
+                this.$router.push('/login');
             }
         },
     }
