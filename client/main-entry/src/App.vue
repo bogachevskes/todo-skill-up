@@ -12,8 +12,13 @@
     }
 </script>
 
-<style>
+<style lang="scss">
+
+    @import '~bulma/bulma.sass';
+    @import '~bulma-calendar/src/sass/index.sass';
+
     .mt-1 {
         margin-top:10px;
     };
+
 </style>

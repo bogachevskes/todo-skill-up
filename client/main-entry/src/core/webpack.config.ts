@@ -22,22 +22,16 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.css$/,
+                test: /\.scss$/,
                 use: [
-                    process.env.NODE_ENV !== 'production'
-                    ? 'vue-style-loader'
-                    : MiniCssExtractPlugin.loader,
-                    'css-loader',
-                ],
+                  'vue-style-loader',
+                  'css-loader',
+                  'sass-loader'
+                ]
             },
             {
                 test: /\.vue$/,
                 loader: 'vue-loader',
-                options: {
-                    loaders: {
-                        
-                    }
-                }
             },
             {
                 test: /\.js$/,

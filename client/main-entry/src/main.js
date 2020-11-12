@@ -10,8 +10,6 @@ import userStorageService from '@services/UserStorageService';
 
 import MixinLoader from '@helpers/MixinLoader';
 
-import 'bulma/css/bulma.css';
-
 import axios from '@axios/base';
 
 Vue.use(VueRouter);

@@ -106,20 +106,24 @@ export default class AssetManager
      * @return {string}
      * @throws {Error}
      */
-    public static getDirAssets(dirName, type = TYPE_JS): string
+    public static getDirAssets(dirName, type = TYPE_JS, silent: boolean = true): string
     {
         const model = new AssetManager(dirName, type);
 
         model.setFilesList();
 
-        if (! model.fileNames.length) {
-            throw new Error('Assets not found');
+        if (model.fileNames.length) {
+            model.renderTags();
+
+            return model
+                .linkTags
+                .join('');
         }
 
-        model.renderTags();
+        if (silent) {
+            return '';
+        }
 
-        return model
-            .linkTags
-            .join('');
+        throw new Error('Assets not found');
     }
 }
