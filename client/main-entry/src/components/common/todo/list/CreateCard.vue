@@ -12,8 +12,22 @@
                     <div class="field">
                         <label class="label">Название задачи</label>
                         <div class="control">
-                            <input class="input" type="text" placeholder="Сделать невозможное...">
+                            <input
+                                class="input"
+                                placeholder="Сделать невозможное..."
+                                @blur="blurField(['formData', 'name'])"
+                                v-model="formData.name">
                         </div>
+                        <p
+                            class="help is-danger"
+                            v-if="($v.formData.name.$dirty && (! $v.formData.name.required))">
+                            Обязательно к заполнению
+                        </p>
+                        <p
+                            class="help is-danger"
+                            v-if="$v.formData.name.$error && $v.formData.name.required">
+                            Минимальное кол-во символов: {{ lengthRules.name }}
+                        </p>
                     </div>
                     <div class="field">
                         <label class="label">Дата выполнения</label>
@@ -26,15 +40,36 @@
                             <div class="field">
                                 <label class="label">Описание задачи</label>
                                 <div class="control">
-                                    <textarea class="textarea" placeholder="В этой потрясающей задаче я сделаю..."></textarea>
+                                    <textarea
+                                        class="textarea"
+                                        placeholder="В этой потрясающей задаче я сделаю..."
+                                        @blur="blurField(['formData', 'description'])"
+                                        v-model="formData.description">
+                                    </textarea>
                                 </div>
+                                <p
+                                    class="help is-danger"
+                                    v-if="($v.formData.description.$dirty && (! $v.formData.description.required))">
+                                    Обязательно к заполнению
+                                </p>
+                                <p
+                                    class="help is-danger"
+                                    v-if="$v.formData.description.$error && $v.formData.description.required">
+                                    Минимальное кол-во символов: {{ lengthRules.description }}
+                                </p>
                             </div>
                         </div>
                     </div>
                 </section>
                 <footer class="modal-card-foot">
-                    <button class="button is-success">Сохранить</button>
-                    <button class="button is-danger" @click="deactivateModal()">Отменить</button>
+                    <button
+                        class="button is-success"
+                        :disabled="$v.$invalid"
+                        @click="handleCardProcessing"
+                        >
+                        Сохранить
+                    </button>
+                    <button class="button is-danger" @click="deactivateModal">Отменить</button>
                 </footer>
             </div>
         </div>
@@ -56,16 +91,29 @@
 
 <script>
 
+    import { required, minLength } from 'vuelidate/lib/validators';
     import * as bulmaCalendar from 'bulma-calendar/dist/js/bulma-calendar.min.js';
+    import { inputMethods, validationMixinAsset } from '@libs/libStack';
 
     export default {
         data: function () {
             return {
+                formData: {
+                    id: null,
+                    name: null,
+                    description: null,
+                    planned_complition_at: null,
+                },
                 isModalActive: 0,
                 modalHeadingText: null,
+                lengthRules: {
+                    name: 5,
+                    description: 10,
+                },
             };
         },
         methods: {
+            ...inputMethods,
             activateModal: function (modalHeadingText) {
                 this.modalHeadingText = modalHeadingText;
                 this.isModalActive = 1;
@@ -73,6 +121,9 @@
             deactivateModal: function () {
                 this.modalHeadingText = null;
                 this.isModalActive = 0;
+            },
+            handleCardProcessing: function () {
+                console.log('Processing...');
             },
         },
         mounted: function () {
@@ -89,6 +140,21 @@
                     dateFormat: 'DD.MM.YYYY',
                 }
             )
+        },
+        mixins: [validationMixinAsset],
+        validations: function() {
+            return {
+                formData:{
+                    name: {
+                        required: required,
+                        minLength: minLength(this.lengthRules.name),
+                    },
+                    description: {
+                        required: required,
+                        minLength: minLength(this.lengthRules.description),
+                    },
+                },
+            };
         },
     }
 </script>
