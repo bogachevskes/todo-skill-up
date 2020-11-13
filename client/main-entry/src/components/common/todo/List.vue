@@ -32,12 +32,7 @@
             'create-card-item': CreateCard,
         },
         beforeCreate: function () {
-            this.$userStorage.loadTodoItems(() => {
-                this.$store.dispatch(
-                        'setCards',
-                        this.$userStorage.getTodoItems()
-                    );
-            });
+            this.$store.dispatch('updateCardsList', this.$userStorage);
         },
     }
 </script>

@@ -18,7 +18,7 @@ export default (err: Error, req: Request, res: Response, next: NextFunction): Re
             .json(err);
     }
 
-    logger.log('error', `Occurred unexpected error => ${err.message}`);
+    logger.log('error', `Occurred unexpected error => ${err}`);
 
     const error = new InternalServerError;
 

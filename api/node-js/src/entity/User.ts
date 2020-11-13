@@ -2,7 +2,7 @@ import { Column, Entity, BaseEntity, PrimaryGeneratedColumn, Index, ManyToMany, 
 import Role from './Role';
 
 @Index('idx-users_name', ['name'])
-@Index('idx-users_email', ['email'], { unique: true })
+@Index('udx-users_email', ['email'], { unique: true })
 @Index('idx-users_password', ['password'])
 @Index('idx-users_status', ['status'])
 @Index('idx-users_created_at', ['createdAt'])
@@ -37,6 +37,7 @@ export default class User extends BaseEntity
     @Column('tinyint', {
         name: 'status',
         nullable: true,
+        unsigned: true,
         comment: 'Статус активности',
         width: 1,
         default: () => "'1'",

@@ -3,6 +3,7 @@ import Role from '../entity/Role';
 import TodoItem from '../entity/TodoItem';
 import UsersRoleRepository from './UsersRoleRepository';
 import TodoItemRepository from './TodoItemRepository';
+import TodoItemInterface from '../entity/base/TodoItemInterface';
 
 
 export default class UserRepository
@@ -142,6 +143,13 @@ export default class UserRepository
     public async getTodos(): Promise<TodoItem[]>
     {
         return TodoItemRepository.findByUserId(this.user.id);
+    }
+
+    public async addTodoItem(data: TodoItemInterface): Promise<TodoItem>
+    {
+        data.userId = this.user.id;
+        
+        return TodoItemRepository.createNew(data);
     }
 
 }

@@ -32,7 +32,9 @@
                     <div class="field">
                         <label class="label">Дата выполнения</label>
                         <div class="control">
-                            <input type="date" id="planned_complition_at">
+                            <input
+                                type="date"
+                                id="planned_complition_at">
                         </div>
                     </div>
                     <div class="columns">
@@ -94,6 +96,8 @@
     import { required, minLength } from 'vuelidate/lib/validators';
     import * as bulmaCalendar from 'bulma-calendar/dist/js/bulma-calendar.min.js';
     import { inputMethods, validationMixinAsset } from '@libs/libStack';
+    import axios from '@axios/base';
+    import DateHelper from '@helpers/DateHelper';
 
     export default {
         data: function () {
@@ -102,7 +106,7 @@
                     id: null,
                     name: null,
                     description: null,
-                    planned_complition_at: null,
+                    plannedComplitionAt: null,
                 },
                 isModalActive: 0,
                 modalHeadingText: null,
@@ -122,12 +126,23 @@
                 this.modalHeadingText = null;
                 this.isModalActive = 0;
             },
+            flushFormData: function () {
+                for (const item in this.formData) {
+                    this.formData[item] = null;
+                }
+            },
             handleCardProcessing: function () {
-                console.log('Processing...');
+                console.log(this.formData);
+                axios.post('todo/create', {form: this.formData})
+                    .then((res) => {
+                        this.deactivateModal();
+                        this.flushFormData();
+                        this.$store.dispatch('updateCardsList', this.$userStorage);
+                    });
             },
         },
         mounted: function () {
-            bulmaCalendar.attach(
+            const calendar = bulmaCalendar.attach(
                 '#planned_complition_at',
                 {
                     type: 'date',
@@ -139,7 +154,13 @@
                     cancelLabel:'Закрыть',
                     dateFormat: 'DD.MM.YYYY',
                 }
-            )
+            )[0];
+
+            this.formData.plannedComplitionAt = DateHelper.format(new Date(), 'YYYY-MM-DD HH:mm:ss');
+
+            calendar.on('select', (event) => {
+                this.formData.planned_complition_at = DateHelper.format(event.data.date, 'YYYY-MM-DD HH:mm:ss');
+            })
         },
         mixins: [validationMixinAsset],
         validations: function() {

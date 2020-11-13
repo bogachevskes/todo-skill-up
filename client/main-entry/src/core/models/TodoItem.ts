@@ -31,7 +31,7 @@ export default class TodoItem extends Configurable
 
     public prinDescription(defaultContent: string = 'Не указано'): string
     {
-        return this.description || defaultContent
+        return this.description || defaultContent;
     }
     
     /**

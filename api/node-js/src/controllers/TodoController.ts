@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import CrudController from './base/CrudController';
 import BadRequest from '../core/Exceptions/BadRequest';
 import User from '../entity/User';
+import TodoItem from '../entity/TodoItem';
 import UserRepository from '../repository/UserRepository';
 
 export default class TodoController extends CrudController
@@ -41,13 +42,13 @@ export default class TodoController extends CrudController
     /**
      * @see CrudController
      */
-    protected async create(req: Request): Promise<object>
+    protected async create(req: Request): Promise<TodoItem>
     {
         this.defineUserRepo(req);
+
+        const newTodo = await this.userRepo.addTodoItem(req.body.form);
         
-        return new Promise(function(resolve, reject) {
-            return resolve({});
-        });
+        return newTodo;
     }
 
     /**

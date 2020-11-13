@@ -18,14 +18,14 @@ export default class TodoItem extends BaseEntity
         unsigned: true,
         comment: 'Пользователь',
     })
-    userId: number;
+    public userId: number;
 
     @Column({
         primary: true,
         unsigned: true,
         comment: 'Статус',
     })
-    statusId: number;
+    public statusId: number;
 
     @Column('varchar', {
         name: 'name',

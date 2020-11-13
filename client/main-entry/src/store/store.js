@@ -38,6 +38,14 @@ export const store = new Vuex.Store({
         setCards: function ({commit}, cards) {
             commit('setUserCards', cards);
         },
+        updateCardsList: function ({dispatch}, userStorage) {
+            userStorage.loadTodoItems(() => {
+                dispatch(
+                        'setCards',
+                        userStorage.getTodoItems()
+                    );
+            });
+        }
     },
     modules: {
         router: router,
