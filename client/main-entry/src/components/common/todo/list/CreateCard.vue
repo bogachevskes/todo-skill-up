@@ -132,6 +132,7 @@
                 }
             },
             handleCardProcessing: function () {
+                console.log(this.formData);
                 axios.post('todo/create', {form: this.formData})
                     .then((res) => {
                         this.deactivateModal();
@@ -158,7 +159,7 @@
             this.formData.plannedComplitionAt = DateHelper.format(new Date(), 'YYYY-MM-DD HH:mm:ss');
 
             calendar.on('select', (event) => {
-                this.formData.planned_complition_at = DateHelper.format(event.data.date, 'YYYY-MM-DD HH:mm:ss');
+                this.formData.plannedComplitionAt = DateHelper.format(event.data.date, 'YYYY-MM-DD HH:mm:ss');
             })
         },
         mixins: [validationMixinAsset],

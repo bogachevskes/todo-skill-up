@@ -16,7 +16,7 @@ export default class TodoItem extends Configurable
      */
     public printPlannedCompilationAt(): string
     {
-        return DateHelper.printFormatted(this.plannedComplitionAt);
+        return DateHelper.printFormatted(this.plannedComplitionAt, 'DD.MM.YYYY');
     }
 
     /**
@@ -26,7 +26,7 @@ export default class TodoItem extends Configurable
      */
     public printCreatedAt(): string
     {
-        return DateHelper.printFormatted(this.createdAt);
+        return DateHelper.printFormatted(this.createdAt, 'DD.MM.YYYY');
     }
 
     public prinDescription(defaultContent: string = 'Не указано'): string
