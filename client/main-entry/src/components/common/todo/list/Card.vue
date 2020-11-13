@@ -23,7 +23,9 @@
                 </span>
             </p>
             <p class="card-footer-item">
-                <span class="button is-danger">
+                <span
+                    class="button is-danger"
+                    @click="deleteCard(card.id)">
                     Удалить
                 </span>
             </p>
@@ -36,7 +38,7 @@
 <script>
 
     export default {
-        props: ['card']
+        props: ['card', 'deleteCard'],
     }
 
 </script>
