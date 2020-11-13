@@ -132,7 +132,6 @@
                 }
             },
             handleCardProcessing: function () {
-                console.log(this.formData);
                 axios.post('todo/create', {form: this.formData})
                     .then((res) => {
                         this.deactivateModal();

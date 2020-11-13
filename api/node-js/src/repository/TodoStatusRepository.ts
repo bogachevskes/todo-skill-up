@@ -4,11 +4,22 @@ const INITIAL_DEFAULT_FLAG = 1;
 
 export default class TodoStatusRepository
 {
+    /**
+     * Возвращает модель статуса по умолчанию.
+     * 
+     * @return Promise<TodoStatus|undefined>
+     */
     public static async getInitialStatusModel(): Promise<TodoStatus|undefined>
     {
         return await TodoStatus.findOne({where: { initialDefault: INITIAL_DEFAULT_FLAG }});
     }
     
+    /**
+     * Возвращает идентификатор
+     * статуса по умолчанию при создании задачи.
+     * 
+     * @return Promise<number>
+     */
     public static async getInitialtStatusId(): Promise<number>
     {
         const initial = await this.getInitialStatusModel();
@@ -25,4 +36,5 @@ export default class TodoStatusRepository
         
         throw new Error('Необходимо создать хотя бы 1 статус');
     }
+
 }

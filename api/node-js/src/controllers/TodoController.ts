@@ -4,6 +4,7 @@ import BadRequest from '../core/Exceptions/BadRequest';
 import User from '../entity/User';
 import TodoItem from '../entity/TodoItem';
 import UserRepository from '../repository/UserRepository';
+import TodoItemRepository from '../repository/TodoItemRepository';
 
 export default class TodoController extends CrudController
 {
@@ -68,11 +69,7 @@ export default class TodoController extends CrudController
      */
     protected async delete(req: Request): Promise<boolean>
     {
-        this.defineUserRepo(req);
-        
-        return new Promise(function(resolve, reject) {
-            return resolve(true);
-        });
+        return await TodoItemRepository.deleteById(req.body.id);
     }
 
 }
