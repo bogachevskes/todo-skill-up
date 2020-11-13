@@ -7,11 +7,14 @@
                 {{card.name}}
             </p>
             <p class="subtitle" style="color:black">
+                <u>Описание:</u><br>
+                {{ card.prinDescription() }}
+            </p>
+            <div class="content">
                 Плановая дата выполнения:<br>{{ card.printPlannedCompilationAt() }}
                 <br>
-                <br>
                 Создано:<br>{{ card.printCreatedAt() }}
-            </p>
+            </div>
         </div>
         <footer class="card-footer">
             <p class="card-footer-item">

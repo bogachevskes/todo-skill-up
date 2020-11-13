@@ -6,6 +6,8 @@ export default class TodoItem extends Configurable
     public plannedComplitionAt: string;
 
     public createdAt: string;
+
+    public description: string
     
     /**
      * Выводит читаемую дату выполнения.
@@ -25,6 +27,11 @@ export default class TodoItem extends Configurable
     public printCreatedAt(): string
     {
         return DateHelper.printFormatted(this.createdAt);
+    }
+
+    public prinDescription(defaultContent: string = 'Не указано'): string
+    {
+        return this.description || defaultContent
     }
     
     /**
