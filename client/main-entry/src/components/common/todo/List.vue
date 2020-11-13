@@ -35,7 +35,6 @@
         },
         methods: {
             deleteCard: function (id) {
-                console.log(id);
                 axios.delete('todo/delete', { data: { id } })
                     .then(() => {
                         this.$store.dispatch('updateCardsList', this.$userStorage);
