@@ -23,6 +23,7 @@
                         :key="index"
                         :card="card"
                         :deleteCard="deleteCard"
+                        :editCard="editCard"
                     ></card-item>
                 </div>
             </div>
@@ -61,9 +62,15 @@
             addCard: function () {
                 eventBus.showCardManageModal(
                         TodoItem.getInstance(),
-                        'Добавить задачу'
+                        'create'
                     );
             },
+            editCard: function (card) {
+                eventBus.showCardManageModal(
+                        card,
+                        'update'
+                    );
+            }
         },
         beforeCreate: function () {
             this.$store.dispatch('updateCardsList', this.$userStorage);

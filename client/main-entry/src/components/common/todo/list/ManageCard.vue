@@ -90,14 +90,17 @@
     import { eventBus } from '@store/eventBus';
     import events from '@config/events';
 
+    const CASE_CREATE = 'create';
+    const CASE_EDIT = 'update';
+
     export default {
         data: function () {
             return {
                 formData: {
 
                 },
+                action: null,
                 isModalActive: 0,
-                modalHeadingText: null,
                 lengthRules: {
                     name: 5,
                     description: 10,
@@ -106,12 +109,10 @@
         },
         methods: {
             ...inputMethods,
-            activateModal: function (modalHeadingText) {
-                this.modalHeadingText = modalHeadingText;
+            activateModal: function () {
                 this.isModalActive = 1;
             },
             deactivateModal: function () {
-                this.modalHeadingText = null;
                 this.isModalActive = 0;
             },
             flushFormData: function () {
@@ -119,15 +120,48 @@
                     this.formData[item] = null;
                 }
             },
-            handleCardProcessing: function () {
-                console.log(this.formData);
+            executeCreation: function () {
                 axios.post('todo/create', {form: this.formData})
-                    .then((res) => {
-                        this.deactivateModal();
-                        this.flushFormData();
-                        this.$store.dispatch('updateCardsList', this.$userStorage);
-                    });
+                    .then(
+                            res => this.onCardProcessingComplete()
+                        );
             },
+            executeUpdating: function () {
+                axios.put('todo/update', {form: this.formData})
+                    .then(
+                            res => this.onCardProcessingComplete()
+                        );
+            },
+            onCardProcessingComplete: function () {
+                this.deactivateModal();
+                this.flushFormData();
+                this.$store.dispatch('updateCardsList', this.$userStorage);
+            },
+            handleCardProcessing: function () {
+                
+                switch (this.action) {
+                    case CASE_CREATE:
+                        this.executeCreation();
+                        return;
+                    case CASE_EDIT:
+                        this.executeUpdating();
+                        return;
+                }
+                
+                throw new Error('Handling is not defined');
+            },
+        },
+        computed: {
+            modalHeadingText: function () {
+                switch (this.action) {
+                    case CASE_CREATE:
+                        return 'Создать задачу';
+                    case CASE_EDIT:
+                        return 'Редактировать задачу';
+                }
+
+                return 'Не определено';
+            }
         },
         mounted: function () {
             const calendar = bulmaCalendar.attach(
@@ -148,10 +182,11 @@
                 this.formData.plannedComplitionAt = DateHelper.format(event.data.date, 'YYYY-MM-DD HH:mm:ss');
             });
 
-            eventBus.$on(events.SHOW_CARD_MANAGE_MODAL, (card, actionName) => {
+            eventBus.$on(events.SHOW_CARD_MANAGE_MODAL, (card, action) => {
+                this.action = action;
                 this.formData = {...card};
 
-                this.activateModal(actionName);
+                this.activateModal(action);
             });
         },
         mixins: [validationMixinAsset],

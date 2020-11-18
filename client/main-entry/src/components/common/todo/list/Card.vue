@@ -18,7 +18,9 @@
         </div>
         <footer class="card-footer">
             <p class="card-footer-item">
-                <span class="button is-warning">
+                <span
+                    class="button is-warning"
+                    @click="editCard(card)">
                     Изменить
                 </span>
             </p>
@@ -38,7 +40,7 @@
 <script>
 
     export default {
-        props: ['card', 'deleteCard'],
+        props: ['card', 'deleteCard', 'editCard'],
     }
 
 </script>

@@ -13,8 +13,8 @@ export const eventBus = new Vue({
         hideInviteIntro: function() {
             this.$emit(events.HIDE_INTRO);
         },
-        showCardManageModal: function (formData, actionName) {
-            this.$emit(events.SHOW_CARD_MANAGE_MODAL, formData, actionName);
+        showCardManageModal: function (formData, action) {
+            this.$emit(events.SHOW_CARD_MANAGE_MODAL, formData, action);
         },
     },
 });

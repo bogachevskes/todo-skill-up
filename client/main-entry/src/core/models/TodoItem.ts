@@ -3,15 +3,15 @@ import DateHelper from '../helpers/DateHelper';
 
 export default class TodoItem extends Configurable
 {
-    public id: number|null = null;
+    public id: number|null;
 
-    public name: string = '';
+    public name: string;
 
-    public description: string = '';
+    public description: string;
     
-    public plannedComplitionAt: string = '';
+    public plannedComplitionAt: string;
 
-    public createdAt: string = '';
+    public createdAt: string;
     
     /**
      * Выводит читаемую дату выполнения.
