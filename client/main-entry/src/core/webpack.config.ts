@@ -58,6 +58,7 @@ module.exports = {
             '@axios': path.resolve(__dirname, '../src/axios'),
             '@helpers': path.resolve(__dirname, '../src/core/helpers'),
             '@config': path.resolve(__dirname, '../src/core/config'),
+            '@models': path.resolve(__dirname, '../src/core/models'),
             '@common-traits': path.resolve(__dirname, '../src/common/traits'),
         },
         extensions: ['*', '.ts', '.js', '.vue', '.json']

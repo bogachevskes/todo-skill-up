@@ -75,18 +75,6 @@
                 </footer>
             </div>
         </div>
-        <div class="column is-3 has-background-white">
-            <aside class="menu">
-                <p class="menu-label">
-                    Возможности
-                </p>
-                <ul class="menu-list">
-                    <li class="is-right">
-                        <a class="is-active" @click="activateModal('Добавить задачу')">Добавить задачу</a>
-                    </li>
-                </ul>
-            </aside>
-        </div>
     </div>
     
 </template>
@@ -99,14 +87,14 @@
     import axios from '@axios/base';
     import DateHelper from '@helpers/DateHelper';
 
+    import { eventBus } from '@store/eventBus';
+    import events from '@config/events';
+
     export default {
         data: function () {
             return {
                 formData: {
-                    id: null,
-                    name: null,
-                    description: null,
-                    plannedComplitionAt: null,
+
                 },
                 isModalActive: 0,
                 modalHeadingText: null,
@@ -156,11 +144,15 @@
                 }
             )[0];
 
-            this.formData.plannedComplitionAt = DateHelper.format(new Date(), 'YYYY-MM-DD HH:mm:ss');
-
             calendar.on('select', (event) => {
                 this.formData.plannedComplitionAt = DateHelper.format(event.data.date, 'YYYY-MM-DD HH:mm:ss');
-            })
+            });
+
+            eventBus.$on(events.SHOW_CARD_MANAGE_MODAL, (card, actionName) => {
+                this.formData = {...card};
+
+                this.activateModal(actionName);
+            });
         },
         mixins: [validationMixinAsset],
         validations: function() {

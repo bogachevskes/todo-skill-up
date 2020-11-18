@@ -3,11 +3,15 @@ import DateHelper from '../helpers/DateHelper';
 
 export default class TodoItem extends Configurable
 {
-    public plannedComplitionAt: string;
+    public id: number|null = null;
 
-    public createdAt: string;
+    public name: string = '';
 
-    public description: string
+    public description: string = '';
+    
+    public plannedComplitionAt: string = '';
+
+    public createdAt: string = '';
     
     /**
      * Выводит читаемую дату выполнения.
@@ -29,6 +33,12 @@ export default class TodoItem extends Configurable
         return DateHelper.printFormatted(this.createdAt, 'DD.MM.YYYY');
     }
 
+    /**
+     * Возвращает описание.
+     * 
+     * @param  string defaultContent 
+     * @retrun string
+     */
     public prinDescription(defaultContent: string = 'Не указано'): string
     {
         return this.description || defaultContent;
@@ -40,7 +50,7 @@ export default class TodoItem extends Configurable
      * @param  object card
      * @return TodoItem
      */
-    public static getInstance(card): TodoItem
+    public static getInstance(card: object = {}): TodoItem
     {
         return new this(card);
     }

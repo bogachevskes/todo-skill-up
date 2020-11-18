@@ -6,18 +6,15 @@ export const eventBus = new Vue({
     methods: {
         showSuccess: function (heading = 'Выполнено', message = '') {
             this.$emit(events.ON_SUCCESS, heading, message);
-
-            return this;
         },
         showError: function (params, heading = 'Ошибка') {
             this.$emit(events.ON_ERROR, params, heading);
-
-            return this;
         },
         hideInviteIntro: function() {
             this.$emit(events.HIDE_INTRO);
-
-            return this;
-        }
+        },
+        showCardManageModal: function (formData, actionName) {
+            this.$emit(events.SHOW_CARD_MANAGE_MODAL, formData, actionName);
+        },
     },
 });
