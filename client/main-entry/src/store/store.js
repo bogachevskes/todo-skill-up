@@ -9,7 +9,7 @@ export const store = new Vuex.Store({
     state: {
         token: null,
         userId: null,
-        cards: [],
+        groups: [],
     },
     getters: {
         getToken: function (state) {
@@ -27,21 +27,21 @@ export const store = new Vuex.Store({
             state.token = userData.token;
             state.userId = userData.userId;
         },
-        setUserCards: function (state, cards) {
-            state.cards = cards;
+        setUserGroups: function (state, groups) {
+            state.groups = groups;
         },
     },
     actions: {
         setUserData: function ({commit}, userData) {
             commit('setUserState', userData);
         },
-        setCards: function ({commit}, cards) {
-            commit('setUserCards', cards);
+        setGroups: function ({commit}, groups) {
+            commit('setUserGroups', groups);
         },
-        updateCardsList: function ({dispatch}, userStorage) {
+        updateGroupsList: function ({dispatch}, userStorage) {
             userStorage.loadTodoItems(() => {
                 dispatch(
-                        'setCards',
+                        'setGroups',
                         userStorage.getTodoItems()
                     );
             });

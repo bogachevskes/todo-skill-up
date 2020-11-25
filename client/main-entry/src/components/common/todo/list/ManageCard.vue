@@ -135,7 +135,7 @@
             onCardProcessingComplete: function () {
                 this.deactivateModal();
                 this.flushFormData();
-                this.$store.dispatch('updateCardsList', this.$userStorage);
+                this.$store.dispatch('updateGroupsList', this.$userStorage);
             },
             handleCardProcessing: function () {
                 

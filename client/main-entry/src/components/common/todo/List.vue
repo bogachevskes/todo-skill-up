@@ -4,8 +4,8 @@
             <div class="container">
                 <manage-card-item></manage-card-item>
                 <div class="columns">
-                    <div class="column is-3 has-background-white">
-                        <aside class="menu">
+                    <div class="column is-3">
+                        <aside class="menu has-background-white px-3 py-3">
                             <p class="menu-label">
                                 Возможности
                             </p>
@@ -17,14 +17,14 @@
                         </aside>
                     </div>
                 </div>
-                <div class="columns is-vcentered">
-                    <card-item
-                        v-for="(card, index) in cards"
+                <div class="columns">
+                    <group-item
+                        v-for="(group, index) in groups"
                         :key="index"
-                        :card="card"
+                        :group="group"
                         :deleteCard="deleteCard"
                         :editCard="editCard"
-                    ></card-item>
+                    ></group-item>
                 </div>
             </div>
         </div>
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-    import Card from './list/Card';
+    import Group from './list/Group';
     import ManageCard from './list/ManageCard';
 
     import axios from '@axios/base';
@@ -45,18 +45,18 @@
     export default {
         computed: {
             ...mapState([
-                'cards',
+                'groups',
             ]),
         },
         components: {
-            'card-item': Card,
+            'group-item': Group,
             'manage-card-item': ManageCard,
         },
         methods: {
             deleteCard: function (id) {
                 axios.delete('todo/delete', { data: { id } })
                     .then(() => {
-                        this.$store.dispatch('updateCardsList', this.$userStorage);
+                        this.$store.dispatch('updateGroupsList', this.$userStorage);
                     });
             },
             addCard: function () {
@@ -73,7 +73,7 @@
             }
         },
         beforeCreate: function () {
-            this.$store.dispatch('updateCardsList', this.$userStorage);
+            this.$store.dispatch('updateGroupsList', this.$userStorage);
         },
     }
 </script>

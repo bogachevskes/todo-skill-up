@@ -37,9 +37,9 @@ export default class TodoItem extends Configurable
      * Возвращает описание.
      * 
      * @param  string defaultContent 
-     * @retrun string
+     * @return string
      */
-    public prinDescription(defaultContent: string = 'Не указано'): string
+    public printDescription(defaultContent: string = 'Не указано'): string
     {
         return this.description || defaultContent;
     }

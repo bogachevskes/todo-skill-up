@@ -1,7 +1,7 @@
 import axios from '../../axios/base';
 import UserIdentity from '../models/UserIdentity';
 import TodoItem from '../models/TodoItem';
-import TodoItemService from './TodoItemService';
+import TodoGroupsService from './TodoGroupsService';
 
 export default class UserStorageLoader
 {
@@ -101,9 +101,9 @@ export default class UserStorageLoader
     {
         axios.get('todo/list')
         .then(result => {
-            const cards = TodoItemService.createCards(result.data.items);
+            const groups = TodoGroupsService.createGroups(result.data.items);
             
-            this.identity.set('cards', cards);
+            this.identity.set('groups', groups);
 
             if (callback instanceof Function) {
                 callback();
@@ -116,7 +116,7 @@ export default class UserStorageLoader
 
     public getTodoItems(): TodoItem[]
     {
-        return this.identity.get('cards');
+        return this.identity.get('groups');
     }
     
     public static getInstance(): UserStorageLoader
