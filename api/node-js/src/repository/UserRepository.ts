@@ -1,10 +1,10 @@
 import User from '../entity/User';
 import Role from '../entity/Role';
 import TodoItem from '../entity/TodoItem';
+import TodoStatusGroup from '../entity/TodoStatusGroup';
 import UsersRoleRepository from './UsersRoleRepository';
 import TodoItemRepository from './TodoItemRepository';
 import TodoItemInterface from '../entity/base/TodoItemInterface';
-
 
 export default class UserRepository
 {
@@ -89,7 +89,7 @@ export default class UserRepository
     /**
      * Добавить роль.
      * 
-     * @param  role 
+     * @param  Role role 
      * @return Promise<void>
      */
     public async assignRole(role: Role): Promise<void>
@@ -104,7 +104,7 @@ export default class UserRepository
     /**
      * Добавить роль, если ее нет.
      * 
-     * @param  role 
+     * @param  Role role 
      * @return Promise<boolean>
      */
     public async assignRoleIfNotExists(role: Role): Promise<boolean>
@@ -121,7 +121,7 @@ export default class UserRepository
     /**
      * Удалить роль если назначена.
      * 
-     * @param  role
+     * @param  Role role
      * @return Promise<boolean>
      */
     public async unsetRoleIfExists(role: Role): Promise<boolean>
@@ -140,11 +140,26 @@ export default class UserRepository
      * 
      * @return Promise<TodoItem[]>
      */
-    public async getTodos(): Promise<TodoItem[]>
+    public async getTodoes(): Promise<TodoItem[]>
     {
         return TodoItemRepository.findByUserId(this.user.id);
     }
 
+    /**
+     * Возвращает задания
+     * пользователя группированные по статусам.
+     */
+    public async getTodoesByStatusGroups(): Promise<TodoStatusGroup[]>
+    {
+        return await TodoItemRepository.getTodoesGroupedByStatuses(this.user.id);
+    }
+
+    /**
+     * Добавление задания.
+     * 
+     * @param  TodoItemInterface data
+     * @return Promise<TodoItem>
+     */
     public async addTodoItem(data: TodoItemInterface): Promise<TodoItem>
     {
         data.userId = this.user.id;

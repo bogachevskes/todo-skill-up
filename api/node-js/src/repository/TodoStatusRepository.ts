@@ -20,7 +20,7 @@ export default class TodoStatusRepository
      * 
      * @return Promise<number>
      */
-    public static async getInitialtStatusId(): Promise<number>
+    public static async getInitialStatusId(): Promise<number>
     {
         const initial = await this.getInitialStatusModel();
 

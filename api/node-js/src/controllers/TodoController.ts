@@ -37,7 +37,7 @@ export default class TodoController extends CrudController
     {
         this.defineUserRepo(req);
         
-        return await this.userRepo.getTodos();
+        return await this.userRepo.getTodoesByStatusGroups();
     }
 
     /**

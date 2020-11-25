@@ -1,7 +1,10 @@
 import { SelectQueryBuilder } from 'typeorm';
 import TodoItem from '../entity/TodoItem';
+import TodoStatus from '../entity/TodoStatus';
+import TodoStatusGroup from '../entity/TodoStatusGroup';
 import TodoItemInterface from '../entity/base/TodoItemInterface';
 import TodoStatusRepository from './TodoStatusRepository';
+import TodoStatusGroupRepository from './TodoStatusGroupRepository';
 
 export default class TodoItemRepository
 {
@@ -49,7 +52,7 @@ export default class TodoItemRepository
      */
     public static async createNew(data: TodoItemInterface): Promise<TodoItem>
     {
-        data.statusId = await TodoStatusRepository.getInitialtStatusId();
+        data.statusId = await TodoStatusRepository.getInitialStatusId();
         
         const model = this.loadModel(new TodoItem, data);
 
@@ -72,5 +75,26 @@ export default class TodoItemRepository
             .execute();
 
         return true;
+    }
+
+    /**
+     * Возвращает группированные
+     * задания пользователя по статусам.
+     * 
+     * @param  number userId 
+     * @return Promise<TodoStatusGroup[]>
+     */
+    public static async getTodoesGroupedByStatuses(userId: number): Promise<TodoStatusGroup[]>
+    {
+        const statusGroups: TodoStatusGroup[] = [];
+
+        const statuses = await TodoStatus.find();
+
+        for (const status of statuses) {
+            const statusGroup: TodoStatusGroup = await TodoStatusGroupRepository.createGroup(status, userId);
+            statusGroups.push(statusGroup);
+        }
+
+        return statusGroups;
     }
 }
