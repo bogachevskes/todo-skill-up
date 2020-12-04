@@ -33,8 +33,8 @@ export default class UsersRoleRepository
     /**
      * Есть роль у пользователя?
      * 
-     * @param  userId 
-     * @param  roleId
+     * @param  number userId 
+     * @param  number roleId
      * @return Promise<void>
      */
     public static async hasRole(userId: number, roleId: number): Promise<boolean>
@@ -47,13 +47,30 @@ export default class UsersRoleRepository
     }
 
     /**
-     * @param  userId 
-     * @param  roleId
+     * @param  number userId 
+     * @param  number roleId
      * @return Promise<void>
      */
     public static async hasNoRole(userId: number, roleId: number): Promise<boolean>
     {
         return await ! this.hasRole(userId, roleId);
+    }
+
+    /**
+     * Возвращает имена ролей пользователя.
+     * 
+     * @param  number userId
+     * @return Promise<string[]>
+     */
+    public static async getUserRolesNames(userId: number): Promise<string[]>
+    {
+        const result = await this.getQueryBuilder()
+            .select('role.name')
+            .leftJoinAndSelect('user_role.roles', 'role')
+            .where('user_role.usersId IN (:userId)', { userId })
+            .getRawMany();
+
+        return result.map(role => role.name);
     }
 
 }

@@ -9,7 +9,7 @@ export default abstract class CrudController extends Controller
      * @param req
      * @return Promise<object[]>
      */
-    protected abstract async list(req: Request): Promise<object[]>
+    protected abstract async list(req: Request): Promise<any[]>
 
     /**
      * @param req

@@ -4,6 +4,7 @@ import TodoItem from '../entity/TodoItem';
 import TodoStatusGroup from '../entity/TodoStatusGroup';
 import UsersRoleRepository from './UsersRoleRepository';
 import TodoItemRepository from './TodoItemRepository';
+import RolePermissionsRepository from './RolePermissionsRepository';
 import TodoItemInterface from '../entity/base/TodoItemInterface';
 
 export default class UserRepository
@@ -165,6 +166,23 @@ export default class UserRepository
         data.userId = this.user.id;
         
         return TodoItemRepository.createNew(data);
+    }
+
+    /**
+     * Возвращает имена
+     * разрешений пользователя.
+     * 
+     * @return Promise<string[]>
+     */
+    public async getPermissionNames(): Promise<string[]>
+    {
+        if (! await this.hasRoles()) {
+            return new Promise(resolve => resolve([]));
+        }
+        
+        const rolesNames = await UsersRoleRepository.getUserRolesNames(this.user.id);
+        
+        return RolePermissionsRepository.listRolePermissionNames(rolesNames);
     }
 
 }
