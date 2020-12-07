@@ -9,25 +9,25 @@ export default abstract class CrudController extends Controller
      * @param req
      * @return Promise<object[]>
      */
-    protected abstract async list(req: Request): Promise<any[]>
+    protected abstract list(req: Request): Promise<any[]>
 
     /**
      * @param req
      * @return Promise<object>
      */
-    protected abstract async create(req: Request): Promise<object>
+    protected abstract create(req: Request): Promise<object>
 
     /**
      * @param req
      * @return Promise<object>
      */
-    protected abstract async update(req: Request): Promise<object>
+    protected abstract update(req: Request): Promise<object>
 
     /**
      * @param req
      * @return Promise<boolean>
      */
-    protected abstract async delete(req: Request): Promise<boolean>
+    protected abstract delete(req: Request): Promise<boolean>
     
     /**
      * @see Controller

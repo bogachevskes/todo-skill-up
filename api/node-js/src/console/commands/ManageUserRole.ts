@@ -65,6 +65,6 @@ export default abstract class ManageUserRole extends BaseCommand
     /**
      * @see BaseCommand
      */
-    protected abstract async handle(): Promise<void>
+    protected abstract handle(): Promise<void>
 
 }
