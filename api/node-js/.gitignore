@@ -1,4 +1,0 @@
-dist
-node_modules
-runtime/logs/*
-*.log
