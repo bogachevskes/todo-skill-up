@@ -1,0 +1,56 @@
+import Role from '../entity/Role';
+
+export default class RoleRepository
+{
+    /**
+     * Поиск по ид.
+     * 
+     * @param  number id
+     * @return Promise<Role|null>
+     */
+    public static async findById(id: number): Promise<Role|null>
+    {
+        const role = await Role.findOne({ where: { id } });
+
+        if (role instanceof Role) {
+            return role;
+        }
+
+        return null;
+    }
+
+    /**
+     * Поиск по имени.
+     * 
+     * @param  string name
+     * @return Promise<Role|null>
+     */
+    public static async findByName(name: string): Promise<Role|null>
+    {
+        const role = await Role.findOne({where: { name }});
+
+        if (role instanceof Role) {
+            return role;
+        }
+
+        return null;
+    }
+
+    /**
+     * Создание нового пользователя.
+     * 
+     * @param  string name
+     * @return Promise<Role|null>
+     */
+    public static async createNew(name: string): Promise<Role|null>
+    {
+        const role = new Role;
+
+        role.name = name;
+
+        await role.save();
+
+        return role;
+    }
+
+}
