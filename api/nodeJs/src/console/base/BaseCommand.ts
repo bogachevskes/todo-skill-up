@@ -45,7 +45,7 @@ export default abstract class BaseCommand implements CommandInterface
         importantKeys.forEach((element) => {
             const value = this.context.get(element);
 
-            if (! value.length) {
+            if (! Boolean(value)) {
                 this.throwValidationError(`Значение ${element} обязательно`);
             }
         });

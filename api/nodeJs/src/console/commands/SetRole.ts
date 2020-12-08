@@ -1,7 +1,7 @@
 import ManageUserRole from './ManageUserRole';
 import UserRepository from '../../repository/UserRepository';
 
-export default class SetRoles extends ManageUserRole
+export default class SetRole extends ManageUserRole
 {
     /**
      * @see BaseCommand

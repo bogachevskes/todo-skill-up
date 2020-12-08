@@ -24,7 +24,7 @@ export default class TodoStatus extends BaseEntity
         comment: 'Статус по умолчанию при создании задачи',
         width: 1,
       })
-    public initialDefault: number;
+    public initialDefault: number|null;
 
     @Column("timestamp", {
         name: 'created_at',

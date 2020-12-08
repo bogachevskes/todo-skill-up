@@ -1,9 +1,18 @@
+import { SelectQueryBuilder } from 'typeorm';
 import TodoStatus from '../entity/TodoStatus';
 
 const INITIAL_DEFAULT_FLAG = 1;
 
 export default class TodoStatusRepository
 {
+    /**
+     * @return SelectQueryBuilder<TodoItem>
+     */
+    protected static getQueryBuilder(): SelectQueryBuilder<TodoStatus>
+    {
+        return TodoStatus.createQueryBuilder('todo_status');
+    }
+    
     /**
      * Возвращает модель статуса по умолчанию.
      * 
@@ -35,6 +44,41 @@ export default class TodoStatusRepository
         }
         
         throw new Error('Необходимо создать хотя бы 1 статус');
+    }
+
+    /**
+     * Сброс флага изначального статуса.
+     * 
+     * @return Promise<void>
+     */
+    public static async flushInitialDefaults(): Promise<void>
+    {
+        await this.getQueryBuilder()
+            .update(TodoStatus) 
+            .set({ initialDefault: null })
+            .execute();
+    }
+
+    /**
+     * Создание нового статуса.
+     * 
+     * @param  string name
+     * @return Promise<TodoStatus>
+     */
+    public static async createNew(name: string, initialDefault: boolean = false): Promise<TodoStatus>
+    {
+        const model = new TodoStatus;
+
+        model.name = name;
+
+        if (initialDefault) {
+            await this.flushInitialDefaults();
+            model.initialDefault = 1;
+        }
+
+        await model.save();
+
+        return model;
     }
 
 }

@@ -37,12 +37,12 @@ export default class RoleRepository
     }
 
     /**
-     * Создание нового пользователя.
+     * Создание новой роли.
      * 
      * @param  string name
-     * @return Promise<Role|null>
+     * @return Promise<Role>
      */
-    public static async createNew(name: string): Promise<Role|null>
+    public static async createNew(name: string): Promise<Role>
     {
         const role = new Role;
 
@@ -51,6 +51,11 @@ export default class RoleRepository
         await role.save();
 
         return role;
+    }
+
+    public static async createPermission(role: Role)
+    {
+        
     }
 
 }

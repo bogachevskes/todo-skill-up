@@ -50,7 +50,7 @@ export default abstract class ManageUserRole extends BaseCommand
             this.throwValidationError(`Роль ${roleName} не найдена`);
         }
 
-        this.role = role!;
+        this.role = role;
     }
     
     /**
