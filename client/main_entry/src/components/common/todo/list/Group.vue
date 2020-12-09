@@ -4,6 +4,7 @@
         <nav class="panel">
             <p class="panel-heading has-background-primary has-text-primary-light">
                 {{ group.status.name }}
+                <button class='button is-warning is-small ml-4' v-if="group.isInitialDefault()" @click="addCard">Добавить задачу</button>
             </p>
             <div class="panel-block has-background-light">
                 <div class="container">
@@ -30,6 +31,9 @@
 
     import Card from './Card';
 
+    import TodoItem from '@models/TodoItem';
+    import { eventBus } from '@store/eventBus';
+
     export default {
         props: ['group', 'deleteCard', 'editCard'],
         components: {
@@ -46,6 +50,12 @@
         methods: {
             getGroups: function () {
                 console.log(this.groups);
+            },
+            addCard: function () {
+                eventBus.showCardManageModal(
+                        TodoItem.getInstance(),
+                        'create'
+                    );
             },
         },
     }

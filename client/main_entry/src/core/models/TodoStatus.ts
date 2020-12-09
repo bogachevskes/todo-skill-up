@@ -2,6 +2,8 @@ import Configurable from '../base/Configurable';
 
 export default class TodoStatus extends Configurable
 {
+    public initialDefault: number;
+    
     /**
      * Создает новую модель.
      * 

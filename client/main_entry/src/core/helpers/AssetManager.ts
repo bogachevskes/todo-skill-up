@@ -76,9 +76,9 @@ export default class AssetManager
             cssExpr = new RegExp(`\.${TYPE_CSS}`);
 
         if (jsExpr.test(fileName)) {
-            return `<script type="text/javascript" src="./${fileName}"></script>`;
+            return `<script type="text/javascript" src="/${fileName}"></script>`;
         } else if (cssExpr.test(fileName)) {
-            return `<link href="./${fileName}" rel="stylesheet">`;
+            return `<link href="/${fileName}" rel="stylesheet">`;
         }
 
         throw new Error("Tag can't be generated");

@@ -9,6 +9,7 @@ export default class UserIdentity extends CommandContext
             token: null,
             userId: null,
             groups: [],
+            permissions: [],
         });
     }
 }

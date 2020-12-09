@@ -114,6 +114,16 @@ export default class UserStorageLoader
         });
     }
 
+    public loadPermissions(): void
+    {
+        return axios.get('user-permissions/list')
+            .then(result => {
+                this.identity.set('permissions', result.data.items);
+
+                return Promise.resolve(this.identity.get('permissions'));
+            });
+    }
+
     public getTodoItems(): TodoItem[]
     {
         return this.identity.get('groups');
@@ -127,4 +137,5 @@ export default class UserStorageLoader
 
         return this.instance;
     }
+
 }

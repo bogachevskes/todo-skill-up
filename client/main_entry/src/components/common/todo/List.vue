@@ -3,20 +3,7 @@
         <div class="hero-body">
             <div class="container">
                 <manage-card-item></manage-card-item>
-                <div class="columns">
-                    <div class="column is-3">
-                        <aside class="menu has-background-white px-3 py-3">
-                            <p class="menu-label">
-                                Возможности
-                            </p>
-                            <ul class="menu-list">
-                                <li class="is-right">
-                                    <a class="is-active" @click="addCard">Добавить задачу</a>
-                                </li>
-                            </ul>
-                        </aside>
-                    </div>
-                </div>
+                <actions-item></actions-item>
                 <div class="columns">
                     <group-item
                         v-for="(group, index) in groups"
@@ -34,13 +21,12 @@
 <script>
     import Group from './list/Group';
     import ManageCard from './list/ManageCard';
+    import Actions from '@common-components/Actions';
 
     import axios from '@axios/base';
-    import { mapState } from 'vuex';
+    import { mapState} from 'vuex';
 
     import { eventBus } from '@store/eventBus';
-
-    import TodoItem from '@models/TodoItem';
 
     export default {
         computed: {
@@ -51,6 +37,7 @@
         components: {
             'group-item': Group,
             'manage-card-item': ManageCard,
+            'actions-item': Actions,
         },
         methods: {
             deleteCard: function (id) {
@@ -59,18 +46,12 @@
                         this.$store.dispatch('updateGroupsList', this.$userStorage);
                     });
             },
-            addCard: function () {
-                eventBus.showCardManageModal(
-                        TodoItem.getInstance(),
-                        'create'
-                    );
-            },
             editCard: function (card) {
                 eventBus.showCardManageModal(
                         card,
                         'update'
                     );
-            }
+            },
         },
         beforeCreate: function () {
             this.$store.dispatch('updateGroupsList', this.$userStorage);

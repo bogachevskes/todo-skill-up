@@ -25,4 +25,14 @@ export default class TodoGroup extends Configurable implements TodoGroupInterfac
         
         return new this(configuration);
     }
+
+    /**
+     * Группа по умолчанию?
+     * 
+     * @return boolean
+     */
+    public isInitialDefault(): boolean
+    {
+        return Boolean(this.status.initialDefault);
+    }
 }

@@ -10,6 +10,7 @@ export const store = new Vuex.Store({
         token: null,
         userId: null,
         groups: [],
+        permissions:[],
     },
     getters: {
         getToken: function (state) {
@@ -20,7 +21,16 @@ export const store = new Vuex.Store({
         },
         isLogged: function (_state, getters) {
             return ! getters.notLogged;
-        }
+        },
+        hasPermission: function (state, permissionName) {
+            return state.permissions.includes(permissionName);
+        },
+        canManageUsers: function (state) {
+            return state.permissions.includes('canManageUsers');
+        },
+        canManageUsersTodoes: function (state) {
+            return state.permissions.includes('canManageUsersTodoes');
+        },
     },
     mutations: {
         setUserState: function (state, userData) {
@@ -30,10 +40,16 @@ export const store = new Vuex.Store({
         setUserGroups: function (state, groups) {
             state.groups = groups;
         },
+        setUserPermissions: function (state, permissions) {
+            state.permissions = permissions;
+        },
     },
     actions: {
         setUserData: function ({commit}, userData) {
             commit('setUserState', userData);
+        },
+        setPermissions: function ({commit}, permissions) {
+            commit('setUserPermissions', permissions);
         },
         setGroups: function ({commit}, groups) {
             commit('setUserGroups', groups);

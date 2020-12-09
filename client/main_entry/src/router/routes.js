@@ -5,7 +5,10 @@ const ROUTE_TODO_LIST = 'todo-list';
 import Home from '@common-components/Home';
 import LoginPage from '@common-components/LoginPage';
 import InviteActions from '@login-page-components/InviteActions';
-import TodoListPage from '@common-components/todo/List'
+import TodoListPage from '@common-components/todo/List';
+import Manage from '@common-components/manage/Manage';
+import UsersTodoes from '@common-components/manage/components/UsersTodoes';
+import Users from '@common-components/manage/components/Users';
 
 const routes = [
     {
@@ -31,6 +34,23 @@ const routes = [
             default: TodoListPage,
             'invite-actions': InviteActions,
         },
+    },
+    {
+        path: '/manage',
+        components: {
+            default: Manage,
+            'invite-actions': InviteActions,
+        },
+        children: [
+            {
+              path: 'todoes-list',
+              component: UsersTodoes
+            },
+            {
+                path: 'users',
+                component: Users,
+            },
+        ]
     }
 ];
 

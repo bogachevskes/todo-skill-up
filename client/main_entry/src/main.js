@@ -51,5 +51,11 @@ new Vue({
         this.$store.dispatch('setUserData', this.$userStorage.getUserData());
 
         axios.defaults.headers.common['X-BASE-AUTH'] = this.$store.getters.getToken;
+
+        if (this.$store.getters.isLogged) {
+            this.$userStorage.loadPermissions()
+                .then(permissions => this.$store.dispatch('setPermissions', permissions));
+        }
+
     }
 });
