@@ -2,6 +2,7 @@ import { Column, Entity, PrimaryGeneratedColumn, Index, ManyToMany, JoinTable, B
 import User from './User';
 
 @Index('idx-roles_name', ['name'])
+@Index('idx-roles_description', ['description'])
 @Index('idx-roles_created_at', ['createdAt'])
 @Index('idx-roles_updated_at', ['updatedAt'])
 @Entity('roles')
@@ -16,6 +17,13 @@ export default class Roles extends BaseEntity
         length: 10,
     })
     name: string;
+
+    @Column('varchar', {
+        name: 'description',
+        comment: 'Описание',
+        length: 50,
+    })
+    description: string;
 
     @Column("timestamp", {
         name: 'created_at',

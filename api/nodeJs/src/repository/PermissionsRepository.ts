@@ -37,13 +37,15 @@ export default class PermissionsRepository
      * Создание нового разрешения.
      * 
      * @param  string name
+     * @param  string description
      * @return Promise<Permission>
      */
-    public static async createNew(name: string): Promise<Permission>
+    public static async createNew(name: string, description: string): Promise<Permission>
     {
         const model = new Permission;
 
         model.name = name;
+        model.description = description;
 
         await model.save();
 

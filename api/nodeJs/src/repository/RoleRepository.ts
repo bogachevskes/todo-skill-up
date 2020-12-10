@@ -40,13 +40,15 @@ export default class RoleRepository
      * Создание новой роли.
      * 
      * @param  string name
+     * @param  string description
      * @return Promise<Role>
      */
-    public static async createNew(name: string): Promise<Role>
+    public static async createNew(name: string, description: string): Promise<Role>
     {
         const role = new Role;
 
         role.name = name;
+        role.description = description;
 
         await role.save();
 

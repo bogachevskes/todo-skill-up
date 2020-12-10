@@ -80,11 +80,17 @@ export default class SeedData extends BaseCommand
             '$2a$12$lAR1FHRxNOQWADxnhmQQk.RpHpTsO61h36VXnE4z2G8m1M5/481jK' //admin
         );
 
-        this.role = await RoleRepository.createNew('admin');
+        this.role = await RoleRepository.createNew('admin', 'Администратор');
 
-        this.manageUsersPermission = await PermissionsRepository.createNew(PermissionsRepository.PERMISSION_CAN_MANAGE_USERS);
+        this.manageUsersPermission = await PermissionsRepository.createNew(
+                PermissionsRepository.PERMISSION_CAN_MANAGE_USERS,
+                'Управление пользователями'
+            );
 
-        this.manageUsersTodoesPermissions = await PermissionsRepository.createNew(PermissionsRepository.PERMISSION_CAN_MANAGE_USERS_TODOES);
+        this.manageUsersTodoesPermissions = await PermissionsRepository.createNew(
+                PermissionsRepository.PERMISSION_CAN_MANAGE_USERS_TODOES,
+                'Управление списком задач пользователей'
+            );
 
         await this.assignRoles();
 
