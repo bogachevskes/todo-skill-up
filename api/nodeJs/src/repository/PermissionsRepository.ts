@@ -3,6 +3,20 @@ import Permission from '../entity/Permission';
 export default class PermissionsRepository
 {
     /**
+     * Разрешение на управление
+     * пользователями.
+     * @var string
+     */
+    public static PERMISSION_CAN_MANAGE_USERS: string = 'canManageUsers';
+
+    /**
+     * Разрешение на управление
+     * списком зада пользователей.
+     * @var string
+     */
+    public static PERMISSION_CAN_MANAGE_USERS_TODOES: string = 'canManageUsersTodoes';
+    
+    /**
      * Поиск по имени.
      * 
      * @param  string name

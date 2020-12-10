@@ -1,3 +1,4 @@
+import { getRepository } from 'typeorm';
 import User from '../entity/User';
 import Role from '../entity/Role';
 import TodoItem from '../entity/TodoItem';
@@ -14,6 +15,24 @@ export default class UserRepository
     public constructor(user: User)
     {
         this.user = user;
+    }
+
+    /**
+     * Возвращает список всех пользователей.
+     * 
+     * @return Promise<User[]>
+     */
+    public static async all(): Promise<User[]>
+    {
+        return await getRepository(User)
+            .createQueryBuilder('user')
+            .select('user.id', 'id')
+            .addSelect('user.name', 'name')
+            .addSelect('user.email', 'email')
+            .addSelect('user.status', 'status')
+            .addSelect('user.created_at', 'createdAt')
+            .addSelect('user.updated_at', 'updatedAt')
+            .getRawMany();
     }
     
     /**

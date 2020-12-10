@@ -82,9 +82,9 @@ export default class SeedData extends BaseCommand
 
         this.role = await RoleRepository.createNew('admin');
 
-        this.manageUsersPermission = await PermissionsRepository.createNew('canManageUsers');
+        this.manageUsersPermission = await PermissionsRepository.createNew(PermissionsRepository.PERMISSION_CAN_MANAGE_USERS);
 
-        this.manageUsersTodoesPermissions = await PermissionsRepository.createNew('canManageUsersTodoes');
+        this.manageUsersTodoesPermissions = await PermissionsRepository.createNew(PermissionsRepository.PERMISSION_CAN_MANAGE_USERS_TODOES);
 
         await this.assignRoles();
 

@@ -16,6 +16,7 @@ import siteRoutes from './routes/site';
 
 import TodoItemController from './controllers/TodoController';
 import UserPermissionsController from './controllers/UserPermissionsController';
+import AdminUserController from './controllers/admin/AdminUserController';
 
 const dbConf = require('./config/_db');
 
@@ -24,6 +25,8 @@ async function initServer() {
     const todoController = new TodoItemController;
 
     const userPermissionsController = new UserPermissionsController;
+
+    const adminUserController = new AdminUserController;
 
     const PORT          = ConfigService.getPort();
     const SOCKET_PORT   = ConfigService.getSocketPort();
@@ -35,6 +38,7 @@ async function initServer() {
         .use('/auth', authRoutes)
         .use(todoController.getPath(), asyncMiddleware(middleware.authOnly), todoController.getRouter())
         .use(userPermissionsController.getPath(), asyncMiddleware(middleware.authOnly), userPermissionsController.getRouter())
+        .use(adminUserController.getPath(), asyncMiddleware(middleware.authOnly), adminUserController.getRouter())
         .use(siteRoutes)
         .use(errorMiddleware)
         .listen(PORT, () => OutputManager.showServerInit(PORT));
