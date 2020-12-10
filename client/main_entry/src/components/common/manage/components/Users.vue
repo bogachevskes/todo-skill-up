@@ -1,7 +1,7 @@
 <template>
     <div>
         <data-table-item
-            :data="data"
+            :data="users"
             :fields="fields"
         >
             <template slot="status" slot-scope="prop">
@@ -61,20 +61,21 @@
     import { faEye, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
     import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
+    import DateHelper from '@helpers/DateHelper';
+
     library.add(faEye, faEdit, faTrash);
+
+    import axios from '@axios/base';
 
     export default {
         data: function() {
             return {
-                data: [
-                    {
-                        id: 5,
-                        name: 'admin',
-                        email: 'admin@admin.com',
-                        status: 1,
-                    },
-                ],
+                users: [],
                 fields: [
+                    {
+                        name: 'id',
+                        label: '#',
+                    },
                     {
                         name: 'name',
                         label: 'Имя',
@@ -87,6 +88,20 @@
                         name: 'status',
                         label: 'Активный',
                         slot: true,
+                    },
+                    {
+                        name: 'createdAt',
+                        label: 'Дата создания',
+                        callback: data => {
+                            return DateHelper.printFormatted(data.createdAt);
+                        }
+                    },
+                    {
+                        name: 'updatedAt',
+                        label: 'Дата обновления',
+                        callback: data => {
+                            return DateHelper.printFormatted(data.updatedAt);
+                        }
                     },
                     {
                         name: 'actions',
@@ -105,6 +120,12 @@
             printYesNo: function (val) {
                 return val ? 'Да' : 'Нет';
             },
+            loadUsersList: function () {
+                axios.get('/admin/users/list')
+                    .then(result => {
+                        this.users = result.data.items || [];
+                    });
+            },
         },
         computed: {
             ...mapGetters({
@@ -118,6 +139,11 @@
             'data-table-item': DataTable,
             'vb-switch-item': VbSwitch,
             'font-awesome-icon': FontAwesomeIcon,
+        },
+        beforeRouteEnter (to, from, next) {
+              next(vm => {
+                vm.loadUsersList();
+            })
         },
     }
 

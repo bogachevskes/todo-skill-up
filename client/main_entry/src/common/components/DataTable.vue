@@ -73,7 +73,7 @@
         </tbody>
       </table>
     </div>
-    <nav class="pagination is-centered" :class="inputClass" role="navigation" aria-label="pagination" v-if="pagination && !scrollable">
+    <nav class="pagination is-centered mt-1" :class="inputClass" role="navigation" aria-label="pagination" v-if="pagination && !scrollable">
       <a class="pagination-previous" @click="previousPage" :disabled="from - perPage < 0">Предыдущая</a>
       <a class="pagination-next" @click="nextPage"
          :disabled="from + perPage >= filteredData.length">Следующая</a>
