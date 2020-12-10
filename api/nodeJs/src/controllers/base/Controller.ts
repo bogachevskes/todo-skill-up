@@ -78,7 +78,7 @@ export default abstract class Controller
         
         routes.forEach((controller: RouteData) => {
             const
-                action  = this.defineAction(controller.path),
+                action  = this.defineAction(controller.action),
                 path    = this.definePath(controller.path);
 
             this.router[controller.method](path, asyncHandler(this[action]));

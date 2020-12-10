@@ -20,6 +20,8 @@ export default (err: Error, req: Request, res: Response, next: NextFunction): Re
 
     logger.log('error', `Occurred unexpected error => ${err}`);
 
+    console.log(err);
+
     const error = new InternalServerError;
 
     return res.status(error.status)

@@ -1,4 +1,3 @@
-import { getRepository } from 'typeorm';
 import User from '../entity/User';
 import Role from '../entity/Role';
 import TodoItem from '../entity/TodoItem';
@@ -20,19 +19,15 @@ export default class UserRepository
     /**
      * Возвращает список всех пользователей.
      * 
+     * @param  object condition 
      * @return Promise<User[]>
      */
-    public static async all(): Promise<User[]>
+    public static async all(condition: object = {}): Promise<User[]>
     {
-        return await getRepository(User)
-            .createQueryBuilder('user')
-            .select('user.id', 'id')
-            .addSelect('user.name', 'name')
-            .addSelect('user.email', 'email')
-            .addSelect('user.status', 'status')
-            .addSelect('user.created_at', 'createdAt')
-            .addSelect('user.updated_at', 'updatedAt')
-            .getRawMany();
+        return User.find({
+            select: ['name', 'email', 'status', 'createdAt', 'updatedAt'],
+            ...condition,
+        });
     }
     
     /**
@@ -168,6 +163,8 @@ export default class UserRepository
     /**
      * Возвращает задания
      * пользователя группированные по статусам.
+     * 
+     * @return Promise<TodoStatusGroup[]>
      */
     public async getTodoesByStatusGroups(): Promise<TodoStatusGroup[]>
     {

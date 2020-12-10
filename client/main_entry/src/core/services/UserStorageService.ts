@@ -100,18 +100,18 @@ export default class UserStorageLoader
     public loadTodoItems(callback: Function|null): void
     {
         axios.get('todo/list')
-        .then(result => {
-            const groups = TodoGroupsService.createGroups(result.data.items);
-            
-            this.identity.set('groups', groups);
+            .then(result => {
+                const groups = TodoGroupsService.createGroups(result.data.items);
+                
+                this.identity.set('groups', groups);
 
-            if (callback instanceof Function) {
-                callback();
-            }
-        })
-        .catch(error => {
-            // TODO: Добавить хендлер
-        });
+                if (callback instanceof Function) {
+                    callback();
+                }
+            })
+            .catch(error => {
+                // TODO: Добавить хендлер
+            });
     }
 
     public loadPermissions(): void
