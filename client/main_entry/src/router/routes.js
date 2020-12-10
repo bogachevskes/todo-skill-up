@@ -1,6 +1,7 @@
 const ROUTE_HOME = 'home';
 const ROUTE_LOGIN = 'login';
 const ROUTE_TODO_LIST = 'todo-list';
+const ROUTE_USERS_TODOES_LIST = 'user-todoes-list';
 
 import Home from '@common-components/Home';
 import LoginPage from '@common-components/LoginPage';
@@ -43,7 +44,8 @@ const routes = [
         },
         children: [
             {
-              path: 'todoes-list',
+              path: 'user-todoes-list/:id',
+              name: ROUTE_USERS_TODOES_LIST,
               component: UsersTodoes
             },
             {
@@ -58,5 +60,6 @@ export {
     ROUTE_HOME,
     ROUTE_LOGIN,
     ROUTE_TODO_LIST,
+    ROUTE_USERS_TODOES_LIST,
     routes,
 };

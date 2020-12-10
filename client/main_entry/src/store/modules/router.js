@@ -24,16 +24,6 @@ const getters = {
             return routeQuery;
         };
     },
-    getRouteById: (state, getters) => {
-        return (route, id = null, query = {}, hash) => {
-            
-            if (! id && this.$route) {
-                id = this.$route.params.id;
-            }
-            
-            return getters.getRoute(route, {id: id}, { ...query }, hash);
-        };
-    },
     getHomeRoute: function (state, getters) {
         return getters.getRoute(ROUTE_HOME);
     },

@@ -1,13 +1,13 @@
 <template>
     <div>
-        Начать отсюда.
+        Начать отсюда. {{ $route.params.id }}
     </div>
 </template>
 
 <script>
-export default {
+    export default {
 
-}
+    }
 </script>
 
 <style>

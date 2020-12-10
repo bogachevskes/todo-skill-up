@@ -2,7 +2,7 @@
     
     <div class="column is-4">
         <nav class="panel">
-            <p class="panel-heading has-background-primary has-text-primary-light">
+            <p class="panel-heading has-background-primary has-text-primary-light" style="min-height:60px;">
                 {{ group.status.name }}
                 <button class='button is-warning is-small ml-4' v-if="group.isInitialDefault()" @click="addCard">Добавить задачу</button>
             </p>

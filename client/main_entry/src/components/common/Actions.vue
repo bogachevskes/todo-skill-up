@@ -26,16 +26,6 @@
                             Управление пользователями
                         </router-link>
                     </li>
-                    <li v-if="canManageUsersTodoes">
-                        <router-link
-                            to="/manage/todoes-list"
-                            tag="a"
-                            active-class="is-active"
-                            exact
-                        >
-                            Просмотр задач пользователей
-                        </router-link>
-                    </li>
                 </ul>
             </aside>
         </div>
