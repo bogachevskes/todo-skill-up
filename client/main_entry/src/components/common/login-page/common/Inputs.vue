@@ -220,7 +220,10 @@
                         this.setOffLoading('onLoginLoading');
 
                         this.$store.dispatch('setUserData', this.$userStorage.getUserData());
-                        
+
+                        this.$store.dispatch('updateToken');
+                        this.$store.dispatch('updatePermissions', this.$userStorage);
+
                         this.$router.push('/todo-list');
 
                         return this;

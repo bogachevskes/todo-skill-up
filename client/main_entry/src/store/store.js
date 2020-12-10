@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
+import axios from '@axios/base';
+
 import router from './modules/router';
 
 Vue.use(Vuex);
@@ -48,9 +50,6 @@ export const store = new Vuex.Store({
         setUserData: function ({commit}, userData) {
             commit('setUserState', userData);
         },
-        setPermissions: function ({commit}, permissions) {
-            commit('setUserPermissions', permissions);
-        },
         setGroups: function ({commit}, groups) {
             commit('setUserGroups', groups);
         },
@@ -61,7 +60,14 @@ export const store = new Vuex.Store({
                         userStorage.getTodoItems()
                     );
             });
-        }
+        },
+        updateToken: function ({getters}) {
+            axios.defaults.headers.common['X-BASE-AUTH'] = getters.getToken;
+        },
+        updatePermissions: function ({commit}, userComponent) {
+            userComponent.loadPermissions()
+                .then(permissions => commit('setUserPermissions', permissions));
+        },
     },
     modules: {
         router: router,

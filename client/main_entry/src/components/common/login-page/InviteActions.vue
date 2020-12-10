@@ -67,7 +67,7 @@
 
                 this.$store.dispatch('setUserData', this.$userStorage.getUserData());
 
-                this.$router.push('/login');
+                window.location.href = '/login';
             }
         },
     }

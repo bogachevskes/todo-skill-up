@@ -10,8 +10,6 @@ import userStorageService from '@services/UserStorageService';
 
 import MixinLoader from '@helpers/MixinLoader';
 
-import axios from '@axios/base';
-
 Vue.use(VueRouter);
 
 const router = new VueRouter({
@@ -50,12 +48,10 @@ new Vue({
     created: function () {
         this.$store.dispatch('setUserData', this.$userStorage.getUserData());
 
-        axios.defaults.headers.common['X-BASE-AUTH'] = this.$store.getters.getToken;
-
         if (this.$store.getters.isLogged) {
-            this.$userStorage.loadPermissions()
-                .then(permissions => this.$store.dispatch('setPermissions', permissions));
+            this.$store.dispatch('updateToken');
+            this.$store.dispatch('updatePermissions', this.$userStorage);
         }
 
-    }
+    },
 });
