@@ -49,14 +49,14 @@
 
     export default {
         props: {
-            'card': {
+            card: {
                 type: TodoItem,
             },
             deleteCard: {
                 type: Function,
                 default: null,
             },
-            'editCard': {
+            editCard: {
                 type: Function,
                 default: null,
             },
