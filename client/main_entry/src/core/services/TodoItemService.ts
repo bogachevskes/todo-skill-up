@@ -2,6 +2,12 @@ import TodoItem from '../models/TodoItem';
 
 export default class TodoItemService
 {
+    /**
+     * Создает модели туду-заданий.
+     * 
+     * @param  cards 
+     * @return TodoItem[]
+     */
     public static createCards(cards: object[]): TodoItem[]
     {
         const newCards: TodoItem[] = [];

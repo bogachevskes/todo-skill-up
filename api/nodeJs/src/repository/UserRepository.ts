@@ -206,7 +206,7 @@ export default class UserRepository
      * Возвращает
      * туду-задание пользователя.
      * 
-     * @param number cardId
+     * @param  number cardId
      * @return Promise<TodoItem | undefined>
      */
     public async findTodoById(cardId: number): Promise<TodoItem | undefined>

@@ -126,8 +126,8 @@ export default class TodoItemRepository
     /**
      * Обновление модели.
      * 
-     * @param  item 
-     * @param  attributes 
+     * @param  TodoItem item 
+     * @param  object attributes 
      * @return Promise<TodoItem>
      */
     public static async update(item: TodoItem, attributes: object): Promise<TodoItem>

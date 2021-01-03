@@ -3,6 +3,12 @@ import TodoGroupInterface from '../models/base/TodoGroupInterface';
 
 export default class TodoItemService
 {
+    /**
+     * Создает модели групп.
+     * 
+     * @param  groups 
+     * @return TodoGroupInterface[]
+     */
     public static createGroups(groups: TodoGroupInterface[]): TodoGroup[]
     {
         const newGroups: TodoGroup[] = [];

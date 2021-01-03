@@ -7,14 +7,29 @@ import TodoGroupsService from './TodoGroupsService';
 
 export default class UserStorageLoader
 {
+    /**
+     * @var UserStorageLoader
+     */
     public static instance: UserStorageLoader;
 
+    /**
+     * @var Storage
+     */
     protected storage: Storage;
 
+    /**
+     * @var boolean
+     */
     protected wasLoaded: boolean;
 
+    /**
+     * @var UserIdentity
+     */
     protected identity: UserIdentity;
 
+    /**
+     * @var any[]
+     */
     protected identityKeys: any[];
 
     protected constructor() {
@@ -24,37 +39,76 @@ export default class UserStorageLoader
         this.fillFomStorage();
     }
 
+    /**
+     * Получение значений сущности пользователя.
+     * 
+     * @return void
+     */
     protected loadIdentityKeys(): void
     {
         this.identityKeys = this.identity.getKeys();
     }
 
-    protected setWasLoaded (condition: boolean): void
+    /**
+     * Присвоение признака о
+     * загрузке сущности пользователя.
+     * 
+     * @param  boolean condition
+     * @return void
+     */
+    protected setWasLoaded(condition: boolean): void
     {
         this.wasLoaded = condition;
     }
 
+    /**
+     * Установка признака
+     * о загрузке сущности пользователя.
+     * 
+     * @return void
+     */
     protected setStorageLoaded(): void
     {
         this.setWasLoaded(true);
     }
 
+    /**
+     * Сброс признака
+     * о загрузке сущности пользователя.
+     * 
+     * @return void
+     */
     protected setStorageNotLoaded(): void
     {
         this.setWasLoaded(false);
     }
 
+    /**
+     * Проверка признака
+     * загрузки сущности пользователя.
+     * 
+     * @return boolean
+     */
     protected isStorageLoaded(): boolean
     {
         return this.wasLoaded === true;
     }
 
+    /**
+     * @return boolean
+     */
     protected storageNotLoaded(): boolean
     {
         return ! this.isStorageLoaded();
     }
 
-    fillFomStorage(): void
+    /**
+     * Загрузка сущности
+     * пользователя из памяти браузера.
+     * 
+     * @return void
+     */
+    public fillFomStorage(): void
     {
         for (const item of this.identityKeys) {
             
@@ -68,6 +122,13 @@ export default class UserStorageLoader
         this.setStorageLoaded();
     }
 
+    /**
+     * Запись данных сущности
+     * пользователя в память браузера.
+     * 
+     * @param  object data 
+     * @return void
+     */
     public fillStorage(data: object): void
     {
         const keys = Object.keys(data);
@@ -79,6 +140,12 @@ export default class UserStorageLoader
         this.setStorageNotLoaded();
     }
 
+    /**
+     * Возвращает
+     * сущность пользователя.
+     * 
+     * @return object
+     */
     public getUserData(): object
     {
         if (this.storageNotLoaded()) {
@@ -88,18 +155,35 @@ export default class UserStorageLoader
         return this.identity.getParams();
     }
 
+    /**
+     * Сброс данных
+     * в памяти браузера.
+     * 
+     * @return void
+     */
     protected flushStorage(): void
     {
         this.storage.clear();
     }
 
+    /**
+     * Сброс сущности пользователя.
+     * 
+     * @return void
+     */
     public flushData(): void
     {
         this.flushStorage();
         this.fillFomStorage();
     }
 
-    public loadTodoItems(callback: Function|null): void
+    /**
+     * Загрузка туду-заданий пользователя.
+     * 
+     * @param  Function|null
+     * @return void
+     */
+    public loadTodoItems(callback: Function|null = null): void
     {
         axios.get('todo/list')
             .then(result => {
@@ -116,6 +200,11 @@ export default class UserStorageLoader
             });
     }
 
+    /**
+     * Загрузка разрешений пользователя.
+     * 
+     * @return void
+     */
     public loadPermissions(): void
     {
         return axios.get('user-permissions/list')
@@ -126,11 +215,22 @@ export default class UserStorageLoader
             });
     }
 
+    /**
+     * Возвращает туду-задания пользователя.
+     * 
+     * @return TodoGroup[]
+     */
     public getTodoItems(): TodoGroup[]
     {
         return this.identity.get('groups');
     }
 
+    /**
+     * Возвращает массив статусов в формате
+     * {id: name}
+     * 
+     * @return object[]
+     */
     public getGroupsPairs(): object[]
     {
         const
@@ -151,6 +251,11 @@ export default class UserStorageLoader
         return pairs;
     }
     
+    /**
+     * Возвращает экземпляр класса.
+     * 
+     * @return UserStorageLoader
+     */
     public static getInstance(): UserStorageLoader
     {
         if (! (this.instance instanceof this)) {
