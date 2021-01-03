@@ -1,5 +1,7 @@
 import axios from '../../axios/base';
 import UserIdentity from '../models/UserIdentity';
+import TodoGroup from '../models/TodoGroup';
+import TodoStatus from '../models/TodoStatus';
 import TodoItem from '../models/TodoItem';
 import TodoGroupsService from './TodoGroupsService';
 
@@ -124,9 +126,29 @@ export default class UserStorageLoader
             });
     }
 
-    public getTodoItems(): TodoItem[]
+    public getTodoItems(): TodoGroup[]
     {
         return this.identity.get('groups');
+    }
+
+    public getGroupsPairs(): object[]
+    {
+        const
+            groups = this.getTodoItems(),
+            pairs: object[] = [];
+
+        for (const group of groups) {
+
+            const status: TodoStatus = group.status;
+            
+            pairs.push({
+                id: status.id,
+                name: status.name,
+            });
+
+        }
+
+        return pairs;
     }
     
     public static getInstance(): UserStorageLoader

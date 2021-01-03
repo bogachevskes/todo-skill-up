@@ -1,4 +1,5 @@
 import { SelectQueryBuilder } from 'typeorm';
+import RuntimeError from '../core/Exceptions/RuntimeError';
 import TodoItem from '../entity/TodoItem';
 import TodoStatus from '../entity/TodoStatus';
 import TodoStatusGroup from '../entity/TodoStatusGroup';
@@ -14,6 +15,30 @@ export default class TodoItemRepository
     protected static getQueryBuilder(): SelectQueryBuilder<TodoItem>
     {
         return TodoItem.createQueryBuilder('todo_item');
+    }
+
+    /**
+     * Поиск по ид.
+     * 
+     * @param  number id
+     * @return Promise<TodoItem|undefined>
+     */
+    public static async findById(id: number): Promise<TodoItem | undefined>
+    {
+        return await TodoItem.findOne({ where: { id } });
+    }
+
+    /**
+     * Возвращает
+     * туду-задание пользователя.
+     * 
+     * @param  number id
+     * @param  number userId
+     * @return 
+     */
+    public static async getUserTodoById(id: number, userId: number): Promise<TodoItem | undefined>
+    {
+        return await TodoItem.findOne({ where: { id, userId } });
     }
     
     /**
@@ -32,10 +57,10 @@ export default class TodoItemRepository
      * модели из объекта.
      * 
      * @param  TodoItem model
-     * @param  TodoItemInterface data
+     * @param  object data
      * @return TodoItem
      */
-    protected static loadModel(model: TodoItem, data: TodoItemInterface): TodoItem
+    protected static loadModel(model: TodoItem, data: object): TodoItem
     {
         for(const key in data) {
             model[key] = data[key];
@@ -48,7 +73,7 @@ export default class TodoItemRepository
      * Создает новое задание.
      * 
      * @param  TodoItemInterface data 
-     * @preturn Promise<TodoItem>
+     * @return Promise<TodoItem>
      */
     public static async createNew(data: TodoItemInterface): Promise<TodoItem>
     {
@@ -97,4 +122,29 @@ export default class TodoItemRepository
 
         return statusGroups;
     }
+
+    /**
+     * Обновление модели.
+     * 
+     * @param  item 
+     * @param  attributes 
+     * @return Promise<TodoItem>
+     */
+    public static async update(item: TodoItem, attributes: object): Promise<TodoItem>
+    {
+        await this.getQueryBuilder()
+            .update(TodoItem)
+            .set(attributes)
+            .where("id = :id", { id: item.id })
+            .execute();
+
+        const updatedItem = await this.findById(item.id);
+
+        if (updatedItem instanceof TodoItem) {
+            return updatedItem;
+        }
+
+        throw new RuntimeError('Модель задания не найдена после обновления');
+    }
+
 }

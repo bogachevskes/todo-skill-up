@@ -6,6 +6,17 @@ const INITIAL_DEFAULT_FLAG = 1;
 export default class TodoStatusRepository
 {
     /**
+     * Поиск по ид.
+     * 
+     * @param  number id
+     * @return Promise<TodoItem|undefined>
+     */
+    public static async findById(id: number): Promise<TodoStatus | undefined>
+    {
+        return await TodoStatus.findOne({ where: { id } });
+    }
+    
+    /**
      * @return SelectQueryBuilder<TodoItem>
      */
     protected static getQueryBuilder(): SelectQueryBuilder<TodoStatus>

@@ -9,7 +9,9 @@
                         v-for="(group, index) in groups"
                         :key="index"
                         :group="group"
+                        :statuses="statuses"
                         :addCard="addCard"
+                        :changeStatus="changeStatus"
                         :deleteCard="deleteCard"
                         :editCard="editCard"
                     ></group-item>
@@ -32,10 +34,22 @@
     import { eventBus } from '@store/eventBus';
 
     export default {
+        data: function () {
+            return {
+                groupStatuses: null,
+            };
+        },
         computed: {
             ...mapState([
                 'groups',
             ]),
+            statuses: function () {
+                if (! Array.isArray(this.groupStatuses)) {
+                    this.groupStatuses = this.$userStorage.getGroupsPairs();
+                }
+
+                return this.groupStatuses;
+            },
         },
         components: {
             'group-item': Group,
@@ -48,6 +62,12 @@
                         TodoItem.getInstance(),
                         'create'
                     );
+            },
+            changeStatus: function (card, event) {
+                axios.put(`todo/set-status/${card.id}`, { statusId: event.target.value })
+                    .then(result => {
+                        this.$store.dispatch('updateGroupsList', this.$userStorage);
+                    });
             },
             deleteCard: function (id) {
                 axios.delete('todo/delete', { data: { id } })

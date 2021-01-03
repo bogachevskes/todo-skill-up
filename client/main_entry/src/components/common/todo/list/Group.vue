@@ -12,7 +12,9 @@
                         <card-item
                             v-for="(card, index) in group.todoes"
                             :key="index"
+                            :statuses="statuses"
                             :card="card"
+                            :changeStatus="changeStatus"
                             :deleteCard="deleteCard"
                             :editCard="editCard"
                         ></card-item>
@@ -38,7 +40,15 @@
             group: {
                 type: TodoGroup,
             },
+            statuses: {
+                type: Array,
+                default: null,
+            },
             addCard: {
+                type: Function,
+                default: null,
+            },
+            changeStatus: {
                 type: Function,
                 default: null,
             },

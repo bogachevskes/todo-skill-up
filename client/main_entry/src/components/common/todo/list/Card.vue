@@ -6,6 +6,21 @@
                 <p class="title" style="color:black">
                     {{card.name}}
                 </p>
+                <div class="field" v-if="changeStatus">
+                    <div class="select is-success">
+                        <select
+                            @change="changeStatus(card, $event)"
+                        >
+                            <option
+                                v-for="(status, index) in statuses"
+                                :key="index"
+                                :value="status.id"
+                            >
+                                {{ status.name }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
                 <p class="subtitle" style="color:black">
                     <u>Описание:</u><br>
                     {{ card.printDescription() }}
@@ -49,8 +64,16 @@
 
     export default {
         props: {
+            statuses: {
+                type: Array,
+                default: null,
+            },
             card: {
                 type: TodoItem,
+            },
+            changeStatus: {
+                type: Function,
+                default: null,
             },
             deleteCard: {
                 type: Function,
@@ -64,7 +87,3 @@
     }
 
 </script>
-
-<style>
-
-</style>

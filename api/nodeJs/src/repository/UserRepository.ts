@@ -1,6 +1,7 @@
 import User from '../entity/User';
 import Role from '../entity/Role';
 import TodoItem from '../entity/TodoItem';
+import TodoStatus from '../entity/TodoStatus';
 import TodoStatusGroup from '../entity/TodoStatusGroup';
 import UsersRoleRepository from './UsersRoleRepository';
 import TodoItemRepository from './TodoItemRepository';
@@ -33,7 +34,7 @@ export default class UserRepository
     /**
      * Поиск по ид пользователя.
      * 
-     * @param  string id
+     * @param  number id
      * @return Promise<User|null>
      */
     public static async findById(id: number): Promise<User|null>
@@ -199,6 +200,33 @@ export default class UserRepository
         const rolesNames = await UsersRoleRepository.getUserRolesNames(this.user.id);
         
         return RolePermissionsRepository.listRolePermissionNames(rolesNames);
+    }
+
+    /**
+     * Возвращает
+     * туду-задание пользователя.
+     * 
+     * @param number cardId
+     * @return Promise<TodoItem | undefined>
+     */
+    public async findTodoById(cardId: number): Promise<TodoItem | undefined>
+    {
+        return await TodoItemRepository.getUserTodoById(
+            cardId,
+            this.user.id
+        );
+    }
+
+    /**
+     * Изменение статуса задания.
+     * 
+     * @param  TodoItem todoItem
+     * @param  TodoStatus statusItem
+     * @return Promise<TodoItem>
+     */
+    public async setTodoStatus(todoItem: TodoItem, statusItem: TodoStatus): Promise<TodoItem>
+    {
+        return await TodoItemRepository.update(todoItem, { statusId: statusItem.id });
     }
 
 }

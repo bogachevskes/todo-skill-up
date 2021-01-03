@@ -2,6 +2,10 @@ import Configurable from '../base/Configurable';
 
 export default class TodoStatus extends Configurable
 {
+    public id: number;
+
+    public name: string;
+    
     public initialDefault: number;
     
     /**
