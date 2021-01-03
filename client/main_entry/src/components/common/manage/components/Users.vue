@@ -6,10 +6,12 @@
         >
             <template slot="status" slot-scope="prop">
                 <vb-switch-item
+                    :class="{'switch-disabled': isCurrentUser(prop.data.id)}"
                     type="success"
                     size="large"
                     v-model="prop.data.status"
                     :value="1"
+                    :disabled="isCurrentUser(prop.data.id)"
                     @change="onChange($event, prop.data.id)"
                 >
                 </vb-switch-item>
@@ -20,12 +22,7 @@
                 <router-link
                     v-if="canManageUsersTodoes"
                     class="button is-info is-small"
-                    :to="{
-                        name: todoesRoute,
-                        params: {
-                            id: parseInt(prop.data.id)
-                        }
-                    }"
+                    :to="getManageTodoesRoute(prop.data)"
                     tag="button"
                 >
                    <font-awesome-icon icon="eye"/>
@@ -39,6 +36,7 @@
                 </button>
                 <button
                     class="button is-danger is-small ml-2"
+                    :disabled="isCurrentUser(prop.data.id)"
                 >
                     <font-awesome-icon icon="trash"/>
                     <span class="ml-2">Удалить</span>
@@ -126,10 +124,26 @@
                         this.users = result.data.items || [];
                     });
             },
+            isCurrentUser: function (userId) {
+                return this.$userStorage.getUserId() == userId;
+            },
+            getManageTodoesRoute: function (data) {
+                if (this.isCurrentUser(data.id)) {
+                    return this.getTodoListRoute;
+                }
+
+                return {
+                    name: todoesRoute,
+                    params: {
+                        id: parseInt(prop.data.id)
+                    }
+                }
+            }
         },
         computed: {
             ...mapGetters({
                 canManageUsersTodoes: 'canManageUsersTodoes',
+                getTodoListRoute: 'getTodoListRoute',
             }),
             todoesRoute: function () {
                 return ROUTE_USERS_TODOES_LIST;
@@ -149,6 +163,10 @@
 
 </script>
 
-<style>
+<style lang="scss">
+
+    .switch-disabled {
+        opacity: .5;
+    }
 
 </style>

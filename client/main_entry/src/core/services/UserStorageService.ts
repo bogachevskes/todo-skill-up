@@ -156,6 +156,22 @@ export default class UserStorageLoader
     }
 
     /**
+     * Возвращает идентификатор пользователя.
+     * 
+     * @return number|null
+     */
+    public getUserId(): number | null
+    {
+        const userId = this.identity.get('userId');
+
+        if (userId) {
+            return parseInt(userId);
+        }
+        
+        return null;
+    }
+
+    /**
      * Сброс данных
      * в памяти браузера.
      * 
