@@ -31,11 +31,6 @@
                     });
             },
         },
-        watch: {
-            groups: function () {
-                console.log(this.groups);
-            },
-        },
         components: {
             'group-item': Group,
         },

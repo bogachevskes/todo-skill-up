@@ -97,7 +97,7 @@
         data: function () {
             return {
                 formData: {
-
+                    plannedComplitionAt: null,
                 },
                 action: null,
                 isModalActive: 0,
@@ -150,6 +150,9 @@
                 
                 throw new Error('Handling is not defined');
             },
+            setComplitionDate: function (date) {
+                this.formData.plannedComplitionAt = DateHelper.format(date, 'YYYY-MM-DD HH:mm:ss');
+            },
         },
         computed: {
             modalHeadingText: function () {
@@ -163,14 +166,25 @@
                 return 'Не определено';
             }
         },
+        watch: {
+            'formData.plannedComplitionAt': function (value) {
+                if (value) {
+                    return;
+                }
+
+                this.setComplitionDate(new Date);
+            },
+        },
         mounted: function () {
-            const calendar = bulmaCalendar.attach(
+            const
+                currentDate = new Date(),
+                calendar = bulmaCalendar.attach(
                 '#planned_complition_at',
                 {
                     type: 'date',
                     displayMode: 'dialog',
-                    startDate: new Date(),
-                    minDate: new Date(),
+                    startDate: currentDate,
+                    minDate: currentDate,
                     showClearButton: false,
                     todayLabel: 'Сегодня',
                     cancelLabel:'Закрыть',
@@ -178,8 +192,11 @@
                 }
             )[0];
 
+            this.setComplitionDate(currentDate);
+
             calendar.on('select', (event) => {
-                this.formData.plannedComplitionAt = DateHelper.format(event.data.date, 'YYYY-MM-DD HH:mm:ss');
+                console.log(this.formData.plannedComplitionAt);
+                this.setComplitionDate(event.data.date.start);
             });
 
             eventBus.$on(events.SHOW_CARD_MANAGE_MODAL, (card, action) => {
@@ -209,8 +226,8 @@
 
 <style lang="scss">
 
-.menu-list li a:hover {
-    background: #09bd5a;
-}
+    .menu-list li a:hover {
+        background: #09bd5a;
+    }
 
 </style>
