@@ -25,7 +25,7 @@ export default class UserRepository
     public static async all(condition: object = {}): Promise<User[]>
     {
         return User.find({
-            select: ['name', 'email', 'status', 'createdAt', 'updatedAt'],
+            select: ['id', 'name', 'email', 'status', 'createdAt', 'updatedAt'],
             ...condition,
         });
     }

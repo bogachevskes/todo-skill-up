@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import Controller from './Controller';
 import RouteData from './RouteData';
 import AutoBind from '../../core/Decorators/AutoBind';
+import * as _ from 'lodash';
 
 export default abstract class CrudController extends Controller
 {
@@ -28,11 +29,25 @@ export default abstract class CrudController extends Controller
      * @return Promise<boolean>
      */
     protected abstract delete(req: Request): Promise<boolean>
-    
+
     /**
-     * @see Controller
+     * Определяет дополнительные роуты.
+     * 
+     * @return RouteData[]
      */
-    protected defineRoutes(): RouteData[]
+    protected defineCustomRoutes(): RouteData[]
+    {
+        return [
+
+        ];
+    }
+
+    /**
+     * Возвращает роуты по умолчанию.
+     * 
+     * @return RouteData[]
+     */
+    protected defineDefaultRoutes(): RouteData[]
     {
         return [
             new RouteData('get', 'list'),
@@ -40,6 +55,17 @@ export default abstract class CrudController extends Controller
             new RouteData('put', 'update'),
             new RouteData('delete', 'delete'),
         ];
+    }
+    
+    /**
+     * @see Controller
+     */
+    protected defineRoutes(): RouteData[]
+    {
+        return _.concat(
+            this.defineDefaultRoutes(),
+            this.defineCustomRoutes()
+        );
     }
 
     /**

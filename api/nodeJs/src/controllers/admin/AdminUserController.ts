@@ -4,7 +4,6 @@ import CrudController from '../base/CrudController';
 import UserRepository from '../../repository/UserRepository';
 import RouteData from '../base/RouteData';
 import AutoBind from '../../core/Decorators/AutoBind';
-import * as _ from 'lodash';
 import NotFound from '../../core/Exceptions/NotFound';
 
 export default class AdminUserController extends CrudController
@@ -17,15 +16,13 @@ export default class AdminUserController extends CrudController
     }
 
     /**
-     * @see Controller
+     * @see CrudController
      */
-    protected defineRoutes(): RouteData[]
+    protected defineCustomRoutes(): RouteData[]
     {
-        const routes = [
+        return [
             new RouteData('get', 'todoes/:id', 'todoes'),
         ];
-
-        return _.concat(routes, super.defineRoutes());
     }
 
     /**
