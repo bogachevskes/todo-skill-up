@@ -2,9 +2,9 @@
     
     <div class="column is-4">
         <nav class="panel">
-            <p class="panel-heading has-background-primary has-text-primary-light" style="min-height:60px;">
+            <p class="panel-heading has-background-primary has-text-primary-light" >
                 {{ group.status.name }}
-                <button class='button is-warning is-small ml-4' v-if="group.isInitialDefault()" @click="addCard">Добавить задачу</button>
+                <button class='button is-warning is-small ml-4' v-if="(addCard && group.isInitialDefault())" @click="addCard">Добавить задачу</button>
             </p>
             <div class="panel-block has-background-light">
                 <div class="container">
@@ -31,11 +31,26 @@
 
     import Card from './Card';
 
-    import TodoItem from '@models/TodoItem';
-    import { eventBus } from '@store/eventBus';
+    import TodoGroup from '@models/TodoGroup';
 
     export default {
-        props: ['group', 'deleteCard', 'editCard'],
+        props: {
+            group: {
+                type: TodoGroup,
+            },
+            addCard: {
+                type: Function,
+                default: null,
+            },
+            deleteCard: {
+                type: Function,
+                default: null,
+            },
+            editCard: {
+                type: Function,
+                default: null,
+            },
+        },
         components: {
             'card-item': Card,
         },
@@ -45,17 +60,6 @@
             },
             hasNoCards: function () {
                 return ! this.hasCards;
-            },
-        },
-        methods: {
-            getGroups: function () {
-                console.log(this.groups);
-            },
-            addCard: function () {
-                eventBus.showCardManageModal(
-                        TodoItem.getInstance(),
-                        'create'
-                    );
             },
         },
     }

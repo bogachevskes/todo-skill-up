@@ -17,14 +17,20 @@
                 </div>
             </div>
             <footer class="card-footer">
-                <p class="card-footer-item">
+                <p
+                    v-if="deleteCard"
+                    class="card-footer-item"
+                >
                     <span
                         class="button is-warning"
                         @click="editCard(card)">
                         Изменить
                     </span>
                 </p>
-                <p class="card-footer-item">
+                <p
+                    v-if="deleteCard"
+                    class="card-footer-item"
+                >
                     <span
                         class="button is-danger"
                         @click="deleteCard(card.id)">
@@ -39,8 +45,22 @@
 
 <script>
 
+    import TodoItem from '@models/TodoItem';
+
     export default {
-        props: ['card', 'deleteCard', 'editCard'],
+        props: {
+            'card': {
+                type: TodoItem,
+            },
+            deleteCard: {
+                type: Function,
+                default: null,
+            },
+            'editCard': {
+                type: Function,
+                default: null,
+            },
+        },
     }
 
 </script>

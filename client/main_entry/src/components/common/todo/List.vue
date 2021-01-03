@@ -1,5 +1,5 @@
 <template>
-      <section class="hero is-info is-fullheight" style="min-height:600px;">
+    <section class="hero is-info is-fullheight" style="min-height:600px;">
         <div class="hero-body">
             <div class="container">
                 <manage-card-item></manage-card-item>
@@ -9,6 +9,7 @@
                         v-for="(group, index) in groups"
                         :key="index"
                         :group="group"
+                        :addCard="addCard"
                         :deleteCard="deleteCard"
                         :editCard="editCard"
                     ></group-item>
@@ -26,6 +27,8 @@
     import axios from '@axios/base';
     import { mapState} from 'vuex';
 
+    import TodoItem from '@models/TodoItem';
+
     import { eventBus } from '@store/eventBus';
 
     export default {
@@ -40,6 +43,12 @@
             'actions-item': Actions,
         },
         methods: {
+            addCard: function () {
+                eventBus.showCardManageModal(
+                        TodoItem.getInstance(),
+                        'create'
+                    );
+            },
             deleteCard: function (id) {
                 axios.delete('todo/delete', { data: { id } })
                     .then(() => {

@@ -58,9 +58,7 @@ export default class AdminUserController extends CrudController
         await this.defineUserRepo(userId);
         
         return res.json({
-            items: {
-                userId: await this.userRepo.getTodoes(),
-            },
+            items: await this.userRepo. getTodoesByStatusGroups(),
         });
     }
     
