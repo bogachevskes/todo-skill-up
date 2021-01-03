@@ -12,7 +12,7 @@
                     v-model="prop.data.status"
                     :value="1"
                     :disabled="isCurrentUser(prop.data.id)"
-                    @change="onChange($event, prop.data.id)"
+                    @change="setUserActiveState($event, prop.data.id)"
                 >
                 </vb-switch-item>
                 <span class='ml-2'>{{ printYesNo(prop.data.status) }}</span>
@@ -111,10 +111,11 @@
             }
         },
         methods: {
-            onChange: function (val, id) {
+            setUserActiveState: function (val, id) {
                 const active = Number(val);
                 
-                console.log(active, id);
+                axios.put(`/admin/users/set-active-state/${id}`, { active })
+                    .then(x => this.loadUsersList());
             },
             deleteUser: function (userId) {
                 axios.delete(`/admin/users/delete/${userId}`)

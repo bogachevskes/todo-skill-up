@@ -2,7 +2,11 @@ import { RequestHandler, Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
 import * as validationManager from '../utils/validationManager';
 
+import BadRequest from '../core/Exceptions/BadRequest';
+import NotFound from '../core/Exceptions/NotFound';
+
 import UserRepository from '../repository/UserRepository';
+import User from '../entity/User';
 
 export const signup: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     
@@ -23,7 +27,13 @@ export const login: RequestHandler = async (req: Request, res: Response, next: N
 
     const user = await UserRepository.findByEmail(req.body.email);
 
-    validationManager.provideModelCondition(user, 'Пользователь не найден');
+    if (! (user instanceof User)) {
+        throw new NotFound('Пользователь не найден');
+    }
+
+    if (UserRepository.isBlocked(user)) {
+        throw new BadRequest('Пользователь заблокирован');
+    }
 
     const isOnMatch = await bcrypt.compare(req.body.password, user!.password);
 
@@ -35,4 +45,5 @@ export const login: RequestHandler = async (req: Request, res: Response, next: N
         token: token,
         userId: user!.id,
     });
+
 }

@@ -22,6 +22,7 @@ export default class AdminUserController extends CrudController
     {
         return [
             new RouteData('get', 'todoes/:id', 'todoes'),
+            new RouteData('put', 'set-active-state/:id', 'setActiveState'),
         ];
     }
 
@@ -59,6 +60,31 @@ export default class AdminUserController extends CrudController
         
         return res.json({
             items: await this.userRepo.getTodoesByStatusGroups(),
+        });
+    }
+
+    /**
+     * Изменяет статус
+     * активности пользователя.
+     * 
+     * @param  req Request
+     * @param  res Response
+     * @return Promise<Response>
+     */
+    @AutoBind
+    public async actionSetActiveState(req: Request, res: Response): Promise<Response>
+    {
+        const
+            userId = Number(req.params.id),
+            active = parseInt(req.body.active);
+        
+        await this.defineUserRepo(userId);
+
+        return res.json({
+            items: await UserRepository.setActiveState(
+                    this.userRepo.getUserModel(),
+                    active
+                ),
         });
     }
     

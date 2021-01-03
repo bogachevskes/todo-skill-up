@@ -167,6 +167,40 @@ export default class UserRepository
     }
 
     /**
+     * Изменяет статус
+     * активности пользователя.
+     * 
+     * @param  User user
+     * @return Promise<User>
+     */
+    public static async setActiveState(user: User, status: number): Promise<User>
+    {
+        return await this.update(user, { status });
+    }
+
+    /**
+     * Пользователь активен?
+     * 
+     * @param  User user
+     * @return boolean
+     */
+    public static isActive(user: User): boolean
+    {
+        return Boolean(user.status);
+    }
+
+    /**
+     * Пользователь заблокирован?
+     * 
+     * @param  User user
+     * @return boolean
+     */
+    public static isBlocked(user: User): boolean
+    {
+        return ! this.isActive(user);
+    }
+
+    /**
      * Есть роли?
      * 
      * @return Promise<boolean>

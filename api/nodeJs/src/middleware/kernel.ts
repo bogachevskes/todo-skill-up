@@ -1,6 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+
+import BadRequest from '../core/Exceptions/BadRequest';
+import NotFound from '../core/Exceptions/NotFound';
+
 import UserRepository from '../repository/UserRepository';
+
+import User from '../entity/User';
 
 import commonConfig from '../config/_common';
 import * as validationManager from '../utils/validationManager';
@@ -37,9 +43,7 @@ export const provideCORS = (req: Request, res: Response, next: NextFunction) => 
  */
 export const authOnly = async (req: Request, res: Response, next: NextFunction) => {
     
-    const token  = req.get('X-BASE-AUTH');
-
-    validationManager.provideAuthentication(token);
+    const token: string = String(req.get('X-BASE-AUTH'));
     
     let decodedToken;
 
@@ -49,7 +53,13 @@ export const authOnly = async (req: Request, res: Response, next: NextFunction) 
 
     const user = await UserRepository.findById(decodedToken.userId);
 
-    validationManager.provideModelCondition(user);
+    if (! (user instanceof User)) {
+        throw new NotFound('Пользователь не найден');
+    }
+
+    if (UserRepository.isBlocked(user)) {
+        throw new BadRequest('Пользователь заблокирован');
+    }
 
     req['user'] = user;
     
