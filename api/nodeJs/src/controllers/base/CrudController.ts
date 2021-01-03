@@ -7,28 +7,30 @@ import * as _ from 'lodash';
 export default abstract class CrudController extends Controller
 {
     /**
-     * @param req
+     * @param  Request req
      * @return Promise<object[]>
      */
     protected abstract list(req: Request): Promise<any[]>
 
     /**
-     * @param req
+     * @param  Request req
      * @return Promise<object>
      */
     protected abstract create(req: Request): Promise<object>
 
     /**
-     * @param req
+     * @param  number id
+     * @param  Request req
      * @return Promise<object>
      */
-    protected abstract update(req: Request): Promise<object>
+    protected abstract update(id: number, req: Request): Promise<object>
 
     /**
-     * @param req
+     * @param  number id
+     * @param  Request req
      * @return Promise<boolean>
      */
-    protected abstract delete(req: Request): Promise<boolean>
+    protected abstract delete(id: number, req: Request): Promise<boolean>
 
     /**
      * Определяет дополнительные роуты.
@@ -52,8 +54,8 @@ export default abstract class CrudController extends Controller
         return [
             new RouteData('get', 'list'),
             new RouteData('post', 'create'),
-            new RouteData('put', 'update'),
-            new RouteData('delete', 'delete'),
+            new RouteData('put', 'update/:id', 'update'),
+            new RouteData('delete', 'delete/:id', 'delete'),
         ];
     }
     
@@ -108,8 +110,10 @@ export default abstract class CrudController extends Controller
     @AutoBind
     public async actionUpdate(req: Request, res: Response): Promise<Response>
     {
+        const id = parseInt(req.params.id);
+        
         return res.json({
-            item: await this.update(req),
+            item: await this.update(id, req),
         });
     }
 
@@ -123,8 +127,10 @@ export default abstract class CrudController extends Controller
     @AutoBind
     public async actionDelete(req: Request, res: Response): Promise<Response>
     {
+        const id = parseInt(req.params.id);
+        
         return res.json({
-            success: await this.delete(req),
+            success: await this.delete(id, req),
         });
     }
 

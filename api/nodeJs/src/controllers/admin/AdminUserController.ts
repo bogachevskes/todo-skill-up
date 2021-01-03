@@ -83,7 +83,7 @@ export default class AdminUserController extends CrudController
     /**
      * @see CrudController
      */
-    protected async update(req: Request): Promise<object>
+    protected async update(id: number, req: Request): Promise<object>
     {
         return new Promise(function(resolve, reject) {
             return resolve({});
@@ -93,7 +93,7 @@ export default class AdminUserController extends CrudController
     /**
      * @see CrudController
      */
-    protected async delete(req: Request): Promise<boolean>
+    protected async delete(id: number, req: Request): Promise<boolean>
     {
         // Not implemented
         return new Promise(function(resolve, reject) {

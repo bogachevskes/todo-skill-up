@@ -70,7 +70,7 @@
                     });
             },
             deleteCard: function (id) {
-                axios.delete('todo/delete', { data: { id } })
+                axios.delete(`todo/delete/${id}`)
                     .then(() => {
                         this.$store.dispatch('updateGroupsList', this.$userStorage);
                     });

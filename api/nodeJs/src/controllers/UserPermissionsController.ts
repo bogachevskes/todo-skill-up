@@ -55,7 +55,7 @@ export default class UserPermissionsController extends CrudController
     /**
      * @see CrudController
      */
-    protected async update(req: Request): Promise<object>
+    protected async update(id: number, req: Request): Promise<object>
     {
         this.defineUserRepo(req);
         
@@ -67,7 +67,7 @@ export default class UserPermissionsController extends CrudController
     /**
      * @see CrudController
      */
-    protected async delete(req: Request): Promise<boolean>
+    protected async delete(id: number, req: Request): Promise<boolean>
     {
         // Not implemented
         return new Promise(function(resolve, reject) {
