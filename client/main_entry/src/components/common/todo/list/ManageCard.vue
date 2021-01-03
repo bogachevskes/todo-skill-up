@@ -195,7 +195,6 @@
             this.setComplitionDate(currentDate);
 
             calendar.on('select', (event) => {
-                console.log(this.formData.plannedComplitionAt);
                 this.setComplitionDate(event.data.date.start);
             });
 
