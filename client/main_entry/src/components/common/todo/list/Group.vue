@@ -15,7 +15,7 @@
                             :statuses="statuses"
                             :card="card"
                             :changeStatus="changeStatus"
-                            :deleteCard="deleteCard"
+                            :deleteCard="group.isInitialDefault() ? deleteCard : null"
                             :editCard="editCard"
                         ></card-item>
                     </div>

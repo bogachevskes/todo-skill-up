@@ -44,7 +44,7 @@
                     </span>
                 </p>
                 <p
-                    v-if="deleteCard"
+                    v-if="editCard"
                     class="card-footer-item"
                 >
                     <span
