@@ -134,6 +134,7 @@
             },
             onCardProcessingComplete: function () {
                 this.deactivateModal();
+                this.$v.$reset();
                 this.flushFormData();
                 this.$store.dispatch('updateGroupsList', this.$userStorage);
             },
