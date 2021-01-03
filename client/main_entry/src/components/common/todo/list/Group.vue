@@ -15,8 +15,8 @@
                             :statuses="statuses"
                             :card="card"
                             :changeStatus="changeStatus"
-                            :deleteCard="group.isInitialDefault() ? deleteCard : null"
-                            :editCard="editCard"
+                            :deleteCard="deleteCard"
+                            :editCard="group.isInitialDefault() ? editCard : null"
                         ></card-item>
                     </div>
                     <div v-if="hasNoCards">

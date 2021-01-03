@@ -34,7 +34,7 @@
             </div>
             <footer class="card-footer">
                 <p
-                    v-if="deleteCard"
+                    v-if="editCard"
                     class="card-footer-item"
                 >
                     <span
@@ -44,7 +44,7 @@
                     </span>
                 </p>
                 <p
-                    v-if="editCard"
+                    v-if="deleteCard"
                     class="card-footer-item"
                 >
                     <span
