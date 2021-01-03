@@ -37,6 +37,7 @@
                 <button
                     class="button is-danger is-small ml-2"
                     :disabled="isCurrentUser(prop.data.id)"
+                    @click="deleteUser(prop.data.id)"
                 >
                     <font-awesome-icon icon="trash"/>
                     <span class="ml-2">Удалить</span>
@@ -115,6 +116,10 @@
                 
                 console.log(active, id);
             },
+            deleteUser: function (userId) {
+                axios.delete(`/admin/users/delete/${userId}`)
+                    .then(x => this.loadUsersList());
+            },
             printYesNo: function (val) {
                 return val ? 'Да' : 'Нет';
             },
@@ -133,9 +138,9 @@
                 }
 
                 return {
-                    name: todoesRoute,
+                    name: this.todoesRoute,
                     params: {
-                        id: parseInt(prop.data.id)
+                        id: parseInt(data.id)
                     }
                 }
             }

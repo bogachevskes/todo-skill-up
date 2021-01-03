@@ -67,7 +67,7 @@ export default class AdminUserController extends CrudController
      */
     protected async list(): Promise<object[]>
     {
-        return await UserRepository.all();
+        return await UserRepository.allExisting();
     }
 
     /**
@@ -95,9 +95,11 @@ export default class AdminUserController extends CrudController
      */
     protected async delete(id: number, req: Request): Promise<boolean>
     {
-        // Not implemented
-        return new Promise(function(resolve, reject) {
-            return resolve(true);
-        });
+        await this.defineUserRepo(id);
+        
+        return await UserRepository.delete(
+            this.userRepo.getUserModel()
+        );
     }
+
 }

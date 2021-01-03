@@ -7,6 +7,7 @@ import Role from './Role';
 @Index('idx-users_status', ['status'])
 @Index('idx-users_created_at', ['createdAt'])
 @Index('idx-users_updated_at', ['updatedAt'])
+@Index('idx-users_deleted_at', ['deletedAt'])
 @Entity('users')
 export default class User extends BaseEntity
 {
@@ -46,17 +47,22 @@ export default class User extends BaseEntity
 
     @Column("timestamp", {
         name: 'created_at',
-        default: () => "CURRENT_TIMESTAMP(3)",
+        default: () => "CURRENT_TIMESTAMP()",
     })
     public createdAt: Date;
 
     @Column("timestamp", {
         name: 'updated_at',
-        precision: 3,
-        default: () => "CURRENT_TIMESTAMP(3)",
-        onUpdate: "CURRENT_TIMESTAMP(3)"
+        default: () => "CURRENT_TIMESTAMP()",
+        onUpdate: "CURRENT_TIMESTAMP()"
     })
     public updatedAt: Date;
+
+    @Column("timestamp", {
+        name: 'deleted_at',
+        nullable: true,
+    })
+    public deletedAt: Date;
 
     @ManyToMany(type => Role)
     @JoinTable({

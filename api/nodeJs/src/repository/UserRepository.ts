@@ -1,3 +1,5 @@
+import { SelectQueryBuilder } from 'typeorm';
+import RuntimeError from '../core/Exceptions/RuntimeError';
 import User from '../entity/User';
 import Role from '../entity/Role';
 import TodoItem from '../entity/TodoItem';
@@ -18,6 +20,34 @@ export default class UserRepository
     }
 
     /**
+     * @return SelectQueryBuilder<User>
+     */
+    protected static getQueryBuilder(): SelectQueryBuilder<User>
+    {
+        return User.createQueryBuilder('user');
+    }
+
+    /**
+     * Возвращает модель пользователя.
+     * 
+     * @return User
+     */
+    public getUserModel(): User
+    {
+        return this.user;
+    }
+
+    /**
+     * Возвращает ид пользователя.
+     * 
+     * @return number
+     */
+    public getUserId(): number
+    {
+        return this.user.id;
+    }
+
+    /**
      * Возвращает список всех пользователей.
      * 
      * @param  object condition 
@@ -30,16 +60,29 @@ export default class UserRepository
             ...condition,
         });
     }
+
+    /**
+     * Возвращает всех
+     * не удаленных пользователей.
+     * 
+     * @return Promise<User[]>
+     */
+    public static async allExisting(): Promise<User[]>
+    {
+        return this.all({ where: { deletedAt: null } });
+    }
     
     /**
      * Поиск по ид пользователя.
      * 
      * @param  number id
+     * @param  withTrashed boolean искать с удаленными?
      * @return Promise<User|null>
      */
-    public static async findById(id: number): Promise<User|null>
+    public static async findById(id: number, withTrashed: boolean = false): Promise<User|null>
     {
-        const user = await User.findOne({ where: { id } });
+        const condition = withTrashed ? {} : { deletedAt: null },
+            user = await User.findOne({ where: { id, ...condition } });
 
         if (user instanceof User) {
             return user;
@@ -84,6 +127,43 @@ export default class UserRepository
         await user.save();
 
         return user;
+    }
+
+    /**
+     * Обновление модели.
+     * 
+     * @param  User item 
+     * @param  object attributes 
+     * @return Promise<User>
+     */
+    public static async update(item: User, attributes: object): Promise<User>
+    {
+        await this.getQueryBuilder()
+            .update(User)
+            .set(attributes)
+            .where("id = :id", { id: item.id })
+            .execute();
+
+        const updatedItem = await this.findById(item.id, true);
+
+        if (updatedItem instanceof User) {
+            return updatedItem;
+        }
+
+        throw new RuntimeError('Модель пользователя не найдена после обновления');
+    }
+
+    /**
+     * Удаляет задание по ID
+     * 
+     * @param  User user
+     * @return Promise<boolean>
+     */
+    public static async delete(user: User): Promise<boolean>
+    {
+        await this.update(user, { deletedAt: () => "NOW()" });
+
+        return true;
     }
 
     /**
