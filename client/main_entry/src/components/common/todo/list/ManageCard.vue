@@ -127,7 +127,7 @@
                         );
             },
             executeUpdating: function () {
-                axios.put('todo/update', {form: this.formData})
+                axios.put(`todo/update/${this.formData.id}`, {formData: this.formData})
                     .then(
                             res => this.onCardProcessingComplete()
                         );

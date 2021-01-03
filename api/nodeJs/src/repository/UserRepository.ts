@@ -226,7 +226,19 @@ export default class UserRepository
      */
     public async setTodoStatus(todoItem: TodoItem, statusItem: TodoStatus): Promise<TodoItem>
     {
-        return await TodoItemRepository.update(todoItem, { statusId: statusItem.id });
+        return await this.updateTodoItem(todoItem, { statusId: statusItem.id });
+    }
+
+    /**
+     * Изменение аттрибутов туду-задания.
+     * 
+     * @param  TodoItem todoItem
+     * @param  object attributes
+     * @return Promise<TodoItem>
+     */
+    public async updateTodoItem(todoItem: TodoItem, attributes: object): Promise<TodoItem>
+    {
+        return await TodoItemRepository.update(todoItem, attributes);
     }
 
 }

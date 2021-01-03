@@ -73,10 +73,10 @@ export default class TodoController extends CrudController
     protected async update(id: number, req: Request): Promise<object>
     {
         this.defineUserRepo(req);
+
+        const todoItem = await this.findTodoModel(id);
         
-        return new Promise(function(resolve, reject) {
-            return resolve({});
-        });
+        return await this.userRepo.updateTodoItem(todoItem, req.body.formData);
     }
 
     /**
