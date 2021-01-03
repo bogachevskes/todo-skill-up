@@ -15,6 +15,7 @@
                                 v-for="(status, index) in statuses"
                                 :key="index"
                                 :value="status.id"
+                                :selected="card.statusId == status.id"
                             >
                                 {{ status.name }}
                             </option>

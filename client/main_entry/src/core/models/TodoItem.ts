@@ -7,6 +7,8 @@ export default class TodoItem extends Configurable
 
     public name: string;
 
+    public statusId: number;
+
     public description: string;
     
     public plannedComplitionAt: string;
