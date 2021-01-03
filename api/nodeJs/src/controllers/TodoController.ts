@@ -84,7 +84,11 @@ export default class TodoController extends CrudController
      */
     protected async delete(id: number, req: Request): Promise<boolean>
     {
-        return await TodoItemRepository.deleteById(id);
+        this.defineUserRepo(req);
+        
+        const todoItem = await this.findTodoModel(id);
+        
+        return await TodoItemRepository.deleteById(todoItem.id);
     }
     
     /**
@@ -113,7 +117,7 @@ export default class TodoController extends CrudController
         );
         
         return res.json({
-            item: TodoItem,
+            item: result,
         });
     }
 
