@@ -156,7 +156,7 @@
     import { mapGetters } from 'vuex';
     import axios from '@axios/base';
 
-    import {eventBus} from '@store/eventBus';
+    import { eventBus } from '@store/eventBus';
     
     import { inputMethods, inputComputedMethods, validationMixinAsset, filterErrorResponseDetails } from '@libs/libStack';
 
