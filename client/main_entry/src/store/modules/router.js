@@ -2,6 +2,7 @@ import {
     ROUTE_HOME,
     ROUTE_LOGIN,
     ROUTE_TODO_LIST,
+    ROUTE_CREATE_USER,
 } from '@router/routes';
 
 const getters = {
@@ -33,6 +34,9 @@ const getters = {
     getTodoListRoute: function (_state, getters) {
         return getters.getRoute(ROUTE_TODO_LIST);
     },
+    getCreateUserRoute: function (_state, getters) {
+        return getters.getRoute(ROUTE_CREATE_USER);
+    }
 };
 
 export default {

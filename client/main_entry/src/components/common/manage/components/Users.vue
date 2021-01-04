@@ -1,5 +1,15 @@
 <template>
     <div>
+        <router-link
+            v-if="canManageUsersTodoes"
+            class="button is-success mb-2"
+            :to="getCreateUserRoute"
+            tag="button"
+        >
+            <font-awesome-icon icon="user-plus"/>
+            <span class="ml-2">Создать пользователя</span>
+        </router-link>
+        
         <data-table-item
             :data="users"
             :fields="fields"
@@ -28,12 +38,14 @@
                    <font-awesome-icon icon="eye"/>
                    <span class="ml-2">Задачи</span>
                 </router-link>
-                <button
+                <router-link
                     class="button is-warning is-small ml-2"
+                    :to="updateUserRoute(prop.data)"
+                    tag="button"
                 >
                     <font-awesome-icon icon="edit"/>
                     <span class="ml-2">Изменить</span>
-                </button>
+                </router-link>
                 <button
                     class="button is-danger is-small ml-2"
                     :disabled="isCurrentUser(prop.data.id)"
@@ -54,15 +66,15 @@
 
     import VbSwitch from 'vue-bulma-switch';
 
-    import { ROUTE_USERS_TODOES_LIST } from '@router/routes';
+    import { ROUTE_USERS_TODOES_LIST, ROUTE_CREATE_USER, ROUTE_UPDATE_USER } from '@router/routes';
 
     import { library } from '@fortawesome/fontawesome-svg-core';
-    import { faEye, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+    import { faEye, faEdit, faTrash, faUserPlus } from '@fortawesome/free-solid-svg-icons';
     import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
     import DateHelper from '@helpers/DateHelper';
 
-    library.add(faEye, faEdit, faTrash);
+    library.add(faEye, faEdit, faTrash, faUserPlus);
 
     import axios from '@axios/base';
 
@@ -139,21 +151,29 @@
                 }
 
                 return {
-                    name: this.todoesRoute,
+                    name: ROUTE_USERS_TODOES_LIST,
                     params: {
                         id: parseInt(data.id)
                     }
                 }
-            }
+            },
+            updateUserRoute: function (data) {
+                
+                return {
+                    name: ROUTE_UPDATE_USER,
+                    params: {
+                        id: parseInt(data.id)
+                    }
+                };
+
+            },
         },
         computed: {
             ...mapGetters({
                 canManageUsersTodoes: 'canManageUsersTodoes',
                 getTodoListRoute: 'getTodoListRoute',
+                getCreateUserRoute: 'getCreateUserRoute',
             }),
-            todoesRoute: function () {
-                return ROUTE_USERS_TODOES_LIST;
-            },
         },
         components: {
             'data-table-item': DataTable,

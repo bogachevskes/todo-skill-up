@@ -2,6 +2,8 @@ const ROUTE_HOME = 'home';
 const ROUTE_LOGIN = 'login';
 const ROUTE_TODO_LIST = 'todo-list';
 const ROUTE_USERS_TODOES_LIST = 'user-todoes-list';
+const ROUTE_CREATE_USER = 'create-user';
+const ROUTE_UPDATE_USER = 'update-user';
 
 import Home from '@common-components/Home';
 import LoginPage from '@common-components/LoginPage';
@@ -10,6 +12,8 @@ import TodoListPage from '@common-components/todo/List';
 import Manage from '@common-components/manage/Manage';
 import UsersTodoes from '@common-components/manage/components/UsersTodoes';
 import Users from '@common-components/manage/components/Users';
+import CreateUser from '@common-components/manage/components/CreateUser';
+import UpdateUser from '@common-components/manage/components/UpdateUser';
 
 const routes = [
     {
@@ -52,6 +56,16 @@ const routes = [
                 path: 'users',
                 component: Users,
             },
+            {
+                path: 'create-user',
+                name: ROUTE_CREATE_USER,
+                component: CreateUser,
+            },
+            {
+                path: 'update-user/:id',
+                name: ROUTE_UPDATE_USER,
+                component: UpdateUser,
+            }
         ]
     }
 ];
@@ -61,5 +75,7 @@ export {
     ROUTE_LOGIN,
     ROUTE_TODO_LIST,
     ROUTE_USERS_TODOES_LIST,
+    ROUTE_CREATE_USER,
+    ROUTE_UPDATE_USER,
     routes,
 };
