@@ -75,7 +75,7 @@
                                 class="input"
                                 :class="printIsOnWarning($v.formData.password.$error)"
                                 type="password"
-                                placeholder="*******"
+                                :placeholder="formData.hasPassword ? 'Пароль установлен' : '*******'"
                                 @blur="blurField(['formData','password'])"
                                 v-model="formData.password"
                             >
@@ -172,6 +172,10 @@
                     }
                 },
             },
+            passwordStrictRequired: {
+                type: Boolean,
+                default: true,
+            },
             actionHeading: {
                 type: String,
             },
@@ -210,7 +214,17 @@
                         email: email,
                     },
                     password: {
-                        required,
+                        required: function (value) {
+                            if (this.passwordStrictRequired) {
+                                return Boolean(value);
+                            }
+
+                            if (Boolean(value)) {
+                                return required;
+                            }
+
+                            return true;
+                        },
                         minLength: minLength(this.getPasswordMinLength),
                     },
                     confirm_password: {

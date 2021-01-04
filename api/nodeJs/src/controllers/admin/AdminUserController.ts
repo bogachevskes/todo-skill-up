@@ -22,6 +22,7 @@ export default class AdminUserController extends CrudController
     {
         return [
             new RouteData('get', 'todoes/:id', 'todoes'),
+            new RouteData('get', 'get-user-data/:id', 'getUserData'),
             new RouteData('put', 'set-active-state/:id', 'setActiveState'),
         ];
     }
@@ -60,6 +61,32 @@ export default class AdminUserController extends CrudController
         
         return res.json({
             items: await this.userRepo.getTodoesByStatusGroups(),
+        });
+    }
+
+    /**
+     * Возвращает
+     * данные пользователя.
+     * 
+     * @param  req Request
+     * @param  res Response
+     * @return Promise<Response>
+     */
+    @AutoBind
+    public async actionGetUserData(req: Request, res: Response): Promise<Response>
+    {
+        const userId = Number(req.params.id);
+        
+        await this.defineUserRepo(userId);
+
+        const model = this.userRepo.getUserModel();
+
+        return res.json({
+            item: {
+                name: model.name,
+                email: model.email,
+                hasPassword: Boolean(model.password),
+            }
         });
     }
 

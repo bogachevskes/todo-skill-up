@@ -5,6 +5,7 @@
             :actionHeading="'Редактировать пользователя'"
             :actionText="'Сохранить'"
             :confirmAction="handleUpdating"
+            :passwordStrictRequired="false"
         >
         </form-item>
     </div>
@@ -22,6 +23,7 @@
                 formData: {
                     name: null,
                     email: null,
+                    hasPassword: null,
                     password: null,
                     confirm_password: null,
                 },
@@ -34,7 +36,10 @@
             loadUserData: function () {
                 axios.get(`admin/users/get-user-data/${this.userId}`)
                     .then(result => {
-                        this.formData = result.data.item;
+                        this.formData = {
+                            ...this.formData,
+                            ...result.data.item
+                        };
                     });
             },
             handleUpdating: function () {
