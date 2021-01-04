@@ -10,3 +10,9 @@ Cборка проекта для API на NodeJs + express
 npm dev
 npm start
 ```
+
+## TODO
+
+- избавиться от validationManager  
+- отрефакторить контроллер auth.ts
+- отрефакторить контроллер site.ts

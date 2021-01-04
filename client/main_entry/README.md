@@ -14,3 +14,7 @@ npm run dev
 # build for production with minifications
 npm run build
 ```
+
+## TODO
+
+- отрефакторить компоненты модального окна

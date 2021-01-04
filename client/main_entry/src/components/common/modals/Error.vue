@@ -25,8 +25,6 @@
     import {eventBus} from '@store/eventBus';
     import events from '@config/events';
 
-    import { filterErrorResponseDetails } from '@libs/libStack';
-
     import { state, setters } from '@common-traits/modal_defaults';
     
     export default {
@@ -38,16 +36,12 @@
         },
         methods: {
             ...setters,
-            setErrorInfo: function (error) {
-                if ((! error) || (! error.data)) {
-                    this.message = 'Сервис временно недоступен, повторите попытку позже';
+            setErrorInfo: function (message = null, details = []) {
 
-                    return this;
-                }
+                this.message = message ? message : 'Сервис временно недоступен, повторите попытку позже';
+                this.details = details;
 
-                const errorData = error.data;
-                this.message = errorData.error;
-                this.details = filterErrorResponseDetails(error);
+                console.log(this.details);
 
                 return this;
             },
@@ -60,9 +54,9 @@
             },
         },
         mounted: function () {
-            eventBus.$on(events.ON_ERROR, (error, heading) => {
+            eventBus.$on(events.ON_ERROR, (heading, message = null, details = []) => {
                 this.header = heading;
-                this.setErrorInfo(error.response)
+                this.setErrorInfo(message, details)
                     .showModal();
 
                 return this;

@@ -50,24 +50,8 @@ const inputComputedMethods = {
     },
 };
 
-const filterErrorResponseDetails = (errorResponse) => {
-    let errors = [];
-
-    if (errorResponse.data.data) {
-        for (let error of errorResponse.data.data) {
-            if (! error.msg) {
-                continue;
-            }
-
-            errors.push(error.msg);
-        }
-    }
-
-    return errors;
-}
-
 const validationMixinAsset = {
     mixins: [validationMixin],
 };
 
-export { inputMethods, inputComputedMethods, validationMixinAsset, filterErrorResponseDetails };
+export { inputMethods, inputComputedMethods, validationMixinAsset };

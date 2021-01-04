@@ -205,7 +205,14 @@
                     })
                     .catch(error => {
                         this.setOffLoading('onSignupLoading');
-                        eventBus.showError(error, 'Ошибка при попытке регистрации');
+
+                        const errorData = error.response.data;
+
+                        eventBus.showError(
+                                'Ошибка при попытке регистрации',
+                                errorData.message,
+                                [errorData.data[0].msg],
+                            );
                     });
 
                 return this;
@@ -230,7 +237,14 @@
                     })
                     .catch(error => {
                         this.setOffLoading('onLoginLoading');
-                        eventBus.showError(error, 'Ошибка входа');
+
+                        const errorData = error.response.data;
+
+                        eventBus.showError(
+                                'Ошибка при авторизации',
+                                errorData.message,
+                                errorData.data[0] ? [errorData.data[0].msg] : null,
+                            );
 
                         return this;
                     });

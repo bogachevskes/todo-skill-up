@@ -12,6 +12,8 @@
 <script>
     import form from './common/_form';
 
+    import { eventBus } from '@store/eventBus';
+
     import axios from '@axios/base';
 
     export default {
@@ -20,7 +22,18 @@
                 
                 axios.post(`admin/users/create`, { formData })
                     .then(result => {
-                        this.$router.push('/manage/users');
+                        const resultItem = result.data.item;
+
+                        if (resultItem.success) {
+                            
+                            this.$router.push('/manage/users');
+                            return;
+                        }
+                        
+                        eventBus.showError(
+                                'Ошибка при создании пользователя',
+                                resultItem.error
+                            );
                     });
                     
             },
