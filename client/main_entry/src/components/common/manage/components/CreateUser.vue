@@ -16,11 +16,13 @@
 
     export default {
         methods: {
-            handleCreating: function () {
-                axios.post(`admin/users/create`)
+            handleCreating: function (formData) {
+                
+                axios.post(`admin/users/create`, { formData })
                     .then(result => {
                         this.$router.push('/manage/users');
                     });
+                    
             },
         },
         components: {

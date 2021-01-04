@@ -33,6 +33,8 @@
                             v-if="$v.formData.name.$error && $v.formData.name.required"
                         >
                             Минимальное кол-во символов: {{ getNameMinLength }}
+                            <br>
+                            Только буквы и цифры
                         </p>
                     </div>
                     <div class="field">
@@ -135,7 +137,7 @@
                         class="button is-success mt-1"
                         :class="{'is-loading': onLoading}"
                         :disabled="(! formDataValid)"
-                        @click="confirmAction()"
+                        @click="submit()"
                     >
                         {{ actionText }}
                     </button>
@@ -146,7 +148,7 @@
 </template>
 
 <script>
-    import { required, email, minLength, sameAs } from 'vuelidate/lib/validators';
+    import { required, email, minLength, sameAs, alphaNum } from 'vuelidate/lib/validators';
     import axios from '@axios/base';
 
     import { inputMethods, inputComputedMethods, validationMixinAsset } from '@libs/libStack';
@@ -163,12 +165,10 @@
                 type: Object,
                 default: function () {
                     return {
-                        formData: {
-                            name: null,
-                            email: null,
-                            password: null,
-                            confirm_password: null,
-                        },
+                        name: null,
+                        email: null,
+                        password: null,
+                        confirm_password: null,
                     }
                 },
             },
@@ -194,6 +194,9 @@
         },
         methods: {
             ...inputMethods,
+            submit: function () {
+                this.confirmAction(this.formData);
+            },
         },
         computed: {
             ...inputComputedMethods,
@@ -207,6 +210,7 @@
                 formData:{
                     name: {
                         required: required,
+                        alphaNum: alphaNum,
                         minLength: minLength(this.getNameMinLength),
                     },
                     email: {

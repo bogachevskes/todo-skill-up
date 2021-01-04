@@ -1,10 +1,13 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
+import ValidationError from '../../core/Exceptions/ValidationError';
 import User from '../../entity/User';
 import CrudController from '../base/CrudController';
 import UserRepository from '../../repository/UserRepository';
 import RouteData from '../base/RouteData';
 import AutoBind from '../../core/Decorators/AutoBind';
 import NotFound from '../../core/Exceptions/NotFound';
+import CommandContext from '../../console/base/CommandContext';
+import UserCreate from '../../console/commands/UserCreate';
 
 export default class AdminUserController extends CrudController
 {
@@ -128,9 +131,31 @@ export default class AdminUserController extends CrudController
      */
     protected async create(req: Request): Promise<object>
     {
-        return new Promise(function(resolve, reject) {
-            return resolve({});
-        });
+        const
+            context = new CommandContext,
+            cmd = new UserCreate;
+
+        context.walk(req.body.formData);
+
+        try {
+
+            await cmd.execute(context);
+
+        } catch (error) {
+            if (error instanceof ValidationError) {
+                return {
+                    success: false,
+                    error: error.message,
+                };
+            }
+
+            throw new Error(error.message);
+        }
+        
+        return {
+            success: true,
+            item: context.get('user'),
+        };
     }
 
     /**
