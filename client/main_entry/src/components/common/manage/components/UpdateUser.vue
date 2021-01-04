@@ -21,6 +21,7 @@
             return {
                 userId: null,
                 formData: {
+                    id: null,
                     name: null,
                     email: null,
                     hasPassword: null,
@@ -42,8 +43,8 @@
                         };
                     });
             },
-            handleUpdating: function () {
-                axios.put(`admin/users/update/${this.userId}`)
+            handleUpdating: function (formData) {
+                axios.put(`admin/users/update/${this.userId}`, { formData })
                     .then(result => {
                         this.$router.push('/manage/users');
                     });

@@ -1,24 +1,28 @@
 import bcrypt from 'bcryptjs';
 import BaseCommand from '../base/BaseCommand';
-import UserCreateRequest from '../../request/UserCreateRequest';
+import UserCreateRequest from '../../request/user/UserCreateRequest';
 import UserRepository from '../../repository/UserRepository';
 
 export default class UserCreate extends BaseCommand
 {
     /**
+     * @var UserCreateRequest
+     */
+    protected request: UserCreateRequest;
+    
+    /**
      * @see BaseCommand
      */
     protected async validateData(): Promise<void>
     {
-        const request = new UserCreateRequest(this.context.all());
+        this.request = new UserCreateRequest(this.context.all());
         
-        await request.validate();
+        await this.request.validate();
 
-        if (request.isValid()) {
-            return;
+        if (this.request.isNotValid()) {
+            this.throwValidationError(this.request.getFirstError());
         }
 
-        this.throwValidationError(request.getFirstError());
     }
 
     /**
@@ -27,13 +31,13 @@ export default class UserCreate extends BaseCommand
     protected async handle(): Promise<void>
     {
         const hashedPassword = await bcrypt.hash(
-            this.context.get('password'),
+            this.request.password,
             12
         );
 
         const user = await UserRepository.createNew(
-            this.context.get('name'),
-            this.context.get('email'),
+            this.request.name,
+            this.request.email,
             hashedPassword
         );
 

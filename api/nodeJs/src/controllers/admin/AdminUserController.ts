@@ -8,6 +8,7 @@ import AutoBind from '../../core/Decorators/AutoBind';
 import NotFound from '../../core/Exceptions/NotFound';
 import CommandContext from '../../console/base/CommandContext';
 import UserCreate from '../../console/commands/UserCreate';
+import UserUpdate from '../../console/commands/UserUpdate';
 
 export default class AdminUserController extends CrudController
 {
@@ -86,6 +87,7 @@ export default class AdminUserController extends CrudController
 
         return res.json({
             item: {
+                id: model.id,
                 name: model.name,
                 email: model.email,
                 hasPassword: Boolean(model.password),
@@ -161,11 +163,33 @@ export default class AdminUserController extends CrudController
     /**
      * @see CrudController
      */
-    protected async update(id: number, req: Request): Promise<object>
+    protected async update(_id: number, req: Request): Promise<object>
     {
-        return new Promise(function(resolve, reject) {
-            return resolve({});
-        });
+        const
+            context = new CommandContext,
+            cmd = new UserUpdate;
+
+        context.walk(req.body.formData);
+
+        try {
+
+            await cmd.execute(context);
+
+        } catch (error) {
+            if (error instanceof ValidationError) {
+                return {
+                    success: false,
+                    error: error.message,
+                };
+            }
+
+            throw new Error(error.message);
+        }
+        
+        return {
+            success: true,
+            item: context.get('user'),
+        };
     }
 
     /**
