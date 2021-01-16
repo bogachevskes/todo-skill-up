@@ -19,7 +19,8 @@
 </template>
 
 <script>
-    import Navbar from './common/Navbar';
+    
+    import Navbar from './common/NavBar';
     import Footer from './common/Footer';
     import ErrorModal from '@common-components/modals/Error';
     import SuccessModal from '@common-components/modals/Success';
@@ -32,4 +33,5 @@
             'app-error-modal': ErrorModal,
         },
     }
+    
 </script>
