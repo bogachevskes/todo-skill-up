@@ -107,6 +107,7 @@
                             return DateHelper.printFormatted(data.createdAt);
                         }
                     },
+                    /* Вернуть после установки на mariadb >= 10.0.1
                     {
                         name: 'updatedAt',
                         label: 'Дата обновления',
@@ -114,6 +115,7 @@
                             return DateHelper.printFormatted(data.updatedAt);
                         }
                     },
+                    */
                     {
                         name: 'actions',
                         label: 'Действия',
