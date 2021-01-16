@@ -47,7 +47,7 @@ export default class User extends BaseEntity
 
     @Column("timestamp", {
         name: 'created_at',
-        default: () => "CURRENT_TIMESTAMP()",
+        default: () => "NOW()",
     })
     public createdAt: Date;
 
