@@ -28,14 +28,15 @@ export default class TodoStatus extends BaseEntity
 
     @Column("timestamp", {
         name: 'created_at',
-        default: () => "NOW()",
+        default: () => "CURRENT_TIMESTAMP()",
     })
     public createdAt: Date;
 
     @Column("timestamp", {
         name: 'updated_at',
-        default: () => "CURRENT_TIMESTAMP()",
-        onUpdate: "CURRENT_TIMESTAMP()"
+        nullable: true,
+        //default: () => "CURRENT_TIMESTAMP()",
+        //onUpdate: "CURRENT_TIMESTAMP()"
     })
     public updatedAt: Date;
 
