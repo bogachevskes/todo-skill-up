@@ -1,7 +1,7 @@
 import Configurable from '../base/Configurable';
 import Executable from '../base/Executable';
 import CommandContext from '../base/CommandContext';
-import RenderCommand from './commands/RenderCommand';
+import RenderCommand from '../common/commands/RenderCommand';
 
 export default class Renderer extends Configurable
 {
@@ -39,4 +39,5 @@ export default class Renderer extends Configurable
 
         instance.rendererCommand.execute(instance.context);
     }
+    
 }

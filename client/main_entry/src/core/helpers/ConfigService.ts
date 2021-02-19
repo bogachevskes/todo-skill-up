@@ -1,46 +1,37 @@
-import config from '../config/common';
-import serviceConfig from '../config/_services';
+import InvalidArgumentException from '../base/Exceptions/InvalidArgumentException';
+import Configurable from '../base/Configurable';
+import serviceConfig from '../config/_common';
 
-export default class ConfigService
+export default class ConfigService extends Configurable
 {
+    protected static instance: ConfigService|null = null;
+
     /**
-     * Проверяет активность режима
-     * продакшн.
-     * 
-     * @return {boolean}
+     * @param  string key
+     * @return number|string
      */
-    public static isProduction(): boolean
+    public static get(key: string): number|string
     {
-        if (process.env.NODE_ENV === 'production') {
-            return true;
+        const instance = this.getInstance(),
+            value = instance[key];
+        
+        if (value === undefined) {
+            throw new InvalidArgumentException(`Key ${key} is not found in configuration`);
         }
 
-        return false;
+        return value;
     }
     
     /**
-     * Возвращает порт запуска.
-     * 
-     * @return {number}
+     * @return ConfigService
      */
-    public static getPort(): number
+    protected static getInstance(): ConfigService
     {
-        if (ConfigService.isProduction()) {
-            return config.PROD_APP_PORT;
+        if (! (this.instance instanceof ConfigService)) {
+            this.instance = new this(serviceConfig);
         }
-
-        return config.DEV_APP_PORT;
-    }
-
-    /**
-     * Возвращает адрес
-     * обращения к api.
-     * 
-     * @return {string}
-     */
-    public static getBackendUrl(): string
-    {
-        return serviceConfig.BACKEND_DOMAIN;
+        
+        return this.instance;
     }
 
 }
