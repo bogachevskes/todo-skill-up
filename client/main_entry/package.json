@@ -1,10 +1,9 @@
 {
   "name": "main-entry",
-  "description": "Todo App on VueJs",
+  "description": "Todo App client-side on VueJs",
   "version": "1.0.0",
   "author": "ace7upp@gmail.com",
   "license": "MIT",
-  "private": false,
   "scripts": {
     "watch": "webpack --config ./dist/webpack.config.js --mode=development --watch --progress --hide-modules",
     "build": "rm -rf ./dist && cross-env NODE_ENV=production webpack --config ./webpack.config.js --mode=production --progress --hide-modules",

@@ -1,4 +1,4 @@
-const db = require('./dist/config/_db');
+const db = require('./dist/server/config/_db');
 
 module.exports = {
     "type": 'mysql',
@@ -10,6 +10,6 @@ module.exports = {
     "logging": db.logging,
     "synchronize": db.sync,
     "entities": [
-        "dist/entity/**/*.js",
+        "dist/server/entity/**/*.js",
     ],
 }

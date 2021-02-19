@@ -5,7 +5,6 @@
         "experimentalDecorators": true,
         "module": "commonjs",
         "target": "es5",
-        "outDir": "./dist",
         "incremental": true,
         "strictNullChecks": true,
         "esModuleInterop": true,
