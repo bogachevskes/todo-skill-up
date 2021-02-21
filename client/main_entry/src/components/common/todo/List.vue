@@ -12,6 +12,8 @@
                         :statuses="statuses"
                         :addCard="addCard"
                         :changeStatus="changeStatus"
+                        :onMoveCard="onMoveCard"
+                        :moveCard="moveCard"
                         :deleteCard="deleteCard"
                         :editCard="editCard"
                     ></group-item>
@@ -63,11 +65,24 @@
                         'create'
                     );
             },
-            changeStatus: function (card, event) {
-                axios.put(`todo/set-status/${card.id}`, { statusId: event.target.value })
-                    .then(result => {
+            moveToGroup: function (cardId, statusId) {
+                axios.put(`todo/set-status/${cardId}`, { statusId })
+                    .then(() => {
                         this.$store.dispatch('updateGroupsList', this.$userStorage);
                     });
+            },
+            changeStatus: function (card, event) {
+                this.moveToGroup(card.id, event.target.value);
+            },
+            onMoveCard: function (event, card) {
+                event.dataTransfer.dropEffect = 'move';
+                event.dataTransfer.effectAllowed = 'move';
+                event.dataTransfer.setData('todo_card_id', card.id);
+            },
+            moveCard: function (event, group) {
+                const cardId = event.dataTransfer.getData('todo_card_id');
+
+                this.moveToGroup(cardId, group.status.id);
             },
             deleteCard: function (id) {
                 axios.delete(`todo/delete/${id}`)

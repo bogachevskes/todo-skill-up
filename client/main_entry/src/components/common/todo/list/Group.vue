@@ -8,19 +8,28 @@
             </p>
             <div class="panel-block has-background-light">
                 <div class="container">
-                    <div v-if="hasCards">
-                        <card-item
-                            v-for="(card, index) in group.todoes"
-                            :key="index"
-                            :statuses="statuses"
-                            :card="card"
-                            :changeStatus="changeStatus"
-                            :deleteCard="deleteCard"
-                            :editCard="group.isInitialDefault() ? editCard : null"
-                        ></card-item>
-                    </div>
-                    <div v-if="hasNoCards">
-                        Список пуст
+                    <div
+                        @drop="moveCard ? moveCard($event, group) : null"
+                        @dragover.prevent
+                        @dragenter.prevent
+                    >
+                        <div
+                            v-if="hasCards"
+                        >
+                            <card-item
+                                v-for="(card, index) in group.todoes"
+                                :key="index"
+                                :statuses="statuses"
+                                :card="card"
+                                :changeStatus="changeStatus"
+                                :onMoveCard="onMoveCard"
+                                :deleteCard="deleteCard"
+                                :editCard="group.isInitialDefault() ? editCard : null"
+                            ></card-item>
+                        </div>
+                        <div v-if="hasNoCards" style="display:flex; align-items: center; min-height:50px;">
+                            Список пуст
+                        </div>
                     </div>
                 </div>
             </div>
@@ -49,6 +58,14 @@
                 default: null,
             },
             changeStatus: {
+                type: Function,
+                default: null,
+            },
+            onMoveCard: {
+                type: Function,
+                default: null,
+            },
+            moveCard: {
                 type: Function,
                 default: null,
             },

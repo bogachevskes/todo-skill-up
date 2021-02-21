@@ -1,6 +1,10 @@
 <template>
 
-    <div class="py-2">
+    <div
+        class="py-2"
+        draggable="true"
+        @dragstart="onMoveCard ? onMoveCard($event, card) : null"
+    >
         <div class="card">
             <div class="card-content">
                 <p class="title" style="color:black">
@@ -73,6 +77,10 @@
                 type: TodoItem,
             },
             changeStatus: {
+                type: Function,
+                default: null,
+            },
+            onMoveCard: {
                 type: Function,
                 default: null,
             },
