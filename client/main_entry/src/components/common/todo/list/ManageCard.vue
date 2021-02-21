@@ -225,9 +225,17 @@
 </script>
 
 <style lang="scss">
-
     .menu-list li a:hover {
         background: #09bd5a;
+        color: white!important;
+    }
+
+    .menu-list .is-active {
+        color: white!important;
+    }
+    
+    .menu-list a {
+        color: #4a4a4a!important;
     }
 
 </style>
