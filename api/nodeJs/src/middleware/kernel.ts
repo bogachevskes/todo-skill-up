@@ -8,7 +8,8 @@ import UserRepository from '../repository/UserRepository';
 
 import User from '../entity/User';
 
-import commonConfig from '../config/_common';
+import ConfigService from '../helpers/ConfigService';
+
 import * as validationManager from '../utils/validationManager';
 
 /**
@@ -47,7 +48,7 @@ export const authOnly = async (req: Request, res: Response, next: NextFunction) 
     
     let decodedToken;
 
-    decodedToken = jwt.verify(token!, commonConfig.TOKEN_SECRET_WORD);
+    decodedToken = jwt.verify(token!, String(ConfigService.get('TOKEN_SECRET_WORD')));
 
     validationManager.provideAuthentication(decodedToken);
 

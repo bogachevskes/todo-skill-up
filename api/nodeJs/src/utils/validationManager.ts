@@ -1,7 +1,9 @@
 import { validationResult } from 'express-validator';
 import { check } from 'express-validator';
 import jwt from 'jsonwebtoken';
-import commonConfig from '../config/_common';
+
+import ConfigService from '../helpers/ConfigService';
+
 import BadRequest from '../core/Exceptions/BadRequest';
 import NotFound from '../core/Exceptions/NotFound';
 
@@ -23,7 +25,7 @@ const PASSWORD_MIN_INPUT_LENGTH = 5;
 /**
  * Обработка валидации данных ввода.
  */
-export const provideValidation = (req, next) => {
+export const provideValidation = (req, _next) => {
     const errors = validationResult(req);
 
     if (errors.isEmpty()) {
@@ -70,9 +72,9 @@ export const createUserToken = (user: User) => {
             email: user.email,
             userId: user.id,
         },
-        commonConfig.TOKEN_SECRET_WORD,
+        String(ConfigService.get('TOKEN_SECRET_WORD')),
         {
-            expiresIn: commonConfig.TOKEN_EXPIRATION_TIME,
+            expiresIn: ConfigService.get('TOKEN_EXPIRATION_TIME'),
         }
     );
 

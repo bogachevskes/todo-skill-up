@@ -1,4 +1,7 @@
 export default {
+    DEV_APP_PORT: 3005,
+    PROD_APP_PORT: 3001,
+    WEB_SOCKET_PORT: 8080,
     TOKEN_SECRET_WORD: 'secret',
     TOKEN_EXPIRATION_TIME: 5e5,
 };

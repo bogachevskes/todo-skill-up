@@ -1,6 +1,6 @@
 export default abstract class Configurable
 {
-    protected constructor(parameters: object = {})
+    public constructor(parameters: object = {})
     {
         this.configure(parameters);
     }
