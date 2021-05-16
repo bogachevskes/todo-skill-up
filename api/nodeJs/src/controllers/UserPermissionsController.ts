@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import CrudController from './base/CrudController';
-import BadRequest from '../core/Exceptions/BadRequest';
+import CrudController from '../Framework/Http/Controller/CrudController';
+import BadRequest from '../Framework/Exceptions/BadRequest';
 import User from '../entity/User';
 import UserRepository from '../repository/UserRepository';
 
@@ -8,10 +8,12 @@ export default class UserPermissionsController extends CrudController
 {
     protected userRepo: UserRepository;
     
+    /*
     public constructor()
     {
         super('/user-permissions');
     }
+    */
 
     /**
      * Определение репозитория пользователя.

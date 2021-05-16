@@ -4,8 +4,8 @@ import jwt from 'jsonwebtoken';
 
 import ConfigService from '../helpers/ConfigService';
 
-import BadRequest from '../core/Exceptions/BadRequest';
-import NotFound from '../core/Exceptions/NotFound';
+import BadRequest from '../Framework/Exceptions/BadRequest';
+import NotFound from '../Framework/Exceptions/NotFound';
 
 import User from '../entity/User';
 import UserRepository from '../repository/UserRepository';

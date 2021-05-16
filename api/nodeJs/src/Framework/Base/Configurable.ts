@@ -1,4 +1,4 @@
-export default abstract class Configurable
+export default class Configurable
 {
     public constructor(parameters: object = {})
     {

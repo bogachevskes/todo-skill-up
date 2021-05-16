@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
-import ValidationError from '../../core/Exceptions/ValidationError';
+import ValidationError from '../../Framework/Exceptions/ValidationError';
 import User from '../../entity/User';
-import CrudController from '../base/CrudController';
+import CrudController from '../../Framework/Http/Controller/CrudController';
 import UserRepository from '../../repository/UserRepository';
-import RouteData from '../base/RouteData';
-import AutoBind from '../../core/Decorators/AutoBind';
-import NotFound from '../../core/Exceptions/NotFound';
+import Route from '../../Framework/Http/Router/Route';
+import AutoBind from '../../Framework/Decorators/AutoBind';
+import NotFound from '../../Framework/Exceptions/NotFound';
 import CommandContext from '../../console/base/CommandContext';
 import UserCreate from '../../console/commands/UserCreate';
 import UserUpdate from '../../console/commands/UserUpdate';
@@ -14,20 +14,22 @@ export default class AdminUserController extends CrudController
 {
     protected userRepo: UserRepository;
     
+    /*
     public constructor()
     {
         super('/admin/users');
     }
+    */
 
     /**
      * @see CrudController
      */
-    protected defineCustomRoutes(): RouteData[]
+    protected defineCustomRoutes(): Route[]
     {
         return [
-            new RouteData('get', 'todoes/:id', 'todoes'),
-            new RouteData('get', 'get-user-data/:id', 'getUserData'),
-            new RouteData('put', 'set-active-state/:id', 'setActiveState'),
+            //new Route('get', 'todoes/:id', 'todoes'),
+            //new Route('get', 'get-user-data/:id', 'getUserData'),
+            //new Route('put', 'set-active-state/:id', 'setActiveState'),
         ];
     }
 

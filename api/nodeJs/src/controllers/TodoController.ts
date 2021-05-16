@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
-import CrudController from './base/CrudController';
-import RouteData from './base/RouteData';
-import AutoBind from '../core/Decorators/AutoBind';
-import NotFound from '../core/Exceptions/NotFound';
-import BadRequest from '../core/Exceptions/BadRequest';
+import CrudController from '../Framework/Http/Controller/CrudController';
+import Route from '../Framework/Http/Router/Route';
+import AutoBind from '../Framework/Decorators/AutoBind';
+import NotFound from '../Framework/Exceptions/NotFound';
+import BadRequest from '../Framework/Exceptions/BadRequest';
 import User from '../entity/User';
 import TodoItem from '../entity/TodoItem';
 import TodoStatus from '../entity/TodoStatus';
@@ -15,18 +15,20 @@ export default class TodoController extends CrudController
 {
     protected userRepo: UserRepository;
     
+    /*
     public constructor()
     {
         super('/todo');
     }
+    */
 
     /**
      * @see CrudController
      */
-    protected defineCustomRoutes(): RouteData[]
+    protected defineCustomRoutes(): Route[]
     {
         return [
-            new RouteData('put', 'set-status/:id', 'setStatus'),
+           // new Route('put', 'set-status/:id', 'setStatus'),
         ];
     }
 

@@ -1,6 +1,6 @@
 import CommandContext from '../base/CommandContext';
 import CommandInterface from '../base/CommandInterface';
-import ValidationError from '../../core/Exceptions/ValidationError';
+import ValidationError from '../../Framework/Exceptions/ValidationError';
 
 export default abstract class BaseCommand implements CommandInterface
 {

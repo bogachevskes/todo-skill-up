@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import NotFound from '../core/Exceptions/NotFound';
-import HTTPException from '../core/Exceptions/base/HTTPException';
-import InternalServerError from '../core/Exceptions/InternalServerError';
+import NotFound from '../Framework/Exceptions/NotFound';
+import HTTPException from '../Framework/Exceptions/base/HTTPException';
+import InternalServerError from '../Framework/Exceptions/InternalServerError';
 import logger from '../utils/logger';
 
 export default (err: Error, req: Request, res: Response, next: NextFunction): Response<any> => {

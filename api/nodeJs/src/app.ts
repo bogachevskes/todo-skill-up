@@ -1,3 +1,4 @@
+/*
 import "reflect-metadata";
 import * as typeorm from 'typeorm';
 import express from 'express';
@@ -55,3 +56,4 @@ async function initServer() {
     connection.synchronize(dbConf.sync);
     initServer();
 })();
+*/

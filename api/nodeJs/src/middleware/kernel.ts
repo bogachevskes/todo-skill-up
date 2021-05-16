@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
-import BadRequest from '../core/Exceptions/BadRequest';
-import NotFound from '../core/Exceptions/NotFound';
+import BadRequest from '../Framework/Exceptions/BadRequest';
+import NotFound from '../Framework/Exceptions/NotFound';
 
 import UserRepository from '../repository/UserRepository';
 

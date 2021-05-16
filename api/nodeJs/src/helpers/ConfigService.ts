@@ -1,5 +1,5 @@
-import InvalidArgumentException from '../core/Exceptions/InvalidArgumentException';
-import Configurable from '../core/Base/Configurable';
+import InvalidArgumentException from '../Framework/Exceptions/InvalidArgumentException';
+import Configurable from '../Framework/Base/Configurable';
 import serviceConfig from '../config/_common';
 
 export default class ConfigService extends Configurable

@@ -2,8 +2,8 @@ import { RequestHandler, Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
 import * as validationManager from '../utils/validationManager';
 
-import BadRequest from '../core/Exceptions/BadRequest';
-import NotFound from '../core/Exceptions/NotFound';
+import BadRequest from '../Framework/Exceptions/BadRequest';
+import NotFound from '../Framework/Exceptions/NotFound';
 
 import UserRepository from '../repository/UserRepository';
 import User from '../entity/User';

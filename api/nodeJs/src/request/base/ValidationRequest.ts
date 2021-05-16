@@ -1,7 +1,7 @@
 import { Validator } from "validator.ts/Validator";
 import ValidationErrorBag from './ValidationErrorBag';
 import { ValidationErrorInterface } from "validator.ts/ValidationErrorInterface";
-import Configurable from '../../core/Base/Configurable';
+import Configurable from '../../Framework/Base/Configurable';
 
 export default abstract class ValidationRequest extends Configurable
 {

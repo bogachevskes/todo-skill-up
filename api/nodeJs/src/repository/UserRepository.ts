@@ -1,5 +1,5 @@
 import { SelectQueryBuilder } from 'typeorm';
-import RuntimeError from '../core/Exceptions/RuntimeError';
+import RuntimeError from '../Framework/Exceptions/RuntimeError';
 import User from '../entity/User';
 import Role from '../entity/Role';
 import TodoItem from '../entity/TodoItem';
