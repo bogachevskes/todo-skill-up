@@ -68,8 +68,8 @@ export default class Router
      * @param  ControllerInterface controller
      * @return Function
      */
-     protected resolveController(controller: ControllerInterface, action: string): Function
-     {
+    protected resolveController(controller: ControllerInterface, action: string): Function
+    {
         const className = controller.constructor.name;
         
         if (! (className in this.controllers)) {
@@ -77,13 +77,13 @@ export default class Router
         }
         
         return asyncHandler(this.controllers[className][action]);
-     }
+    }
 
     /**
      * @param  Route[] routes
      * @return void
      */
-    public configure(routes: Route[]): void
+    public configureRoutes(routes: Route[]): void
     {
         this.routes = routes;
         

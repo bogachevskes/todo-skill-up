@@ -1,6 +1,9 @@
-import Router from './Router/Router';
 import express from 'express';
+import { asyncMiddleware } from 'middleware-async';
+import Router from './Router/Router';
 import OutputManager from '../Helpers/OutputManager';
+import MiddlewareInterface from './Middleware/MiddlewareInterface';
+import ErrorMiddlewareInterface from './Middleware/ErrorMiddlewareInterface';
 
 export default class Kernel
 {
@@ -13,6 +16,34 @@ export default class Kernel
      * @type Router
      */
     protected router: Router;
+
+    /**
+     * @type MiddlewareInterface[]
+     */
+    protected middleware: MiddlewareInterface[];
+
+    /**
+     * @post ErrorMiddlewareInterface[]
+     */
+    protected errorMiddleware: ErrorMiddlewareInterface[];
+
+    /**
+     * @param  MiddlewareInterface[] middleware 
+     * @return void
+     */
+    public setMiddleware(middleware: MiddlewareInterface[]): void
+    {
+        this.middleware = middleware;
+    }
+
+    /**
+     * @param  ErrorMiddlewareInterface[] middleware 
+     * @return void
+     */
+     public setErrorMiddleware(middleware: ErrorMiddlewareInterface[]): void
+     {
+        this.errorMiddleware = middleware;
+     }
     
     /**
      * @param  router 
@@ -22,6 +53,26 @@ export default class Kernel
     {
         this.router = router;
     }
+
+    /**
+     * @return void
+     */
+    protected applyMiddleware(): void
+    {
+        for (const middleware of this.middleware) {
+            this.app.use(asyncMiddleware(middleware.execute));
+        }
+    }
+
+    /**
+     * @return void
+     */
+    protected applyErrorMiddleware(): void
+    {
+        for (const middleware of this.errorMiddleware) {
+            this.app.use(middleware.execute);
+        }
+    }
     
     /**
      * @param  number port 
@@ -29,10 +80,15 @@ export default class Kernel
      */
     public async handle(port: number): Promise<void>
     {
-        const app = await express();
+        this.app = await express();
 
-        app.use(this.router.getRoutes())
-            .listen(port, () => OutputManager.showServerInit(port));
+        this.applyMiddleware();
+
+        this.app.use(this.router.getRoutes());
+
+        this.applyErrorMiddleware();
+
+        this.app.listen(port, () => OutputManager.showServerInit(port));
     }
 
     /**

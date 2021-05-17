@@ -1,5 +1,8 @@
+import ErrorMiddlewareInterface from '../Framework/Http/Middleware/ErrorMiddlewareInterface';
 import ErrorMiddleware from '../Framework/Http/Middleware/ErrorMiddleware';
 
-export default [
-    ErrorMiddleware,
+const middleware: ErrorMiddlewareInterface[] = [
+    new ErrorMiddleware,
 ];
+
+export default middleware;

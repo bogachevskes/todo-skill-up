@@ -10,7 +10,7 @@ export default class ErrorMiddleware implements ErrorMiddlewareInterface
     /**
      * @see ErrorMiddlewareInterface
      */
-    public execute(err: Error, req: Request, res: Response, _next: NextFunction): Response
+    public execute(err: Error, req: Request, res: Response, next: NextFunction): Response
     {
         if (err instanceof NotFound) {
             res.status(err.status);
