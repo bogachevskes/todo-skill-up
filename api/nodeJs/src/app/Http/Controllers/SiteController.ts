@@ -9,13 +9,6 @@ export default class SiteController extends Controller
             message: 'Hi there!',
         });
     };
-
-    public async actionHi(_req: Request, res: Response, _next: NextFunction): Promise<Response>
-    {
-        return res.json({
-            message: 'Hi!',
-        });
-    };
 }
 
 

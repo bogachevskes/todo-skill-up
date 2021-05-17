@@ -12,13 +12,4 @@ RoutesCollection.add(
     ),
 );
 
-RoutesCollection.add(
-    new Route(
-        'GET',
-        '/hi',
-        SiteController,
-        'actionHi'
-    ),
-);
-
 export default RoutesCollection;
