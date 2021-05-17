@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import asyncHandler from 'express-async-handler';
-import * as authController from '../controllers/auth';
+import * as AuthController from '../app/Http/Controllers/AuthController';
 import * as ValidationManager from '../Framework/Utils/ValidationManager';
 
 const router = Router();
@@ -13,7 +13,7 @@ router.put(
         ValidationManager.validatePassword(),
         ValidationManager.validatePasswordConfirmation(),
     ],
-    asyncHandler(authController.signup)
+    asyncHandler(AuthController.signup)
 );
 
 router.post(
@@ -22,7 +22,7 @@ router.post(
         ValidationManager.validateEmail(false),
         ValidationManager.validatePassword(),
     ],
-    asyncHandler(authController.login)
+    asyncHandler(AuthController.login)
 );
 
 export default router;

@@ -1,12 +1,12 @@
 import { RequestHandler, Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
-import * as ValidationManager from '../Framework/Utils/ValidationManager';
+import * as ValidationManager from '../../../Framework/Utils/ValidationManager';
 
-import BadRequest from '../Framework/Exceptions/BadRequest';
-import NotFound from '../Framework/Exceptions/NotFound';
+import BadRequest from '../../../Framework/Exceptions/BadRequest';
+import NotFound from '../../../Framework/Exceptions/NotFound';
 
-import UserRepository from '../app/Repository/UserRepository';
-import User from '../app/Entity/User';
+import UserRepository from '../../Repository/UserRepository';
+import User from '../../Entity/User';
 
 export const signup: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     
