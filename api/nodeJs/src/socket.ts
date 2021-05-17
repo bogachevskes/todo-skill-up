@@ -1,8 +1,5 @@
-import * as io from 'socket.io';
 import socketIo from 'socket.io';
 import { Server } from 'http';
-import OutputManager from '../Framework/Helpers/OutputManager';
-import { Express } from 'express';
 
 export default class SocketManager
 {
