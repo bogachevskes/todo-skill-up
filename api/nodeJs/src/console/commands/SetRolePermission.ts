@@ -1,9 +1,9 @@
 import BaseCommand from '../base/BaseCommand';
-import RolePermissionsRepository from '../../repository/RolePermissionsRepository';
-import RoleRepository from '../../repository/RoleRepository';
-import PermissionsRepository from '../../repository/PermissionsRepository';
-import Role from '../../entity/Role';
-import Permission from '../../entity/Permission';
+import RolePermissionsRepository from '../../app/repository/RolePermissionsRepository';
+import RoleRepository from '../../app/repository/RoleRepository';
+import PermissionsRepository from '../../app/repository/PermissionsRepository';
+import Role from '../../app/entity/Role';
+import Permission from '../../app/entity/Permission';
 
 export default class SetRolePermission extends BaseCommand
 {

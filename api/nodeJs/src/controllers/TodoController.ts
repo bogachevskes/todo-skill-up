@@ -4,12 +4,12 @@ import Route from '../Framework/Http/Router/Route';
 import AutoBind from '../Framework/Decorators/AutoBind';
 import NotFound from '../Framework/Exceptions/NotFound';
 import BadRequest from '../Framework/Exceptions/BadRequest';
-import User from '../entity/User';
-import TodoItem from '../entity/TodoItem';
-import TodoStatus from '../entity/TodoStatus';
-import UserRepository from '../repository/UserRepository';
-import TodoItemRepository from '../repository/TodoItemRepository';
-import TodoStatusRepository from '../repository/TodoStatusRepository';
+import User from '../app/entity/User';
+import TodoItem from '../app/entity/TodoItem';
+import TodoStatus from '../app/entity/TodoStatus';
+import UserRepository from '../app/repository/UserRepository';
+import TodoItemRepository from '../app/repository/TodoItemRepository';
+import TodoStatusRepository from '../app/repository/TodoStatusRepository';
 
 export default class TodoController extends CrudController
 {

@@ -2,13 +2,13 @@ import { validationResult } from 'express-validator';
 import { check } from 'express-validator';
 import jwt from 'jsonwebtoken';
 
-import ConfigService from '../helpers/ConfigService';
+import ConfigService from './ConfigService';
 
-import BadRequest from '../Framework/Exceptions/BadRequest';
-import NotFound from '../Framework/Exceptions/NotFound';
+import BadRequest from '../Exceptions/BadRequest';
+import NotFound from '../Exceptions/NotFound';
 
-import User from '../entity/User';
-import UserRepository from '../repository/UserRepository';
+import User from '../../app/entity/User';
+import UserRepository from '../../app/repository/UserRepository';
 
 /**
  * Минимальная длина поля name.

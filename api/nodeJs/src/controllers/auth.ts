@@ -1,16 +1,16 @@
 import { RequestHandler, Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
-import * as validationManager from '../utils/validationManager';
+import * as ValidationManager from '../Framework/Utils/ValidationManager';
 
 import BadRequest from '../Framework/Exceptions/BadRequest';
 import NotFound from '../Framework/Exceptions/NotFound';
 
-import UserRepository from '../repository/UserRepository';
-import User from '../entity/User';
+import UserRepository from '../app/repository/UserRepository';
+import User from '../app/entity/User';
 
 export const signup: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     
-    validationManager.provideValidation(req, next);
+    ValidationManager.provideValidation(req, next);
 
     const hashedPassword = await bcrypt.hash(req.body.password, 12);
 
@@ -23,7 +23,7 @@ export const signup: RequestHandler = async (req: Request, res: Response, next: 
 }
 
 export const login: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
-    validationManager.provideValidation(req, next);
+    ValidationManager.provideValidation(req, next);
 
     const user = await UserRepository.findByEmail(req.body.email);
 
@@ -37,9 +37,9 @@ export const login: RequestHandler = async (req: Request, res: Response, next: N
 
     const isOnMatch = await bcrypt.compare(req.body.password, user!.password);
 
-    validationManager.provideAuthentication(isOnMatch);
+    ValidationManager.provideAuthentication(isOnMatch);
 
-    const token = validationManager.createUserToken(user!);
+    const token = ValidationManager.createUserToken(user!);
 
     return res.json({
         token: token,

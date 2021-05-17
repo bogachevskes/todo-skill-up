@@ -1,5 +1,6 @@
 import Router from './Router/Router';
 import express from 'express';
+import OutputManager from '../Helpers/OutputManager';
 
 export default class Kernel
 {
@@ -22,11 +23,25 @@ export default class Kernel
         this.router = router;
     }
     
-    public async handle(): Promise<void>
+    /**
+     * @param  number port 
+     * @return Promise<void>
+     */
+    public async handle(port: number): Promise<void>
     {
         const app = await express();
 
         app.use(this.router.getRoutes())
-            .listen(3000, () => console.log('started'));
+            .listen(port, () => OutputManager.showServerInit(port));
+    }
+
+    /**
+     * Завершение выполнения команды.
+     * 
+     * @return void
+     */
+    public terminate(): void
+    {
+        process.exit();
     }
 }

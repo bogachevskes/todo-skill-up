@@ -3,8 +3,8 @@ import { MESSAGE_ALPHA_NUM, MESSAGE_MIN_LENGTH, MESSAGE_EMAIL, MESSAGE_PASSWORD_
 import { USER_NAME_MIN_LENGTH, USER_NAME_MAX_LENGTH, USER_PASSWORD_MIN_LENGTH, USER_PASSWORD_MAX_LENGTH } from '../base/ValidationConstants';
 import { IsEmail, IsAlphanumeric, IsLength } from "validator.ts/decorator/Validation";
 import { ToString } from "validator.ts/decorator/Sanitization";
-import UserRepository from '../../repository/UserRepository';
-import User from '../../entity/User';
+import UserRepository from '../../app/repository/UserRepository';
+import User from '../../app/entity/User';
 
 export default class UserCreateRequest extends ValidationRequest
 {

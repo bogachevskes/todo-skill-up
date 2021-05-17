@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import MiddleWareInterface from './MiddleWareInterface';
+import MiddleWareInterface from './MiddlewareInterface';
 
 export default abstract class Middleware implements MiddleWareInterface
 {
@@ -16,7 +16,7 @@ export default abstract class Middleware implements MiddleWareInterface
     /**
      * @return Response|void|never
      */
-    protected abstract handle(): Response|void|never;
+    protected abstract handle(): Promise<boolean|void|never>;
     
     /**
      * @param  Request req 
@@ -24,15 +24,15 @@ export default abstract class Middleware implements MiddleWareInterface
      * @param  NextFunction next 
      * @return void
      */
-    public execute(req: Request, res: Response, next: NextFunction): void
+    public async execute(req: Request, res: Response, next: NextFunction): Promise<void>
     {
         this.req = req;
 
         this.res = res;
         
-        const result = this.handle();
+        const result = await this.handle();
 
-        if (result instanceof Response) {
+        if (result === false) {
             return;
         }
         

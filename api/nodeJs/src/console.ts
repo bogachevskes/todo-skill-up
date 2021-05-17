@@ -5,10 +5,11 @@ import * as typeorm from 'typeorm';
 import commandsList from './config/commandsList';
 import CommandKernel from './console/Kernel';
 
+const kernel = new CommandKernel;
+
 (async () => {
     await typeorm.createConnection();
     
-    const kernel = new CommandKernel();
     await kernel.handle(commandsList);
     kernel.terminate();
 })();

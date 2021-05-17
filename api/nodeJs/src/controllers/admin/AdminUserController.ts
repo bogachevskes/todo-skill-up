@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import ValidationError from '../../Framework/Exceptions/ValidationError';
-import User from '../../entity/User';
+import User from '../../app/entity/User';
 import CrudController from '../../Framework/Http/Controller/CrudController';
-import UserRepository from '../../repository/UserRepository';
+import UserRepository from '../../app/repository/UserRepository';
 import Route from '../../Framework/Http/Router/Route';
 import AutoBind from '../../Framework/Decorators/AutoBind';
 import NotFound from '../../Framework/Exceptions/NotFound';
