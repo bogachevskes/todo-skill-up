@@ -7,8 +7,8 @@ import Route from '../../../../Framework/Http/Router/Route';
 import AutoBind from '../../../../Framework/Decorators/AutoBind';
 import NotFound from '../../../../Framework/Exceptions/NotFound';
 import CommandContext from '../../../../Framework/Base/CommandContext';
-import UserCreate from '../../../console/commands/UserCreate';
-import UserUpdate from '../../../console/commands/UserUpdate';
+import UserCreate from '../../../Console/Commands/UserCreate';
+import UserUpdate from '../../../Console/Commands/UserUpdate';
 
 export default class AdminUserController extends CrudController
 {

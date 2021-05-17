@@ -1,36 +1,18 @@
 import { Request, Response, NextFunction } from 'express';
-import CrudController from '../Framework/Http/Controller/CrudController';
-import Route from '../Framework/Http/Router/Route';
-import AutoBind from '../Framework/Decorators/AutoBind';
-import NotFound from '../Framework/Exceptions/NotFound';
-import BadRequest from '../Framework/Exceptions/BadRequest';
-import User from '../app/Entity/User';
-import TodoItem from '../app/Entity/TodoItem';
-import TodoStatus from '../app/Entity/TodoStatus';
-import UserRepository from '../app/Repository/UserRepository';
-import TodoItemRepository from '../app/Repository/TodoItemRepository';
-import TodoStatusRepository from '../app/Repository/TodoStatusRepository';
+import CrudController from '../../../Framework/Http/Controller/CrudController';
+import AutoBind from '../../../Framework/Decorators/AutoBind';
+import NotFound from '../../../Framework/Exceptions/NotFound';
+import BadRequest from '../../../Framework/Exceptions/BadRequest';
+import User from '../../Entity/User';
+import TodoItem from '../../Entity/TodoItem';
+import TodoStatus from '../../Entity/TodoStatus';
+import UserRepository from '../../Repository/UserRepository';
+import TodoItemRepository from '../../Repository/TodoItemRepository';
+import TodoStatusRepository from '../../Repository/TodoStatusRepository';
 
 export default class TodoController extends CrudController
 {
     protected userRepo: UserRepository;
-    
-    /*
-    public constructor()
-    {
-        super('/todo');
-    }
-    */
-
-    /**
-     * @see CrudController
-     */
-    protected defineCustomRoutes(): Route[]
-    {
-        return [
-           // new Route('put', 'set-status/:id', 'setStatus'),
-        ];
-    }
 
     /**
      * Определение репозитория пользователя.

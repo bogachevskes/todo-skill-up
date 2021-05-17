@@ -1,7 +1,7 @@
-import SetRole from '../app/console/commands/SetRole';
-import UnsetRole from '../app/console/commands/UnsetRole';
-import SetRolePermission from '../app/console/commands/SetRolePermission';
-import SeedData from '../app/console/commands/SeedData';
+import SetRole from '../app/Console/Commands/SetRole';
+import UnsetRole from '../app/Console/Commands/UnsetRole';
+import SetRolePermission from '../app/Console/Commands/SetRolePermission';
+import SeedData from '../app/Console/Commands/SeedData';
 
 export default {
     'set:role': SetRole,
