@@ -1,7 +1,5 @@
 import express from 'express';
 
-import { Router  as BaseRouter } from 'express';
-
 import { asyncMiddleware } from 'middleware-async';
 import Router from './Router/Router';
 import OutputManager from '../Helpers/OutputManager';
