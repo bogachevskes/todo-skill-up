@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import * as typeorm from 'typeorm';
+import * as Connection from 'typeorm';
 import Router from '../Framework/Http/Router/Router';
 import Kernel from '../Framework/Http/Kernel';
 import Routes from '../routes/web';
@@ -24,9 +24,8 @@ kernel.setErrorMiddleware(ErrorMiddleware);
 const PORT = ConfigService.getPort();
 
 (async () => {
-    await typeorm.createConnection();
+    // await Connection.createConnection();
 
     await kernel.handle(PORT);
-    kernel.terminate();
 })();
 

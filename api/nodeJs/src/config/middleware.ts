@@ -4,9 +4,9 @@ import MiddlewareInterface from '../Framework/Http/Middleware/MiddlewareInterfac
 import DefaultMiddleware from '../app/Http/Middleware/DefaultMiddleware';
 
 const middleware: MiddlewareInterface[] = [
-    new JsonParserMiddleware,
+    //new JsonParserMiddleware,
     new DefaultMiddleware,
-    new ProvideCorsMiddleware,
+    //new ProvideCorsMiddleware,
 ];
 
 export default middleware;

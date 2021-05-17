@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import MiddleWareInterface from './MiddlewareInterface';
+import AutoBind from '../../../Framework/Decorators/AutoBind';
 
 export default abstract class Middleware implements MiddleWareInterface
 {
@@ -24,6 +25,7 @@ export default abstract class Middleware implements MiddleWareInterface
      * @param  NextFunction next 
      * @return void
      */
+    @AutoBind
     public async execute(req: Request, res: Response, next: NextFunction): Promise<void>
     {
         this.req = req;

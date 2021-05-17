@@ -1,4 +1,7 @@
 import express from 'express';
+
+import { Router  as BaseRouter } from 'express';
+
 import { asyncMiddleware } from 'middleware-async';
 import Router from './Router/Router';
 import OutputManager from '../Helpers/OutputManager';
@@ -20,12 +23,12 @@ export default class Kernel
     /**
      * @type MiddlewareInterface[]
      */
-    protected middleware: MiddlewareInterface[];
+    protected middleware: MiddlewareInterface[] = [];
 
     /**
      * @post ErrorMiddlewareInterface[]
      */
-    protected errorMiddleware: ErrorMiddlewareInterface[];
+    protected errorMiddleware: ErrorMiddlewareInterface[] = [];
 
     /**
      * @param  MiddlewareInterface[] middleware 
