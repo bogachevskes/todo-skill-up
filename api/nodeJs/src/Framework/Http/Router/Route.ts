@@ -1,5 +1,4 @@
-import Controller from '../Controller/Controller';
-import MiddleWareInterface from '../MiddleWare/MiddleWareInterface';
+import MiddleWareInterface from '../Middleware/MiddleWareInterface';
 import ControllerInterface from '../Controller/ControllerInterface';
 
 export default class Route

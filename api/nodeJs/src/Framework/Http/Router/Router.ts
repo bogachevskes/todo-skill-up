@@ -2,7 +2,7 @@ import { Router  as BaseRouter } from 'express';
 import asyncHandler from 'express-async-handler';
 import { asyncMiddleware } from 'middleware-async';
 import Route from './Route';
-import MiddleWareInterface from '../MiddleWare/MiddleWareInterface';
+import MiddleWareInterface from '../Middleware/MiddleWareInterface';
 import ControllerInterface from '../Controller/ControllerInterface';
 
 export default class Router
