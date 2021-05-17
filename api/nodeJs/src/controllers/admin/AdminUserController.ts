@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 import ValidationError from '../../Framework/Exceptions/ValidationError';
-import User from '../../app/entity/User';
+import User from '../../app/Entity/User';
 import CrudController from '../../Framework/Http/Controller/CrudController';
-import UserRepository from '../../app/repository/UserRepository';
+import UserRepository from '../../app/Repository/UserRepository';
 import Route from '../../Framework/Http/Router/Route';
 import AutoBind from '../../Framework/Decorators/AutoBind';
 import NotFound from '../../Framework/Exceptions/NotFound';
-import CommandContext from '../../app/console/base/CommandContext';
+import CommandContext from '../../Framework/Console/Base/CommandContext';
 import UserCreate from '../../app/console/commands/UserCreate';
 import UserUpdate from '../../app/console/commands/UserUpdate';
 

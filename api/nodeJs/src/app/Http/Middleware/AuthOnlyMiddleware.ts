@@ -4,9 +4,9 @@ import Middleware from '../../../Framework/Http/Middleware/Middleware';
 import BadRequest from '../../../Framework/Exceptions/BadRequest';
 import NotFound from '../../../Framework/Exceptions/NotFound';
 
-import UserRepository from '../../repository/UserRepository';
+import UserRepository from '../../Repository/UserRepository';
 
-import User from '../../entity/User';
+import User from '../../Entity/User';
 
 import ConfigService from '../../../Framework/Utils/ConfigService';
 

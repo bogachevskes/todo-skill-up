@@ -1,5 +1,5 @@
-import CommandContext from './base/CommandContext';
-import CommandInterface from './base/CommandInterface';
+import CommandContext from './Base/CommandContext';
+import CommandInterface from './Base/CommandInterface';
 
 const COMMAND_NAME_POSITION = 2;
 

@@ -1,14 +1,14 @@
-import BaseCommand from '../base/BaseCommand';
-import UserRepository from '../../repository/UserRepository';
-import RoleRepository from '../../repository/RoleRepository';
-import PermissionsRepository from '../../repository/PermissionsRepository';
-import TodoStatusRepository from '../../repository/TodoStatusRepository';
+import BaseCommand from '../../../Framework/Base/BaseCommand';
+import UserRepository from '../../Repository/UserRepository';
+import RoleRepository from '../../Repository/RoleRepository';
+import PermissionsRepository from '../../Repository/PermissionsRepository';
+import TodoStatusRepository from '../../Repository/TodoStatusRepository';
 import SetRole from './SetRole';
 import SetRolePermission from './SetRolePermission';
-import CommandContext from '../base/CommandContext';
-import User from '../../entity/User';
-import Role from '../../entity/Role';
-import Permission from '../../entity/Permission';
+import CommandContext from '../../../Framework/Base/CommandContext';
+import User from '../../Entity/User';
+import Role from '../../Entity/Role';
+import Permission from '../../Entity/Permission';
 
 export default class SeedData extends BaseCommand
 {

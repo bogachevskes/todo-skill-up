@@ -7,8 +7,8 @@ import ConfigService from './ConfigService';
 import BadRequest from '../Exceptions/BadRequest';
 import NotFound from '../Exceptions/NotFound';
 
-import User from '../../app/entity/User';
-import UserRepository from '../../app/repository/UserRepository';
+import User from '../../app/Entity/User';
+import UserRepository from '../../app/Repository/UserRepository';
 
 /**
  * Минимальная длина поля name.

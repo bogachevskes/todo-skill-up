@@ -1,5 +1,5 @@
 import ManageUserRole from './ManageUserRole';
-import UserRepository from '../../repository/UserRepository';
+import UserRepository from '../../Repository/UserRepository';
 
 export default class SetRole extends ManageUserRole
 {

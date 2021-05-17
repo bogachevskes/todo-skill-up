@@ -5,8 +5,8 @@ import * as ValidationManager from '../Framework/Utils/ValidationManager';
 import BadRequest from '../Framework/Exceptions/BadRequest';
 import NotFound from '../Framework/Exceptions/NotFound';
 
-import UserRepository from '../app/repository/UserRepository';
-import User from '../app/entity/User';
+import UserRepository from '../app/Repository/UserRepository';
+import User from '../app/Entity/User';
 
 export const signup: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     

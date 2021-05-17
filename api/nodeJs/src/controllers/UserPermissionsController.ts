@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import CrudController from '../Framework/Http/Controller/CrudController';
 import BadRequest from '../Framework/Exceptions/BadRequest';
-import User from '../app/entity/User';
-import UserRepository from '../app/repository/UserRepository';
+import User from '../app/Entity/User';
+import UserRepository from '../app/Repository/UserRepository';
 
 export default class UserPermissionsController extends CrudController
 {

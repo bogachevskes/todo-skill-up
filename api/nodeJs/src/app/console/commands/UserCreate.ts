@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
-import BaseCommand from '../base/BaseCommand';
+import BaseCommand from '../../../Framework/Base/BaseCommand';
 import UserCreateRequest from '../../../request/user/UserCreateRequest';
-import UserRepository from '../../repository/UserRepository';
+import UserRepository from '../../Repository/UserRepository';
 
 export default class UserCreate extends BaseCommand
 {

@@ -3,7 +3,7 @@
 import "reflect-metadata";
 import * as typeorm from 'typeorm';
 import commandsList from './config/commandsList';
-import CommandKernel from './app/console/Kernel';
+import CommandKernel from './Framework/Console/Kernel';
 
 const kernel = new CommandKernel;
 
