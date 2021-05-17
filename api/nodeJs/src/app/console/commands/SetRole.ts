@@ -1,7 +1,7 @@
 import ManageUserRole from './ManageUserRole';
-import UserRepository from '../../app/repository/UserRepository';
+import UserRepository from '../../repository/UserRepository';
 
-export default class UnsetRole extends ManageUserRole
+export default class SetRole extends ManageUserRole
 {
     /**
      * @see BaseCommand
@@ -10,7 +10,7 @@ export default class UnsetRole extends ManageUserRole
     {
         const repo = new UserRepository(this.user);
         
-        await repo.unsetRoleIfExists(this.role);
+        await repo.assignRoleIfNotExists(this.role);
     }
 
 }

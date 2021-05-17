@@ -1,8 +1,8 @@
 import BaseCommand from '../base/BaseCommand';
-import UserRepository from '../../app/repository/UserRepository';
-import RoleRepository from '../../app/repository/RoleRepository';
-import User from '../../app/entity/User';
-import Role from '../../app/entity/Role';
+import UserRepository from '../../repository/UserRepository';
+import RoleRepository from '../../repository/RoleRepository';
+import User from '../../entity/User';
+import Role from '../../entity/Role';
 
 export default abstract class ManageUserRole extends BaseCommand
 {

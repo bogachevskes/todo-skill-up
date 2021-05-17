@@ -6,9 +6,9 @@ import UserRepository from '../../app/repository/UserRepository';
 import Route from '../../Framework/Http/Router/Route';
 import AutoBind from '../../Framework/Decorators/AutoBind';
 import NotFound from '../../Framework/Exceptions/NotFound';
-import CommandContext from '../../console/base/CommandContext';
-import UserCreate from '../../console/commands/UserCreate';
-import UserUpdate from '../../console/commands/UserUpdate';
+import CommandContext from '../../app/console/base/CommandContext';
+import UserCreate from '../../app/console/commands/UserCreate';
+import UserUpdate from '../../app/console/commands/UserUpdate';
 
 export default class AdminUserController extends CrudController
 {
