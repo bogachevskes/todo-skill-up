@@ -1,9 +1,9 @@
 import "reflect-metadata";
 import * as typeorm from 'typeorm';
-import Router from './Framework/Http/Router/Router';
-import Kernel from './Framework/Http/Kernel';
-import Routes from './routes/web';
-import ConfigService from './Framework/Utils/ConfigService';
+import Router from '../Framework/Http/Router/Router';
+import Kernel from '../Framework/Http/Kernel';
+import Routes from '../routes/web';
+import ConfigService from '../Framework/Utils/ConfigService';
 
 const router = new Router();
 

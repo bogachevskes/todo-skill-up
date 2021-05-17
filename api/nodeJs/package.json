@@ -8,7 +8,7 @@
     "console": "node ./dist/server/console.js",
     "build": "rm -rf ./dist && tsc -p tsconfig.build.json && cp -R ./src/public ./dist/",
     "dev": "nodemon ./src/app.ts",
-    "start": "cross-env NODE_ENV=production node ./dist/server/web.js"
+    "start": "cross-env NODE_ENV=production node ./dist/server/entry/web.js"
   },
   "dependencies": {
     "@types/bluebird": "^3.5.32",
