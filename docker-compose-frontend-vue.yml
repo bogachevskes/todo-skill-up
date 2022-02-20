@@ -1,0 +1,20 @@
+version: '3.7'
+services:
+  gateway:
+    image: ${REGISTRY}/todo-skill-up-gateway:${IMAGE_TAG}
+    ports:
+      - "${FRONTEND_PORT}:8080"
+      - "${API_PORT}:8081"
+    depends_on:
+      - frontend-vue
+
+  frontend-vue:
+    image: ${REGISTRY}/todo-skill-up-frontend-vue:${IMAGE_TAG}
+    volumes:
+      - "./frontend/vueJs:/app"
+
+  frontend-vue-node-cli:
+    image: ${REGISTRY}/todo-skill-up-frontend-vue-node-cli:${IMAGE_TAG}
+    volumes:
+      - "./frontend/vueJs:/app"
+    tty: true
