@@ -5,9 +5,9 @@
   "author": "ace7upp@gmail.com",
   "license": "MIT",
   "scripts": {
-    "watch": "webpack --config ./webpack.config.js --mode=development --watch --progress --hide-modules",
-    "build": "cross-env NODE_ENV=production && webpack --config ./webpack.config.js --mode=production --progress --hide-modules",
-    "start": "cross-env NODE_ENV=production node ./dist/app.js"
+    "watch": "./node_modules/webpack/bin/webpack.js --config ./webpack.config.js --mode=development --watch --progress --hide-modules",
+    "build": "./node_modules/cross-env/src/bin/cross-env.js NODE_ENV=production && ./node_modules/webpack/bin/webpack.js --config ./webpack.config.js --mode=production --progress --hide-modules",
+    "start": "./node_modules/cross-env/src/bin/cross-env.js NODE_ENV=production node ./dist/app.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.27",
@@ -45,7 +45,7 @@
     "babel-preset-stage-3": "^6.24.1",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^6.2.1",
-    "cross-env": "^5.0.5",
+    "cross-env": "^7.0.3",
     "css-loader": "^0.28.7",
     "file-loader": "^1.1.4",
     "fs": "0.0.1-security",

@@ -29,15 +29,21 @@ docker-build-frontend-vue-node-cli:
 
 frontend-vue-init: frontend-vue-yarn-install frontend-vue-yarn-build
 
+frontend-vue-node-exec:
+	@docker-compose -f docker-compose-frontend-vue.yml run --rm $(FRONTEND_VUE_NODE_CLI) $(cmd)
+
 frontend-vue-yarn-install:
-	@docker-compose -f docker-compose-frontend-vue.yml run --rm $(FRONTEND_VUE_NODE_CLI) yarn install
-	@$(MAKE) -s frontend-vue-chown
+	$(MAKE) frontend-vue-node-exec cmd="yarn install --no-bin-links"
+	$(MAKE) -s frontend-vue-chown
 
 frontend-vue-yarn-build:
-	@docker-compose -f docker-compose-frontend-vue.yml run --rm $(FRONTEND_VUE_NODE_CLI) yarn run build
+	$(MAKE) frontend-vue-node-exec cmd="yarn run build"
 	@$(MAKE) -s frontend-vue-chown
 
 frontend-vue-chown:
-	@docker-compose -f docker-compose-frontend-vue.yml run --rm $(FRONTEND_VUE_NODE_CLI) chown -R 1000:1000 ./
+	$(MAKE) frontend-vue-node-exec cmd="chown -R 1000:1000 ./"
+
+frontend-vue-node-shell:
+	$(MAKE) frontend-vue-node-exec cmd="sh"
 
 # ============================== END FRONTEND VUE =================================== #
