@@ -1,4 +1,4 @@
-include .env
+include docker.env
 
 FRONTEND_VUE_NODE_CLI=frontend-vue-node-cli
 API_NODE_CLI=api-node-cli
@@ -6,13 +6,13 @@ API_NODE_CLI=api-node-cli
 # ============================== BEGIN FRONTEND VUE =================================== #
 
 frontend-vue-docker-ps:
-	@docker-compose -f docker-compose-frontend-vue.yml ps
+	@docker-compose --env-file ./docker.env -f docker-compose-frontend-vue.yml ps
 
 up-frontend-vue:
-	@docker-compose -f docker-compose-frontend-vue.yml up -d
+	@docker-compose --env-file ./docker.env -f docker-compose-frontend-vue.yml up -d
 
 down-frontend-vue:
-	@docker-compose -f docker-compose-frontend-vue.yml down
+	@docker-compose --env-file ./docker.env -f docker-compose-frontend-vue.yml down
 
 docker-build-frontend-vue: docker-build-frontend-vue-app \
 	docker-build-frontend-vue-node-cli
@@ -28,7 +28,7 @@ docker-build-frontend-vue-node-cli:
 frontend-vue-init: frontend-vue-yarn-install frontend-vue-yarn-build
 
 frontend-vue-node-exec:
-	@docker-compose -f docker-compose-frontend-vue.yml run --rm $(FRONTEND_VUE_NODE_CLI) $(cmd)
+	@docker-compose --env-file ./docker.env -f docker-compose-frontend-vue.yml run --rm $(FRONTEND_VUE_NODE_CLI) $(cmd)
 
 frontend-vue-yarn-install:
 	$(MAKE) frontend-vue-node-exec cmd="yarn install --no-bin-links"
@@ -49,16 +49,16 @@ frontend-vue-node-shell:
 # ============================== BEGIN API NodeJs =================================== #
 
 api-node-docker-ps:
-	@docker-compose -f docker-compose-api-node.yml ps
+	@docker-compose --env-file ./docker.env -f docker-compose-api-node.yml ps
 
 api-node-docker-logs:
-	@docker-compose -f docker-compose-api-node.yml logs
+	@docker-compose --env-file ./docker.env -f docker-compose-api-node.yml logs
 
 up-api-node:
-	@docker-compose -f docker-compose-api-node.yml up -d
+	@docker-compose --env-file ./docker.env -f docker-compose-api-node.yml up -d
 
 down-api-node:
-	@docker-compose -f docker-compose-api-node.yml down
+	@docker-compose --env-file ./docker.env -f docker-compose-api-node.yml down
 
 docker-build-api-node: docker-build-api-node-app \
 	docker-build-api-node-cli
@@ -74,7 +74,7 @@ docker-build-api-node-cli:
 api-node-init: api-node-yarn-install api-node-yarn-build
 
 api-node-exec:
-	@docker-compose -f docker-compose-api-node.yml run --rm $(API_NODE_CLI) $(cmd)
+	@docker-compose --env-file ./docker.env -f docker-compose-api-node.yml run --rm $(API_NODE_CLI) $(cmd)
 
 api-node-yarn-install:
 	$(MAKE) api-node-exec cmd="yarn install --no-bin-links"
