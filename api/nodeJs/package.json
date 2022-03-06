@@ -1,14 +1,13 @@
 {
   "name": "api-node",
-  "description": "Todo App server-side on NodeJs",
+  "description": "Todo App NodeJs API",
   "version": "1.0.0",
   "author": "ace7upp@gmail.com",
   "license": "MIT",
   "scripts": {
-    "console": "node ./dist/server/console.js",
-    "build": "rm -rf ./dist && tsc -p tsconfig.build.json && cp -R ./src/public ./dist/",
-    "dev": "nodemon ./src/app.ts",
-    "start": "cross-env NODE_ENV=production node ./dist/server/entry/web.js"
+    "console": "node ./dist/server/entry/console.js",
+    "build": "rm -rf ./dist && ./node_modules/typescript/bin/tsc -p ./tsconfig.build.json && cp -R ./src/public ./dist/",
+    "start": "./node_modules/cross-env/src/bin/cross-env.js NODE_ENV=production node ./dist/server/entry/web.js"
   },
   "dependencies": {
     "@types/bluebird": "^3.5.32",

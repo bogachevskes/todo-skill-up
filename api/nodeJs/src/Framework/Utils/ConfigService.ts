@@ -56,11 +56,7 @@ export default class ConfigService extends Configurable
      */
     public static getPort(): number
     {
-        if (this.isProduction()) {
-            return Number(this.get('PROD_APP_PORT'));
-        }
-
-        return Number(this.get('DEV_APP_PORT'));
+        return Number(this.get('APP_PORT'));
     }
 
     /**
