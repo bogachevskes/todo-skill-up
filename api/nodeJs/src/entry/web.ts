@@ -24,7 +24,7 @@ kernel.setErrorMiddleware(ErrorMiddleware);
 const PORT = ConfigService.getPort();
 
 (async () => {
-    // await Connection.createConnection();
+    await Connection.createConnection();
 
     await kernel.handle(PORT);
 })();

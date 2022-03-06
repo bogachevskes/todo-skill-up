@@ -5,11 +5,14 @@ API_NODE_CLI=api-node-cli
 
 # ============================== BEGIN FRONTEND VUE =================================== #
 
+frontend-vue-docker-ps:
+	@docker-compose -f docker-compose-frontend-vue.yml ps
+
 up-frontend-vue:
 	@docker-compose -f docker-compose-frontend-vue.yml up -d
 
 down-frontend-vue:
-	@docker-compose -f docker-compose-frontend-vue.yml down --remove-orphans
+	@docker-compose -f docker-compose-frontend-vue.yml down
 
 docker-build-frontend-vue: docker-build-frontend-vue-app \
 	docker-build-frontend-vue-node-cli
@@ -45,17 +48,17 @@ frontend-vue-node-shell:
 
 # ============================== BEGIN API NodeJs =================================== #
 
-docker-api-node-ps:
+api-node-docker-ps:
 	@docker-compose -f docker-compose-api-node.yml ps
 
-docker-api-node-logs:
+api-node-docker-logs:
 	@docker-compose -f docker-compose-api-node.yml logs
 
 up-api-node:
 	@docker-compose -f docker-compose-api-node.yml up -d
 
 down-api-node:
-	@docker-compose -f docker-compose-api-node.yml down --remove-orphans
+	@docker-compose -f docker-compose-api-node.yml down
 
 docker-build-api-node: docker-build-api-node-app \
 	docker-build-api-node-cli
