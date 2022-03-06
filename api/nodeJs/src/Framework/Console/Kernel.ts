@@ -97,9 +97,9 @@ export default class CommandKernel
         
         this.args = process.argv;
         
-        this.resolveCommandName();
-        
         try {
+
+            this.resolveCommandName();
         
             this.defineCommand();
 
@@ -110,12 +110,12 @@ export default class CommandKernel
         } catch (error) {
             const errorMessage = (error as Error).message;
 
-            console.log("\x1b[31m", `Выполнение команды завершилось ошибкой. Текст ошибки - ${errorMessage}`);
+            console.log("\x1b[31m", `Выполнение команды завершилось ошибкой. Текст ошибки - ${errorMessage}`, "\x1b[0m");
 
             return;
         }
 
-        console.log("\x1b[32m", `Команда ${this.commandName} выполнена успешно`);
+        console.log("\x1b[32m", `Команда ${this.commandName} выполнена успешно`, "\x1b[0m");
         
     }
 

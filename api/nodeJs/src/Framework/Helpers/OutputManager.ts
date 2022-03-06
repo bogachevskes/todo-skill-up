@@ -43,7 +43,8 @@ export default class OutputManager
     {
         return console.log(
                 OutputManager.colorize(color),
-                `${item} started at PORT ${port}`
+                `${item} started at PORT ${port}`,
+                "\x1b[0m"
             );
     }
 }
