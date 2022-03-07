@@ -15,7 +15,7 @@ export default class ErrorMiddleware implements ErrorMiddlewareInterface
         if (err instanceof NotFound) {
             res.status(err.status);
             
-            return res.send(err);
+            return res.send({"message": err.message});
         }
     
         if (err instanceof HTTPException) {

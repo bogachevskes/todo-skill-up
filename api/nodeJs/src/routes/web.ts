@@ -15,7 +15,7 @@ RoutesCollection.add(
 
 RoutesCollection.add(
     new Route(
-        'GET',
+        'POST',
         '/auth/login',
         AuthController,
         'actionLogin'
