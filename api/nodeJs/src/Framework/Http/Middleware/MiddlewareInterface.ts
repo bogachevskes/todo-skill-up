@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 
 export default interface MiddlewareInterface
 {
+    useAsync: boolean;
+
     /**
      * @param Request req 
      * @param Response res 

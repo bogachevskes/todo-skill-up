@@ -14,8 +14,6 @@ services:
     image: ${REGISTRY}/todo-skill-up-api-node-cli:${IMAGE_TAG}
     volumes:
       - "./api/nodeJs:/app"
-    depends_on:
-      - api-mariadb
     tty: true
 
   api-mariadb:

@@ -32,6 +32,8 @@ export default class ErrorMiddleware implements ErrorMiddlewareInterface
         const error = new InternalServerError;
     
         return res.status(error.status)
-            .json(err);
+            .json({
+                'message': 'Internal server error'
+            });
     }
 }

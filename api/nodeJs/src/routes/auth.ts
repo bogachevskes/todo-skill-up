@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import asyncHandler from 'express-async-handler';
-import * as AuthController from '../app/Http/Controllers/AuthController';
+import * as AuthController from '../app/Http/Controllers/AuthController-old';
 import * as ValidationManager from '../Framework/Utils/ValidationManager';
 
 const router = Router();

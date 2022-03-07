@@ -5,6 +5,11 @@ import AutoBind from '../../../Framework/Decorators/AutoBind';
 export default abstract class Middleware implements MiddleWareInterface
 {
     /**
+     * @see MiddleWareInterface
+     */
+    public useAsync: boolean = true;
+    
+    /**
      * @type Request
      */
     protected req: Request;

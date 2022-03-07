@@ -8,8 +8,15 @@ export default class JsonParserMiddleware implements MiddlewareInterface
     /**
      * @see MiddlewareInterface
      */
-    public async execute(req: Request, res: Response, next: NextFunction): Promise<NextHandleFunction>
+    public useAsync: boolean = false;
+    
+    /**
+     * @see MiddlewareInterface
+     */
+    public execute(req: Request, res: Response, next: NextFunction): void
     {
-        return bodyParserJson();
+        bodyParserJson();
+
+        next();
     }
 }

@@ -60,7 +60,14 @@ export default class Kernel
     protected applyMiddleware(): void
     {
         for (const middleware of this.middleware) {
-            this.app.use(asyncMiddleware(middleware.execute));
+            
+            if (middleware.useAsync === true) {
+                this.app.use(asyncMiddleware(middleware.execute));
+
+                continue;
+            }
+            
+            this.app.use(middleware.execute);
         }
     }
 
