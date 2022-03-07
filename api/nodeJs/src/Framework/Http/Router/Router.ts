@@ -76,7 +76,7 @@ export default class Router
             this.controllers[className] = eval(`new controller`);
         }
         
-        return this.controllers[className][action];
+        return asyncHandler(this.controllers[className][action]);
     }
 
     /**

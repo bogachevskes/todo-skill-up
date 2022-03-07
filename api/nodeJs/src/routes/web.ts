@@ -7,7 +7,7 @@ import AuthController from '../app/Http/Controllers/AuthController';
 RoutesCollection.add(
     new Route(
         'GET',
-        '/test',
+        '/',
         SiteController,
         'actionIndex'
     ),
