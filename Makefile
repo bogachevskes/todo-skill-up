@@ -17,6 +17,9 @@ up-frontend-vue:
 down-frontend-vue:
 	@docker-compose --env-file ./docker.env -f docker-compose-frontend-vue.yml -p ${FRONTEND_VUE_COMPOSE_PROJECT_NAME} down --remove-orphans
 
+restart-frontend-vue: down-frontend-vue \
+	up-frontend-vue
+
 docker-build-frontend-vue: docker-build-frontend-vue-app \
 	docker-build-frontend-vue-node-cli
 
@@ -31,7 +34,7 @@ docker-build-frontend-vue-node-cli:
 frontend-vue-init: frontend-vue-yarn-install frontend-vue-yarn-build
 
 frontend-vue-node-exec:
-	@docker-compose --env-file ./docker.env -f docker-compose-frontend-vue.yml run --rm $(FRONTEND_VUE_NODE_CLI) -p ${FRONTEND_VUE_COMPOSE_PROJECT_NAME} $(cmd)
+	@docker-compose --env-file ./docker.env -f docker-compose-frontend-vue.yml run --rm $(FRONTEND_VUE_NODE_CLI) $(cmd)
 
 frontend-vue-yarn-install:
 	$(MAKE) frontend-vue-node-exec cmd="yarn install --no-bin-links"
@@ -55,7 +58,7 @@ api-node-docker-ps:
 	@docker-compose --env-file ./docker.env -f docker-compose-api-node.yml -p ${API_NODE_COMPOSE_PROJECT_NAME} ps
 
 api-node-docker-logs:
-	@docker-compose --env-file ./docker.env -f docker-compose-api-node.yml -p ${API_NODE_COMPOSE_PROJECT_NAME} logs
+	@docker-compose --env-file ./docker.env -f docker-compose-api-node.yml -p ${API_NODE_COMPOSE_PROJECT_NAME} logs -f
 
 up-api-node:
 	@docker-compose --env-file ./docker.env -f docker-compose-api-node.yml -p ${API_NODE_COMPOSE_PROJECT_NAME} up -d --remove-orphans
@@ -77,7 +80,7 @@ docker-build-api-node-cli:
 api-node-init: api-node-yarn-install api-node-yarn-build
 
 api-node-exec:
-	@docker-compose --env-file ./docker.env -f docker-compose-api-node.yml run --rm $(API_NODE_CLI) -p ${API_NODE_COMPOSE_PROJECT_NAME} $(cmd)
+	@docker-compose --env-file ./docker.env -f docker-compose-api-node.yml run --rm $(API_NODE_CLI) $(cmd)
 
 api-node-yarn-install:
 	$(MAKE) api-node-exec cmd="yarn install --no-bin-links"
@@ -95,5 +98,9 @@ api-node-shell:
 
 api-node-app-cli:
 	$(MAKE) api-node-exec cmd="yarn run console $(cmd)"
+
+rebuild-api-node-app: down-api-node \
+	api-node-yarn-build \
+	up-api-node
 
 # ============================== END API NodeJs =================================== #

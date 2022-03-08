@@ -41,8 +41,6 @@
                 this.message = message ? message : 'Сервис временно недоступен, повторите попытку позже';
                 this.details = details;
 
-                console.log(this.details);
-
                 return this;
             },
             unsetModalInfo: function () {

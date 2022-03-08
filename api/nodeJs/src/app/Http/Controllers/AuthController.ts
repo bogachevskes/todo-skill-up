@@ -1,49 +1,77 @@
-import { RequestHandler, Request, Response, NextFunction } from 'express';
-import bcrypt from 'bcryptjs';
-import * as ValidationManager from '../../../Framework/Utils/ValidationManager';
-
+import { Request, Response } from 'express';
+import CommandContext from '../../../Framework/Base/CommandContext';
+import Controller from '../../../Framework/Http/Controller/Controller';
+import ValidationError from '../../../Framework/Exceptions/ValidationError';
 import BadRequest from '../../../Framework/Exceptions/BadRequest';
-import NotFound from '../../../Framework/Exceptions/NotFound';
 
-import UserRepository from '../../Repository/UserRepository';
-import User from '../../Entity/User';
+import UserLogin from '../../Console/Commands/UserLogin';
+import UserCreate from '../../Console/Commands/UserCreate';
 
-export const signup: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
-    
-    ValidationManager.provideValidation(req, next);
+export default class AuthController extends Controller
+{
+    /**
+     * @param  Request req 
+     * @param  Response res 
+     * @return Promise<Response> | never
+     */
+    public async actionLogin(req: Request, res: Response): Promise<Response> | never
+    {
+        const context = new CommandContext;
 
-    const hashedPassword = await bcrypt.hash(req.body.password, 12);
+        for (const key in req.body) {
+            context.set(key, req.body[key]);
+        }
 
-    await UserRepository.createNew(req.body.name, req.body.email, hashedPassword);
+        const cmd = new UserLogin;
 
-    return res.status(201)
-        .json({
+        try {
+
+            await cmd.execute(context);
+
+        } catch (error) {
+
+            if (error instanceof ValidationError) {
+                
+                throw new BadRequest(error.message);
+            }
+
+            throw error;
+        } 
+        
+        return res.json(context.get('access'));
+    };
+
+    /**
+     * @param  Request req 
+     * @param  Response res 
+     * @return Promise<Response> | never
+     */
+    public async actionSignup(req: Request, res: Response): Promise<Response> | never
+    {
+        const context = new CommandContext;
+
+        for (const key in req.body) {
+            context.set(key, req.body[key]);
+        }
+
+        const cmd = new UserCreate;
+
+        try {
+
+            await cmd.execute(context);
+
+        } catch (error) {
+
+            if (error instanceof ValidationError) {
+                
+                throw new BadRequest(error.message);
+            }
+
+            throw error;
+        } 
+        
+        return res.json({
             message: 'success',
         });
-}
-
-export const login: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
-    ValidationManager.provideValidation(req, next);
-
-    const user = await UserRepository.findByEmail(req.body.email);
-
-    if (! (user instanceof User)) {
-        throw new NotFound('Пользователь не найден');
     }
-
-    if (UserRepository.isBlocked(user)) {
-        throw new BadRequest('Пользователь заблокирован');
-    }
-
-    const isOnMatch = await bcrypt.compare(req.body.password, user!.password);
-
-    ValidationManager.provideAuthentication(isOnMatch);
-
-    const token = ValidationManager.createUserToken(user!);
-
-    return res.json({
-        token: token,
-        userId: user!.id,
-    });
-
 }

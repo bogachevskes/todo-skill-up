@@ -15,7 +15,7 @@ export default class ErrorMiddleware implements ErrorMiddlewareInterface
         if (err instanceof NotFound) {
             res.status(err.status);
             
-            return res.send(err);
+            return res.send({"message": err.message});
         }
     
         if (err instanceof HTTPException) {
@@ -32,6 +32,8 @@ export default class ErrorMiddleware implements ErrorMiddlewareInterface
         const error = new InternalServerError;
     
         return res.status(error.status)
-            .json(err);
+            .json({
+                'message': 'Internal server error'
+            });
     }
 }

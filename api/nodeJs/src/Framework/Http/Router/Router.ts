@@ -70,9 +70,9 @@ export default class Router
      */
     protected resolveController(controller: ControllerInterface, action: string): Function
     {
-        const className = controller.constructor.name;
-        
-        if (! (className in this.controllers)) {
+        const className = controller['name'];
+
+        if ((className in this.controllers) === false) {
             this.controllers[className] = eval(`new controller`);
         }
         
