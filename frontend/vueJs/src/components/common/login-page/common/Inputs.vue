@@ -210,8 +210,7 @@
 
                         eventBus.showError(
                                 'Ошибка при попытке регистрации',
-                                errorData.message,
-                                [errorData.data[0].msg],
+                                errorData.message
                             );
                     });
 
@@ -242,8 +241,7 @@
 
                         eventBus.showError(
                                 'Ошибка при авторизации',
-                                errorData.message,
-                                errorData.data[0] ? [errorData.data[0].msg] : null,
+                                errorData.message
                             );
 
                         return this;

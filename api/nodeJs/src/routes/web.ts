@@ -22,4 +22,13 @@ RoutesCollection.add(
     ),
 );
 
+RoutesCollection.add(
+    new Route(
+        'PUT',
+        '/auth/signup',
+        AuthController,
+        'actionSignup'
+    ),
+);
+
 export default RoutesCollection;

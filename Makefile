@@ -17,6 +17,9 @@ up-frontend-vue:
 down-frontend-vue:
 	@docker-compose --env-file ./docker.env -f docker-compose-frontend-vue.yml -p ${FRONTEND_VUE_COMPOSE_PROJECT_NAME} down --remove-orphans
 
+restart-frontend-vue: down-frontend-vue \
+	up-frontend-vue
+
 docker-build-frontend-vue: docker-build-frontend-vue-app \
 	docker-build-frontend-vue-node-cli
 
@@ -31,7 +34,7 @@ docker-build-frontend-vue-node-cli:
 frontend-vue-init: frontend-vue-yarn-install frontend-vue-yarn-build
 
 frontend-vue-node-exec:
-	@docker-compose --env-file ./docker.env -f docker-compose-frontend-vue.yml run --rm $(FRONTEND_VUE_NODE_CLI) -p ${FRONTEND_VUE_COMPOSE_PROJECT_NAME} $(cmd)
+	@docker-compose --env-file ./docker.env -f docker-compose-frontend-vue.yml run --rm $(FRONTEND_VUE_NODE_CLI) $(cmd)
 
 frontend-vue-yarn-install:
 	$(MAKE) frontend-vue-node-exec cmd="yarn install --no-bin-links"

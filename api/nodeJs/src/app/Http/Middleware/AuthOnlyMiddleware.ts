@@ -10,8 +10,6 @@ import User from '../../Entity/User';
 
 import ConfigService from '../../../Framework/Utils/ConfigService';
 
-import * as ValidationManager from '../../../Framework/Utils/ValidationManager';
-
 /**
  * Фильтрация доступа только
  * авторизованных пользователей.
@@ -29,7 +27,9 @@ export default class AuthOnlyMiddleware extends Middleware
     
         decodedToken = jwt.verify(token!, String(ConfigService.get('TOKEN_SECRET_WORD')));
     
-        ValidationManager.provideAuthentication(decodedToken);
+        if (Boolean(decodedToken) === false) {
+            throw new BadRequest('Аутентификация не выполнена');
+        }
     
         const user = await UserRepository.findById(decodedToken.userId);
     
