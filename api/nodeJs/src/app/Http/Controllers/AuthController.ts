@@ -1,11 +1,11 @@
-import Controller from '../../../Framework/Http/Controller/Controller';
-import {Request, Response } from 'express';
-import LoginRequest from '../../FormRequest/Auth/LoginRequest';
-import BadRequest from '../../../Framework/Exceptions/BadRequest';
-import UserRepository from '../../Repository/UserRepository';
-import User from '../../Entity/User';
-import ConfigService from '../../../Framework/Utils/ConfigService';
+import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import CommandContext from '../../../Framework/Base/CommandContext';
+import Controller from '../../../Framework/Http/Controller/Controller';
+import ValidationError from '../../../Framework/Exceptions/ValidationError';
+import BadRequest from '../../../Framework/Exceptions/BadRequest';
+
+import UserLogin from '../../Console/Commands/UserLogin';
 
 export default class AuthController extends Controller
 {
@@ -17,36 +17,28 @@ export default class AuthController extends Controller
      */
     public async actionLogin(req: Request, res: Response): Promise<Response> | never
     {
-        const formRequest = new LoginRequest(req.body);
+        const context = new CommandContext;
 
-        console.log(req.body, formRequest);
-
-        await formRequest.validate();
-
-        if (formRequest.isNotValid()) {
-            throw new BadRequest(formRequest.getFirstError());
+        for (const key in req.body) {
+            context.set(key, req.body[key]);
         }
 
-        const user = await UserRepository.findByEmail(formRequest.email);
+        const cmd = new UserLogin;
 
-        if ((user instanceof User) && UserRepository.isBlocked(user)) {
-            throw new BadRequest('Пользователь заблокирован');
-        }
+        try {
 
-        const token = jwt.sign(
-            {
-                email: user!.email,
-                userId: user!.id,
-            },
-            String(ConfigService.get('TOKEN_SECRET_WORD')),
-            {
-                expiresIn: ConfigService.get('TOKEN_EXPIRATION_TIME'),
+            await cmd.execute(context);
+
+        } catch (error) {
+
+            if (error instanceof ValidationError) {
+                
+                throw new BadRequest(error.message);
             }
-        );
+
+            throw error;
+        } 
         
-        return res.json({
-            token: token,
-            userId: user!.id,
-        });
+        return res.json(context.get('access'));
     };
 }

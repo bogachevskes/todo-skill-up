@@ -7,7 +7,7 @@ import { ToString } from "validator.ts/decorator/Sanitization";
 import UserRepository from '../../Repository/UserRepository';
 import User from '../../Entity/User';
 
-export default class LoginRequest extends ValidationRequest
+export default class UserLoginRequest extends ValidationRequest
 {
     @IsEmail(undefined, { message: MESSAGE_EMAIL })
     @ToString()
