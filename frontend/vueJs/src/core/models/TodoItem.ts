@@ -22,7 +22,7 @@ export default class TodoItem extends Configurable
      */
     public printPlannedCompilationAt(): string
     {
-        return DateHelper.printFormatted(this.plannedComplitionAt, 'dd.MM.yyyy');
+        return DateHelper.printFormatted(this.plannedComplitionAt, 'DD.MM.YYYY');
     }
 
     /**
@@ -32,7 +32,7 @@ export default class TodoItem extends Configurable
      */
     public printCreatedAt(): string
     {
-        return DateHelper.printFormatted(this.createdAt, 'dd.MM.yyyy');
+        return DateHelper.printFormatted(this.createdAt, 'DD.MM.YYYY');
     }
 
     /**

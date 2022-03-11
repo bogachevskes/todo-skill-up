@@ -10,7 +10,7 @@ export default class DateHelper
      * @param  string to 
      * @return string
      */
-    public static printFormatted(date: string, to: string = 'dd.MM.yyyy HH:mm:ss', from: string = 'YYYY-MM-DD HH:mm:ss'): string
+    public static printFormatted(date: string, to: string = 'DD.MM.YYYY HH:mm:ss', from: string = 'YYYY-MM-DD HH:mm:ss'): string
     {
         return moment(date, from).format(to);
     }
@@ -22,7 +22,7 @@ export default class DateHelper
      * @param Date date 
      * @param string to 
      */
-    public static format(date: Date, to: string = 'dd.MM.yyyy HH:mm:ss'): string
+    public static format(date: Date, to: string = 'DD.MM.YYYY HH:mm:ss'): string
     {
         return moment(date).format(to);
     }
