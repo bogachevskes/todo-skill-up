@@ -37,7 +37,7 @@ export default class AuthOnlyMiddleware extends Middleware
             throw new NotFound('Пользователь не найден');
         }
     
-        if (UserRepository.isBlocked(user)) {
+        if (UserRepository.isBlocked(user) === true) {
             throw new BadRequest('Пользователь заблокирован');
         }
     

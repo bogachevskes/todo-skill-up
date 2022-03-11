@@ -22,7 +22,7 @@ export default class TodoController extends CrudController
      */
     protected defineUserRepo(req: Request): void
     {
-        if (! (req['user'] instanceof User)) {
+        if ((req['user'] instanceof User) === false) {
             throw new BadRequest('Пользователь не определен');
         }
 

@@ -23,30 +23,14 @@ export default class Router
     }
 
     /**
-     * @type object
-     */
-    protected middleware: object = {};
-
-    /**
-     * @type object
-     */
-    protected controllers: object = {};
-
-    /**
      * @param  Function middlewareClass 
      * @return Function
      */
     protected resolveMiddleware(middlewareClass: Function): Function
     {
-        const className: string = middlewareClass.constructor.name;
-        
-        if (! (className in this.middleware)) {
-            const middleware: MiddlewareInterface = eval(`new middlewareClass`);
-            
-            this.middleware[className] = middleware;
-        }
-        
-        return asyncMiddleware(this.middleware[className].execute);
+        const middleware: MiddlewareInterface = eval(`new middlewareClass`);
+
+        return asyncMiddleware(middleware.execute);
     }
 
     /**
@@ -72,15 +56,9 @@ export default class Router
      */
     protected resolveController(controllerClass: Function, action: string): Function
     {
-        const className: string = controllerClass['name'];
+        const controller: ControllerInterface = eval(`new controllerClass`);
 
-        if ((className in this.controllers) === false) {
-            const controller: ControllerInterface = eval(`new controllerClass`);
-            
-            this.controllers[className] = controller;
-        }
-        
-        return asyncHandler(this.controllers[className][action]);
+        return asyncHandler(controller[action]);
     }
 
     /**

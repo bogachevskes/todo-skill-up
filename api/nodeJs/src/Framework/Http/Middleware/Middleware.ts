@@ -40,6 +40,7 @@ export default abstract class Middleware implements MiddleWareInterface
         const result = await this.handle();
 
         if (result === false) {
+            
             return;
         }
         
