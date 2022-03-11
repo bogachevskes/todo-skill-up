@@ -24,8 +24,20 @@ kernel.setErrorMiddleware(ErrorMiddleware);
 const PORT = ConfigService.getPort();
 
 (async () => {
-    await Connection.createConnection();
+    
+    try {
 
-    await kernel.handle(PORT);
+        await Connection.createConnection();
+
+        await kernel.handle(PORT);
+
+    } catch (err) {
+
+        console.log("\x1b[31m", `Ошибка при инициализации: ${err.message}`, "\x1b[0m");
+
+        kernel.terminate();
+
+    }
+    
 })();
 

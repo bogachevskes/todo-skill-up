@@ -1195,7 +1195,7 @@ etag@~1.8.1:
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
 
-express-async-handler@^1.1.4:
+express-async-handler@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/express-async-handler/-/express-async-handler-1.2.0.tgz#ffc9896061d90f8d2e71a2d2b8668db5b0934391"
   integrity sha512-rCSVtPXRmQSW8rmik/AIb2P0op6l7r1fMW538yyvTMltCO4xQEWMmobfrIxN2V1/mVrgxB8Az3reYF6yUZw37w==
@@ -2006,7 +2006,7 @@ methods@~1.1.2:
   resolved "https://registry.yarnpkg.com/methods/-/methods-1.1.2.tgz#5529a4d67654134edcc5266656835b0f851afcee"
   integrity sha1-VSmk1nZUE07cxSZmVoNbD4Ua/O4=
 
-middleware-async@^1.2.7:
+middleware-async@^1.3.2:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/middleware-async/-/middleware-async-1.3.2.tgz#757ab49e5cbc284a50a580ef5e81f051f66f9332"
   integrity sha512-3AcboJCmI2100ky8eMxVaVmG0tqM9Etuv/A6XErt6awwEWUk9298kk7d5Qn7Tj5YtS2KU1nVjUQdwCUrAGNqUA==

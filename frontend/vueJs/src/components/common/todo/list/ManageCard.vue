@@ -189,7 +189,7 @@
                     showClearButton: false,
                     todayLabel: 'Сегодня',
                     cancelLabel:'Закрыть',
-                    dateFormat: 'DD.MM.YYYY',
+                    dateFormat: 'dd.MM.yyyy',
                 }
             )[0];
 
