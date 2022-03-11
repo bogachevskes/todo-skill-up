@@ -56,6 +56,16 @@ RoutesCollection.add(
 
 RoutesCollection.add(
     new Route(
+        'DELETE',
+        '/todo/delete/:id',
+        TodoController,
+        'actionDelete',
+        [AuthOnlyMiddleware]
+    ),
+);
+
+RoutesCollection.add(
+    new Route(
         'PUT',
         '/todo/set-status/:id',
         TodoController,
