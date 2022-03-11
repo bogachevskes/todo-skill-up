@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request } from 'express';
 import CrudController from '../../../Framework/Http/Controller/CrudController';
 import BadRequest from '../../../Framework/Exceptions/BadRequest';
 import User from '../../Entity/User';
@@ -16,7 +16,7 @@ export default class UserPermissionsController extends CrudController
      */
     protected defineUserRepo(req: Request): void
     {
-        if (! (req['user'] instanceof User)) {
+        if ((req['user'] instanceof User) === false) {
             throw new BadRequest('Пользователь не определен');
         }
 
@@ -40,8 +40,8 @@ export default class UserPermissionsController extends CrudController
      */
     protected async create(req: Request): Promise<object>
     {
-        this.defineUserRepo(req);
-        
+        // Not implemented
+
         return new Promise(function(resolve, reject) {
             return resolve({});
         });
@@ -54,6 +54,8 @@ export default class UserPermissionsController extends CrudController
     {
         this.defineUserRepo(req);
         
+        // Not implemented
+
         return new Promise(function(resolve, reject) {
             return resolve({});
         });
@@ -65,6 +67,7 @@ export default class UserPermissionsController extends CrudController
     protected async delete(id: number, req: Request): Promise<boolean>
     {
         // Not implemented
+
         return new Promise(function(resolve, reject) {
             return resolve(true);
         });

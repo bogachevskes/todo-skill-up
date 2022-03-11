@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import Controller from './Controller';
-import Route from '../Router/Route';
 import AutoBind from '../../Decorators/AutoBind';
 import * as _ from 'lodash';
 
@@ -31,44 +30,6 @@ export default abstract class CrudController extends Controller
      * @return Promise<boolean>
      */
     protected abstract delete(id: number, req: Request): Promise<boolean>
-
-    /**
-     * Определяет дополнительные роуты.
-     * 
-     * @return Route[]
-     */
-    protected defineCustomRoutes(): Route[]
-    {
-        return [
-
-        ];
-    }
-
-    /**
-     * Возвращает роуты по умолчанию.
-     * 
-     * @return Route[]
-     */
-    protected defineDefaultRoutes(): Route[]
-    {
-        return [
-            //new Route('get', 'list'),
-            //new Route('post', 'create'),
-            //new Route('put', 'update/:id', 'update'),
-            //new Route('delete', 'delete/:id', 'delete'),
-        ];
-    }
-    
-    /**
-     * @see Controller
-     */
-    protected defineRoutes(): Route[]
-    {
-        return _.concat(
-            this.defineDefaultRoutes(),
-            this.defineCustomRoutes()
-        );
-    }
 
     /**
      * Возвращает сущности.

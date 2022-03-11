@@ -3,7 +3,6 @@ import ValidationError from '../../../../Framework/Exceptions/ValidationError';
 import User from '../../../Entity/User';
 import CrudController from '../../../../Framework/Http/Controller/CrudController';
 import UserRepository from '../../../Repository/UserRepository';
-import Route from '../../../../Framework/Http/Router/Route';
 import AutoBind from '../../../../Framework/Decorators/AutoBind';
 import NotFound from '../../../../Framework/Exceptions/NotFound';
 import CommandContext from '../../../../Framework/Base/CommandContext';
@@ -12,26 +11,10 @@ import UserUpdate from '../../../Console/Commands/UserUpdate';
 
 export default class AdminUserController extends CrudController
 {
-    protected userRepo: UserRepository;
-    
-    /*
-    public constructor()
-    {
-        super('/admin/users');
-    }
-    */
-
     /**
-     * @see CrudController
+     * @var UserRepository
      */
-    protected defineCustomRoutes(): Route[]
-    {
-        return [
-            //new Route('get', 'todoes/:id', 'todoes'),
-            //new Route('get', 'get-user-data/:id', 'getUserData'),
-            //new Route('put', 'set-active-state/:id', 'setActiveState'),
-        ];
-    }
+    protected userRepo: UserRepository;
 
     /**
      * Определение репозитория пользователя.
