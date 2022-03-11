@@ -2,8 +2,8 @@ import { Router  as BaseRouter } from 'express';
 import asyncHandler from 'express-async-handler';
 import { asyncMiddleware } from 'middleware-async';
 import Route from './Route';
-import MiddleWareInterface from '../Middleware/MiddlewareInterface';
 import ControllerInterface from '../Controller/ControllerInterface';
+import MiddlewareInterface from '../Middleware/MiddlewareInterface';
 
 export default class Router
 {
@@ -33,29 +33,31 @@ export default class Router
     protected controllers: object = {};
 
     /**
-     * @param  MiddleWareInterface middleware 
+     * @param  Function middlewareClass 
      * @return Function
      */
-    protected resolveMiddleware(middleware: MiddleWareInterface): Function
+    protected resolveMiddleware(middlewareClass: Function): Function
     {
-        const className = middleware.constructor.name;
+        const className: string = middlewareClass.constructor.name;
         
         if (! (className in this.middleware)) {
-            this.middleware[className] = eval(`new middleware`);
+            const middleware: MiddlewareInterface = eval(`new middlewareClass`);
+            
+            this.middleware[className] = middleware;
         }
         
         return asyncMiddleware(this.middleware[className].execute);
     }
 
     /**
-     * @param  MiddleWareInterface[] middleware 
+     * @param  Function[] middlewareClasses
      * @return Function[]
      */
-    protected resolveMiddlewareMultiple(middleware: MiddleWareInterface[]): Function[]
+    protected resolveMiddlewareMultiple(middlewareClasses: Function[]): Function[]
     {
         const handlers: Function[] = [];
         
-        for (const handler of middleware) {
+        for (const handler of middlewareClasses) {
             handlers.push(
                 this.resolveMiddleware(handler)
             );
@@ -65,15 +67,17 @@ export default class Router
     }
 
     /**
-     * @param  ControllerInterface controller
+     * @param  Function controllerClass
      * @return Function
      */
-    protected resolveController(controller: ControllerInterface, action: string): Function
+    protected resolveController(controllerClass: Function, action: string): Function
     {
-        const className = controller['name'];
+        const className: string = controllerClass['name'];
 
         if ((className in this.controllers) === false) {
-            this.controllers[className] = eval(`new controller`);
+            const controller: ControllerInterface = eval(`new controllerClass`);
+            
+            this.controllers[className] = controller;
         }
         
         return asyncHandler(this.controllers[className][action]);
@@ -89,11 +93,13 @@ export default class Router
         
         for (const route of this.routes) {
             
-            const handlers: Function[]  = [];
+            let handlers: Function[]  = [];
 
             if (route.middleware.length !== null) {
                 
-                handlers.concat(this.resolveMiddlewareMultiple(route.middleware));
+                const middleware: Function [] = this.resolveMiddlewareMultiple(route.middleware);
+                
+                handlers = handlers.concat(middleware);
             }
             
             handlers.push(

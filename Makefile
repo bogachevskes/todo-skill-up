@@ -34,10 +34,14 @@ docker-build-frontend-vue-node-cli:
 frontend-vue-init: frontend-vue-yarn-install frontend-vue-yarn-build
 
 frontend-vue-node-exec:
-	@docker-compose --env-file ./docker.env -f docker-compose-frontend-vue.yml run --rm $(FRONTEND_VUE_NODE_CLI) $(cmd)
+	@docker-compose --env-file ./docker.env -f docker-compose-frontend-vue.yml -p ${FRONTEND_VUE_COMPOSE_PROJECT_NAME} run --rm $(FRONTEND_VUE_NODE_CLI) $(cmd)
 
 frontend-vue-yarn-install:
 	$(MAKE) frontend-vue-node-exec cmd="yarn install --no-bin-links"
+	$(MAKE) -s frontend-vue-chown
+
+frontend-vue-yarn-remove:
+	$(MAKE) frontend-vue-node-exec cmd="yarn remove $(package)"
 	$(MAKE) -s frontend-vue-chown
 
 frontend-vue-yarn-build:
@@ -80,10 +84,18 @@ docker-build-api-node-cli:
 api-node-init: api-node-yarn-install api-node-yarn-build
 
 api-node-exec:
-	@docker-compose --env-file ./docker.env -f docker-compose-api-node.yml run --rm $(API_NODE_CLI) $(cmd)
+	@docker-compose --env-file ./docker.env -f docker-compose-api-node.yml -p ${API_NODE_COMPOSE_PROJECT_NAME} run --rm $(API_NODE_CLI) $(cmd)
 
 api-node-yarn-install:
 	$(MAKE) api-node-exec cmd="yarn install --no-bin-links"
+	$(MAKE) -s api-node-chown
+
+api-node-yarn-add:
+	$(MAKE) api-node-exec cmd="yarn add $(package)"
+	$(MAKE) -s api-node-chown
+
+api-node-yarn-remove:
+	$(MAKE) api-node-exec cmd="yarn remove $(package)"
 	$(MAKE) -s api-node-chown
 
 api-node-yarn-build:

@@ -1,15 +1,12 @@
-import MiddleWareInterface from '../Middleware/MiddlewareInterface';
-import ControllerInterface from '../Controller/ControllerInterface';
-
 export default class Route
 {
     public method: string;
     public path: string;
-    public controller: ControllerInterface;
+    public controller: Function;
     public action: string;
-    public middleware: MiddleWareInterface[];
+    public middleware: Function[];
 
-    public constructor(method: string, path: string, controller: ControllerInterface, action: string, middleware: MiddleWareInterface[] = [])
+    public constructor(method: string, path: string, controller: Function, action: string, middleware: Function[] = [])
     {
         this.method = method;
         this.path = path;
