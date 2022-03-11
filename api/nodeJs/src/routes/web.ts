@@ -46,6 +46,16 @@ RoutesCollection.add(
 
 RoutesCollection.add(
     new Route(
+        'PUT',
+        '/todo/set-status/:id',
+        TodoController,
+        'actionSetStatus',
+        [AuthOnlyMiddleware]
+    ),
+);
+
+RoutesCollection.add(
+    new Route(
         'GET',
         '/user-permissions/list',
         UserPermissionsController,
