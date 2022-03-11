@@ -107,15 +107,17 @@
                             return DateHelper.printFormatted(data.createdAt);
                         }
                     },
-                    /* Вернуть после установки на mariadb >= 10.0.1
                     {
                         name: 'updatedAt',
                         label: 'Дата обновления',
                         callback: data => {
+                            if (Boolean(data.updatedAt) === false) {
+                                return 'Не задано';
+                            }
+                            
                             return DateHelper.printFormatted(data.updatedAt);
                         }
                     },
-                    */
                     {
                         name: 'actions',
                         label: 'Действия',

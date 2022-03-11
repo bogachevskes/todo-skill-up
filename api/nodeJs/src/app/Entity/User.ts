@@ -54,8 +54,8 @@ export default class User extends BaseEntity
     @Column("timestamp", {
         name: 'updated_at',
         nullable: true,
-        //default: () => "CURRENT_TIMESTAMP()",
-        //onUpdate: "CURRENT_TIMESTAMP()"
+        default: () => "CURRENT_TIMESTAMP()",
+        onUpdate: "CURRENT_TIMESTAMP()"
     })
     public updatedAt: Date;
 

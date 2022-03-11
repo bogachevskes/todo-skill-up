@@ -3,6 +3,7 @@ import Route from '../Framework/Http/Router/Route';
 import AuthOnlyMiddleware from '../app/Http/Middleware/AuthOnlyMiddleware';
 
 import AuthController from '../app/Http/Controllers/AuthController';
+import AdminUserController from '../app/Http/Controllers/Admin/AdminUserController';
 import UserPermissionsController from '../app/Http/Controllers/UserPermissionsController';
 import TodoController from '../app/Http/Controllers/TodoController';
 
@@ -80,6 +81,76 @@ RoutesCollection.add(
         '/user-permissions/list',
         UserPermissionsController,
         'actionList',
+        [AuthOnlyMiddleware]
+    ),
+);
+
+RoutesCollection.add(
+    new Route(
+        'GET',
+        '/admin/users/list',
+        AdminUserController,
+        'actionList',
+        [AuthOnlyMiddleware]
+    ),
+);
+
+RoutesCollection.add(
+    new Route(
+        'PUT',
+        '/admin/users/set-active-state/:id',
+        AdminUserController,
+        'actionSetActiveState',
+        [AuthOnlyMiddleware]
+    ),
+);
+
+RoutesCollection.add(
+    new Route(
+        'GET',
+        '/admin/users/todoes/:id',
+        AdminUserController,
+        'actionTodoes',
+        [AuthOnlyMiddleware]
+    ),
+);
+
+RoutesCollection.add(
+    new Route(
+        'GET',
+        '/admin/users/get-user-data/:id',
+        AdminUserController,
+        'actionGetUserData',
+        [AuthOnlyMiddleware]
+    ),
+);
+
+RoutesCollection.add(
+    new Route(
+        'PUT',
+        '/admin/users/update/:id',
+        AdminUserController,
+        'actionUpdate',
+        [AuthOnlyMiddleware]
+    ),
+);
+
+RoutesCollection.add(
+    new Route(
+        'DELETE',
+        '/admin/users/delete/:id',
+        AdminUserController,
+        'actionDelete',
+        [AuthOnlyMiddleware]
+    ),
+);
+
+RoutesCollection.add(
+    new Route(
+        'POST',
+        '/admin/users/create',
+        AdminUserController,
+        'actionCreate',
         [AuthOnlyMiddleware]
     ),
 );
