@@ -19,7 +19,7 @@ services:
     tty: true
 
   api-mariadb:
-    image: mariadb:10.1.32
+    image: ${MYSQL_VERSION}
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${API_MYSQL_USER}

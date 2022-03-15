@@ -2,7 +2,7 @@
   "name": "api-node",
   "description": "Todo App NodeJs API",
   "version": "1.0.0",
-  "author": "ace7upp@gmail.com",
+  "author": "Andrey Bogachevskiy",
   "license": "MIT",
   "scripts": {
     "console": "node ./dist/server/entry/console.js",
