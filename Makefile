@@ -133,6 +133,9 @@ up-ws-node:
 down-ws-node:
 	@docker-compose --env-file ./docker.env -f docker-compose-ws-node.yml -p ${WS_NODE_COMPOSE_PROJECT_NAME} down --remove-orphans
 
+restart-ws-node: down-ws-node \
+	up-ws-node
+
 docker-build-ws-node: docker-build-ws-node-app \
 	docker-build-ws-node-cli
 
