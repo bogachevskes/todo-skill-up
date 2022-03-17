@@ -13,7 +13,7 @@ io.on('connection', (socket) => {
     socket.on('send_message', (data) => {
         console.log(`User sent a message:`, data);
 
-        socket.emit('receive_message', 'hi client');
+        socket.emit('receive_message', `Got message: ${data}`);
     });
 
     socket.on('join_room', (data) => {
@@ -23,10 +23,10 @@ io.on('connection', (socket) => {
     });
 
     setInterval(function() {
-        socket.emit('receive_message', 'are you okey?');
+        socket.emit('receive_message', 'Connection ready');
 
         console.log('sent check to client');
-    }, 3000);
+    }, 10000);
 
     socket.on('disconnect', () => {
         console.log(`User Disconnected: ${socket.id}`);
