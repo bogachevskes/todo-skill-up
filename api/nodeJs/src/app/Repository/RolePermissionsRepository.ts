@@ -25,8 +25,8 @@ export default class RolePermissionsRepository
     protected static getJoinedQuery(): SelectQueryBuilder<RolePermission>
     {
         return this.getQueryBuilder()
-            .leftJoinAndSelect('role_permission.permissions', 'permission')
-            .leftJoinAndSelect('role_permission.roles', 'role');
+            .leftJoinAndSelect('role_permission.permission', 'permission')
+            .leftJoinAndSelect('role_permission.role', 'role');
     }
     
     /**
@@ -78,8 +78,8 @@ export default class RolePermissionsRepository
 
         const model = new RolePermission;
 
-        model.rolesId = role.id;
-        model.permissionsId = permission.id;
+        model.roleId = role.id;
+        model.permissionId = permission.id;
 
         await model.save();
 

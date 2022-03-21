@@ -1,4 +1,6 @@
 const db = require('./dist/server/config/_db');
+const SnakeNamingStrategy = require('typeorm-naming-strategies')
+  .SnakeNamingStrategy;
 
 module.exports = {
     "type": 'mysql',
@@ -12,4 +14,5 @@ module.exports = {
     "entities": [
         "dist/server/app/Entity/**/*.js",
     ],
+    "namingStrategy": new SnakeNamingStrategy(),
 }

@@ -3,7 +3,7 @@ import RuntimeError from '../../Framework/Exceptions/RuntimeError';
 import TodoItem from '../Entity/TodoItem';
 import TodoStatus from '../Entity/TodoStatus';
 import TodoStatusGroup from '../Entity/TodoStatusGroup';
-import TodoItemInterface from '../Entity/Base/TodoItemInterface';
+import TodoItemCreateRequest from '../FormRequest/TodoItem/TodoItemCreateRequest';
 import TodoStatusRepository from './TodoStatusRepository';
 import TodoStatusGroupRepository from './TodoStatusGroupRepository';
 
@@ -72,10 +72,10 @@ export default class TodoItemRepository
     /**
      * Создает новое задание.
      * 
-     * @param  TodoItemInterface data 
+     * @param  TodoItemCreateRequest data 
      * @return Promise<TodoItem>
      */
-    public static async createNew(data: TodoItemInterface): Promise<TodoItem>
+    public static async createNew(data: TodoItemCreateRequest): Promise<TodoItem>
     {
         data.statusId = await TodoStatusRepository.getInitialStatusId();
         

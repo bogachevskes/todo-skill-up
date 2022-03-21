@@ -8,7 +8,7 @@ import TodoStatusGroup from '../Entity/TodoStatusGroup';
 import UsersRoleRepository from './UsersRoleRepository';
 import TodoItemRepository from './TodoItemRepository';
 import RolePermissionsRepository from './RolePermissionsRepository';
-import TodoItemInterface from '../Entity/Base/TodoItemInterface';
+import TodoItemCreateRequest from '../FormRequest/TodoItem/TodoItemCreateRequest';
 
 export default class UserRepository
 {
@@ -226,7 +226,7 @@ export default class UserRepository
     {
         const userRoles = await this.user.roles;
 
-        userRoles.push(role);
+        // !!! userRoles.push(role);
         
         await this.user.save();
     }
@@ -289,10 +289,10 @@ export default class UserRepository
     /**
      * Добавление задания.
      * 
-     * @param  TodoItemInterface data
+     * @param  TodoItemCreateRequest data
      * @return Promise<TodoItem>
      */
-    public async addTodoItem(data: TodoItemInterface): Promise<TodoItem>
+    public async addTodoItem(data: TodoItemCreateRequest): Promise<TodoItem>
     {
         data.userId = this.user.id;
         

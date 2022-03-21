@@ -3,12 +3,15 @@ import CrudController from '../../../Framework/Http/Controller/CrudController';
 import AutoBind from '../../../Framework/Decorators/AutoBind';
 import NotFound from '../../../Framework/Exceptions/NotFound';
 import BadRequest from '../../../Framework/Exceptions/BadRequest';
+import CommandContext from '../../../Framework/Base/CommandContext';
+import ValidationError from '../../../Framework/Exceptions/ValidationError';
 import User from '../../Entity/User';
 import TodoItem from '../../Entity/TodoItem';
 import TodoStatus from '../../Entity/TodoStatus';
 import UserRepository from '../../Repository/UserRepository';
 import TodoItemRepository from '../../Repository/TodoItemRepository';
 import TodoStatusRepository from '../../Repository/TodoStatusRepository';
+import TodoItemCreate from '../../Console/Commands/TodoItemCreate';
 
 export default class TodoController extends CrudController
 {
@@ -46,9 +49,29 @@ export default class TodoController extends CrudController
     {
         this.defineUserRepo(req);
 
-        const newTodo = await this.userRepo.addTodoItem(req.body.form);
+        const
+            context = new CommandContext,
+            cmd = new TodoItemCreate;
+
+        context.walk(req.body.form);
+
+        cmd.userRepo = this.userRepo;
+
+        try {
+
+            await cmd.execute(context);
+
+        } catch (error) {
+            
+            if (error instanceof ValidationError) {
+
+                throw new BadRequest(error.message);
+            }
+
+            throw new Error(error.message);
+        }
         
-        return newTodo;
+        return context.get('item');
     }
 
     /**

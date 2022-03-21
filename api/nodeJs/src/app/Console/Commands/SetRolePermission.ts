@@ -68,7 +68,7 @@ export default class SetRolePermission extends BaseCommand
      */
     protected async handle(): Promise<void>
     {
-        RolePermissionsRepository.assignPermission(
+        await RolePermissionsRepository.assignPermission(
             this.role,
             this.permission
         );

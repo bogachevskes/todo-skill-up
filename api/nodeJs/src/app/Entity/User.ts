@@ -1,4 +1,5 @@
-import { Column, Entity, BaseEntity, PrimaryGeneratedColumn, Index, ManyToMany, JoinTable } from 'typeorm';
+import { Column, Entity, BaseEntity, PrimaryGeneratedColumn, Index, OneToMany } from 'typeorm';
+import UserRole from './UserRole';
 import Role from './Role';
 
 @Index('idx-users_name', ['name'])
@@ -63,11 +64,8 @@ export default class User extends BaseEntity
         name: 'deleted_at',
         nullable: true,
     })
-    public deletedAt: Date;
+    public deletedAt: Date | null;
 
-    @ManyToMany(type => Role)
-    @JoinTable({
-        name: 'user_roles',
-    })
-    roles: Promise<Role[]>;
+    @OneToMany(() => UserRole, userRole => userRole.role)
+    public roles: Role[];
 }

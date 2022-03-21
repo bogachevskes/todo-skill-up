@@ -30,7 +30,8 @@
     "nodemailer-sendgrid-transport": "^0.2.0",
     "reflect-metadata": "^0.1.13",
     "ts-node": "^9.0.0",
-    "typeorm": "^0.2.29",
+    "typeorm": "0.2.41",
+    "typeorm-naming-strategies": "^4.0.0",
     "validator.ts": "^0.2.2",
     "winston": "^3.2.1",
     "winston-daily-rotate-file": "^4.4.2"

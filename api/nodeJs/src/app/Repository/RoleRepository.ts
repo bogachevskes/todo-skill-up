@@ -54,10 +54,5 @@ export default class RoleRepository
 
         return role;
     }
-
-    public static async createPermission(role: Role)
-    {
-        
-    }
-
+    
 }
