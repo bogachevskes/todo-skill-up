@@ -14,9 +14,9 @@ export default class RolePermission extends BaseEntity
     @Column({ unsigned: true })
     public permissionId: number;
 
-    @ManyToOne(_type => Role)
+    @ManyToOne(() => Role, role => role.rolePermission)
     public role: Role;
 
-    @ManyToOne(_type => Permission)
+    @ManyToOne(() => Permission, permission => permission.rolePermission)
     public permission: Permission;
 }

@@ -3,6 +3,7 @@ import RuntimeError from '../../Framework/Exceptions/RuntimeError';
 import User from '../Entity/User';
 import Role from '../Entity/Role';
 import TodoItem from '../Entity/TodoItem';
+import UserRole from '../Entity/UserRole';
 import TodoAccessGroup from '../Entity/TodoAccessGroup';
 import TodoStatus from '../Entity/TodoStatus';
 import TodoStatusGroup from '../Entity/TodoStatusGroup';
@@ -212,7 +213,7 @@ export default class UserRepository
     {
         const result = await
             Role.createQueryBuilder('role')
-            .leftJoinAndSelect('role.users', 'user')
+            .leftJoinAndSelect('role.userRoles', 'user')
             .where("user.id = :userId", { userId: this.user.id })
             .getCount();
 
@@ -227,12 +228,12 @@ export default class UserRepository
      */
     public async assignRole(role: Role): Promise<void>
     {
-        const userRoles = await this.user.roles;
+        const model = new UserRole;
 
-        // !!! Протестить
-        userRoles.push(role);
+        model.userId = this.user.id;
+        model.roleId = role.id;
         
-        await this.user.save();
+        await model.save();
     }
 
     /**

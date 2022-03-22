@@ -2,6 +2,7 @@ import { Column, Entity, PrimaryGeneratedColumn, Index, OneToMany, BaseEntity } 
 import UserRole from './UserRole';
 import RolePermission from './RolePermission';
 import Permission from './Permission';
+import User from './User';
 
 @Index('idx-roles_name', ['name'])
 @Index('idx-roles_description', ['description'])
@@ -41,10 +42,10 @@ export default class Roles extends BaseEntity
     })
     public updatedAt: Date;
 
-    @OneToMany(() => UserRole, userRole => userRole.user)
-    public users: UserRole[];
+    @OneToMany(() => UserRole, userRole => userRole.role)
+    public userRoles: UserRole[];
 
-    @OneToMany(() => RolePermission, rolePermission => rolePermission.permission)
-    public permissions: Permission[];
+    @OneToMany(() => RolePermission, rolePermission => rolePermission.role)
+    public rolePermission: RolePermission[];
 
 }

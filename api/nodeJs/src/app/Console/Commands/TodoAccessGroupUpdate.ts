@@ -22,8 +22,6 @@ export default class TodoAccessGroupUpdate extends BaseCommand
     protected async validateData(): Promise<void>
     {
         this.request = new TodoAccessGroupUpdateRequest(this.context.all());
-
-        console.log(this.request);
         
         await this.request.validate();
 

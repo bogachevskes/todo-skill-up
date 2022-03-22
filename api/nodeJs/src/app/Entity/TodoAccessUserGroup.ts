@@ -18,7 +18,7 @@ export default class TodoAccessUserGroup extends BaseEntity
         unsigned: true,
         comment: 'Группа доступа',
     })
-    public todoAccessGroupsId: number;
+    public todoAccessGroupId: number;
 
     @Column({
         unsigned: true,

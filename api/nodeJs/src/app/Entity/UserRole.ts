@@ -12,11 +12,11 @@ export default class UserRole extends BaseEntity
     userId: number;
 
     @Column({ unsigned: true })
-    roleId: number;
+    public roleId: number;
 
-    @ManyToOne(_type => User)
+    @ManyToOne(() => User, user => user.userRoles)
     user: User;
 
-    @ManyToOne(_type => Role)
+    @ManyToOne(() => Role, role => role.userRoles)
     role: Role;
 }

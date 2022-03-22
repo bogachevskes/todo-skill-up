@@ -21,8 +21,6 @@ export default class TodoItemUpdate extends BaseCommand
     protected async validateData(): Promise<void>
     {
         this.request = new TodoItemUpdateRequest(this.context.all());
-
-        console.log(this.request);
         
         await this.request.validate();
 

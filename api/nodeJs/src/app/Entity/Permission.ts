@@ -40,7 +40,7 @@ export default class Permission extends BaseEntity
     })
     public updatedAt: Date;
 
-    @OneToMany(() => RolePermission, rolePermission => rolePermission.role)
-    public roles: Role[];
+    @OneToMany(() => RolePermission, rolePermission => rolePermission.permission)
+    public rolePermission: RolePermission[];
 
 }

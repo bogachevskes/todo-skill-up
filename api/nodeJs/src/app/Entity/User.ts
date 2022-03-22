@@ -1,4 +1,4 @@
-import { Column, Entity, BaseEntity, PrimaryGeneratedColumn, Index, OneToMany } from 'typeorm';
+import { Column, Entity, BaseEntity, PrimaryGeneratedColumn, Index, OneToMany, JoinTable } from 'typeorm';
 import UserRole from './UserRole';
 import Role from './Role';
 
@@ -66,6 +66,6 @@ export default class User extends BaseEntity
     })
     public deletedAt: Date | null;
 
-    @OneToMany(() => UserRole, userRole => userRole.role)
-    public roles: Role[];
+    @OneToMany(() => UserRole, userRole => userRole.user)
+    public userRoles: UserRole[];
 }
