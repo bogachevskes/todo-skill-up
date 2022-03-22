@@ -3,12 +3,15 @@ import RuntimeError from '../../Framework/Exceptions/RuntimeError';
 import User from '../Entity/User';
 import Role from '../Entity/Role';
 import TodoItem from '../Entity/TodoItem';
+import TodoAccessGroup from '../Entity/TodoAccessGroup';
 import TodoStatus from '../Entity/TodoStatus';
 import TodoStatusGroup from '../Entity/TodoStatusGroup';
 import UsersRoleRepository from './UsersRoleRepository';
 import TodoItemRepository from './TodoItemRepository';
 import RolePermissionsRepository from './RolePermissionsRepository';
+import TodoAccessGroupRepository from './TodoAccessGroupRepository';
 import TodoItemCreateRequest from '../FormRequest/TodoItem/TodoItemCreateRequest';
+import TodoAccessGroupCreateRequest from '../FormRequest/TodoAccessGroup/TodoAccessGroupCreateRequest';
 
 export default class UserRepository
 {
@@ -226,7 +229,8 @@ export default class UserRepository
     {
         const userRoles = await this.user.roles;
 
-        // !!! userRoles.push(role);
+        // !!! Протестить
+        userRoles.push(role);
         
         await this.user.save();
     }
@@ -355,4 +359,31 @@ export default class UserRepository
         return await TodoItemRepository.update(todoItem, attributes);
     }
 
+    /**
+     * @param  id: number
+     * @return Promise<TodoAccessGroup | undefined>
+     */
+    public async findTodoAccessGroupById(id: number): Promise<TodoAccessGroup | undefined>
+    {
+        return await TodoAccessGroupRepository.findOneByUserId(this.user.id, id);
+    }
+
+    /**
+     * @return Promise<TodoAccessGroup[]>
+     */
+    public async getTodoAccessGroups(): Promise<TodoAccessGroup[]>
+    {
+        return await TodoAccessGroupRepository.findByUserId(this.user.id);
+    }
+
+    /**
+     * @param  data TodoAccessGroupCreateRequest
+     * @return Promise<TodoAccessGroup | undefined>
+     */
+    public async addTodoAccessGroup(data: TodoAccessGroupCreateRequest): Promise<TodoAccessGroup | undefined>
+    {
+        data.userId = this.user.id;
+        
+        return await TodoAccessGroupRepository.createNew(data);
+    }
 }

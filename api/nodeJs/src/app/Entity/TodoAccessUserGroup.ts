@@ -1,15 +1,15 @@
 import { Column, Entity, BaseEntity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import TodoAccessGroup from './TodoAccessUserGroup';
+import TodoAccessGroup from './TodoAccessGroup';
 import User from './User';
 
 @Entity('todo_access_user_group')
 export default class TodoAccessUserGroup extends BaseEntity
 {
-    @ManyToOne(_type => TodoAccessGroup)
-    todoAccessGroups: TodoAccessGroup;
+    @ManyToOne(_type => TodoAccessGroup, { onDelete: 'CASCADE' })
+    todoAccessGroup: TodoAccessGroup;
 
-    @ManyToOne(_type => User)
-    users: User;
+    @ManyToOne(_type => User, { onDelete: 'CASCADE' })
+    user: User;
     
     @PrimaryGeneratedColumn({ unsigned: true })
     public id: number;

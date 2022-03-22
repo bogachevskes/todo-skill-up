@@ -12,6 +12,7 @@ import UserRepository from '../../Repository/UserRepository';
 import TodoItemRepository from '../../Repository/TodoItemRepository';
 import TodoStatusRepository from '../../Repository/TodoStatusRepository';
 import TodoItemCreate from '../../Console/Commands/TodoItemCreate';
+import TodoItemUpdate from '../../Console/Commands/TodoItemUpdate';
 
 export default class TodoController extends CrudController
 {
@@ -81,9 +82,31 @@ export default class TodoController extends CrudController
     {
         this.defineUserRepo(req);
 
-        const todoItem = await this.findTodoModel(id);
+        const
+            context = new CommandContext,
+            cmd = new TodoItemUpdate;
+
+        context.walk(req.body.formData);
+
+        context.set('id', id);
+
+        cmd.userRepo = this.userRepo;
+
+        try {
+
+            await cmd.execute(context);
+
+        } catch (error) {
+            
+            if (error instanceof ValidationError) {
+
+                throw new BadRequest(error.message);
+            }
+
+            throw new Error(error.message);
+        }
         
-        return await this.userRepo.updateTodoItem(todoItem, req.body.formData);
+        return context.get('item');
     }
 
     /**

@@ -132,19 +132,11 @@ export default class TodoItemRepository
      */
     public static async update(item: TodoItem, attributes: object): Promise<TodoItem>
     {
-        await this.getQueryBuilder()
-            .update(TodoItem)
-            .set(attributes)
-            .where("id = :id", { id: item.id })
-            .execute();
+        const model = this.loadModel(item, attributes);
+        
+        await model.save();
 
-        const updatedItem = await this.findById(item.id);
-
-        if (updatedItem instanceof TodoItem) {
-            return updatedItem;
-        }
-
-        throw new RuntimeError('Модель задания не найдена после обновления');
+        return model;
     }
 
 }
