@@ -1,6 +1,6 @@
 import { Column, Entity, BaseEntity, PrimaryGeneratedColumn, Index, OneToMany, JoinTable } from 'typeorm';
 import UserRole from './UserRole';
-import Role from './Role';
+import TodoAccessUserGroup from './TodoAccessUserGroup';
 
 @Index('idx-users_name', ['name'])
 @Index('udx-users_email', ['email'], { unique: true })
@@ -65,6 +65,9 @@ export default class User extends BaseEntity
         nullable: true,
     })
     public deletedAt: Date | null;
+
+    @OneToMany(() => TodoAccessUserGroup, todoAccessUserGroup => todoAccessUserGroup.user)
+    public todoAccessGroupsGroups: TodoAccessUserGroup[];
 
     @OneToMany(() => UserRole, userRole => userRole.user)
     public userRoles: UserRole[];

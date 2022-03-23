@@ -5,12 +5,14 @@ import Role from '../Entity/Role';
 import TodoItem from '../Entity/TodoItem';
 import UserRole from '../Entity/UserRole';
 import TodoAccessGroup from '../Entity/TodoAccessGroup';
+import TodoAccessUserGroup from '../Entity/TodoAccessUserGroup';
 import TodoStatus from '../Entity/TodoStatus';
 import TodoStatusGroup from '../Entity/TodoStatusGroup';
 import UsersRoleRepository from './UsersRoleRepository';
 import TodoItemRepository from './TodoItemRepository';
 import RolePermissionsRepository from './RolePermissionsRepository';
 import TodoAccessGroupRepository from './TodoAccessGroupRepository';
+import TodoAccessUserGroupRepository from './TodoAccessUserGroupRepository';
 import TodoItemCreateRequest from '../FormRequest/TodoItem/TodoItemCreateRequest';
 import TodoAccessGroupCreateRequest from '../FormRequest/TodoAccessGroup/TodoAccessGroupCreateRequest';
 
@@ -386,5 +388,44 @@ export default class UserRepository
         data.userId = this.user.id;
         
         return await TodoAccessGroupRepository.createNew(data);
+    }
+
+    /**
+     * @param  id number
+     * @return Promise<TodoAccessUserGroup | undefined>
+     */
+    public async findTodoAccessUserGroupById(id: number): Promise<TodoAccessUserGroup | undefined>
+    {
+        return await TodoAccessUserGroupRepository.findOneByUserId(this.user.id, id);
+    }
+
+    /**
+     * @param  groupId number
+     * @param  userId number
+     * @return Promise<TodoAccessUserGroup>
+     */
+    public async addTodoAccessUserGroup(groupId: number, userId: number): Promise<TodoAccessUserGroup>
+    {
+        const model = new TodoAccessUserGroup;
+
+        model.todoAccessGroupId = groupId;
+        model.userId = userId;
+
+        return await model.save();
+    }
+
+    /**
+     * @param  groupId number
+     * @return  Promise<object[]>
+     */
+    public async getGroupAccessedUsers(groupId: number): Promise<object[]>
+    {
+        const query = UserRepository.getQueryBuilder()
+            .select(['user.id, user.name, user.email, taug.id as group_id'])
+            .leftJoin('user.todoAccessGroupsGroups', 'taug')
+            .leftJoin('taug.todoAccessGroup', 'tag')
+            .where('tag.userId = :userId AND tag.id = :groupId', {userId: this.user.id, groupId});
+
+        return await query.getRawMany();
     }
 }

@@ -7,6 +7,7 @@ import AdminUserController from '../app/Http/Controllers/Admin/AdminUserControll
 import UserPermissionsController from '../app/Http/Controllers/UserPermissionsController';
 import TodoController from '../app/Http/Controllers/TodoController';
 import TodoAccessGroupController from '../app/Http/Controllers/TodoAccessGroupController';
+import TodoAccessUserGroupController from '../app/Http/Controllers/TodoAccessUserGroupController';
 
 RoutesCollection.add(
     new Route(
@@ -191,6 +192,36 @@ RoutesCollection.add(
         'DELETE',
         '/todo-access-group/delete/:id',
         TodoAccessGroupController,
+        'actionDelete',
+        [AuthOnlyMiddleware]
+    ),
+);
+
+RoutesCollection.add(
+    new Route(
+        'GET',
+        '/todo-access-user-group/list/:id',
+        TodoAccessUserGroupController,
+        'actionList',
+        [AuthOnlyMiddleware]
+    ),
+);
+
+RoutesCollection.add(
+    new Route(
+        'POST',
+        '/todo-access-user-group/create/:id',
+        TodoAccessUserGroupController,
+        'actionCreate',
+        [AuthOnlyMiddleware]
+    ),
+);
+
+RoutesCollection.add(
+    new Route(
+        'DELETE',
+        '/todo-access-user-group/delete/:id',
+        TodoAccessUserGroupController,
         'actionDelete',
         [AuthOnlyMiddleware]
     ),

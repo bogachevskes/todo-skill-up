@@ -26,8 +26,8 @@ export default class TodoItemUpdateRequest extends ValidationRequest
     /**
      * @see ValidationRequest
      */
-     protected getCustomValidations(): Function[]
-     {
+    protected getCustomValidations(): Function[]
+    {
         return [
             async () => {
                 if (Boolean(this.todoAccessGroupId) === false) {
