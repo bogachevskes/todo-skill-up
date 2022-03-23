@@ -5,7 +5,7 @@ import UserRepository from '../../Repository/UserRepository';
 export default class TodoAccessGroupCreate extends BaseCommand
 {
     /**
-     * @var UserCreateRequest
+     * @var TodoAccessGroupCreateRequest
      */
     protected request: TodoAccessGroupCreateRequest;
 

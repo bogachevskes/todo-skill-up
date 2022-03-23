@@ -9,7 +9,7 @@ import User from '../../Entity/User';
 export default class TodoAccessUserGroupCreate extends BaseCommand
 {
     /**
-     * @var UserCreateRequest
+     * @var TodoAccessUserGroupCreateRequest
      */
     protected request: TodoAccessUserGroupCreateRequest;
 

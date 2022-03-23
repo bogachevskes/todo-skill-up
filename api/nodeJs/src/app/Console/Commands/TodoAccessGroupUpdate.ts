@@ -7,7 +7,7 @@ import TodoAccessGroup from '../../Entity/TodoAccessGroup';
 export default class TodoAccessGroupUpdate extends BaseCommand
 {
     /**
-     * @var UserCreateRequest
+     * @var TodoAccessGroupUpdateRequest
      */
     protected request: TodoAccessGroupUpdateRequest;
 
