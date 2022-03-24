@@ -8,6 +8,7 @@ import UserPermissionsController from '../app/Http/Controllers/UserPermissionsCo
 import TodoController from '../app/Http/Controllers/TodoController';
 import TodoAccessGroupController from '../app/Http/Controllers/TodoAccessGroupController';
 import TodoAccessUserGroupController from '../app/Http/Controllers/TodoAccessUserGroupController';
+import UserController from '../app/Http/Controllers/UserController';
 
 RoutesCollection.add(
     new Route(
@@ -223,6 +224,16 @@ RoutesCollection.add(
         '/todo-access-user-group/delete/:id',
         TodoAccessUserGroupController,
         'actionDelete',
+        [AuthOnlyMiddleware]
+    ),
+);
+
+RoutesCollection.add(
+    new Route(
+        'GET',
+        '/users-match-by-email/:email',
+        UserController,
+        'actionMatchUsersByEmail',
         [AuthOnlyMiddleware]
     ),
 );

@@ -428,4 +428,19 @@ export default class UserRepository
 
         return await query.getRawMany();
     }
+
+    /**
+     * @param  emailEntry string
+     * @param  limit number
+     * @returns Promise<object[]>
+     */
+    public static async getUsersByEmailEntry(emailEntry: string, limit: number): Promise<object[]>
+    {
+        const query = this.getQueryBuilder()
+            .select(['user.id', 'user.email'])
+            .where('user.email LIKE :emailEntry', {emailEntry: `${emailEntry}%`})
+            .limit(limit);
+
+        return await query.getRawMany();
+    }
 }

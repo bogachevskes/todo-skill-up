@@ -1,4 +1,3 @@
-import Configurable from '../../Base/Configurable';
 import ControllerInterface from './ControllerInterface';
 
 export default class Controller implements ControllerInterface
