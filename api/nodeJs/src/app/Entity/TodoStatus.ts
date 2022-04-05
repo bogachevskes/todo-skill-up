@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn, Index, ManyToMany, JoinTable, BaseEntity } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, Index, BaseEntity } from 'typeorm';
 
 @Index('idx-todo_status_name', ['name'])
 @Index('udx-users_email', ['initialDefault'], { unique: true })
