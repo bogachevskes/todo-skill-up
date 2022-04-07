@@ -1,14 +1,18 @@
 import RoutesCollection from '../Framework/Http/Router/RoutesCollection';
 import Route from '../Framework/Http/Router/Route';
 import AuthOnlyMiddleware from '../app/Http/Middleware/AuthOnlyMiddleware';
+import HasAccessToTodoAccessGroupMiddleware from '../app/Http/Middleware/HasAccessToTodoAccessGroupMiddleware';
 
 import AuthController from '../app/Http/Controllers/AuthController';
 import AdminUserController from '../app/Http/Controllers/Admin/AdminUserController';
 import UserPermissionsController from '../app/Http/Controllers/UserPermissionsController';
 import TodoController from '../app/Http/Controllers/TodoController';
 import TodoAccessGroupController from '../app/Http/Controllers/TodoAccessGroupController';
+import TodoAccessGroupTodoController from '../app/Http/Controllers/TodoAccessGroupTodoController';
 import TodoAccessUserGroupController from '../app/Http/Controllers/TodoAccessUserGroupController';
 import UserController from '../app/Http/Controllers/UserController';
+
+/* === auth group === */
 
 RoutesCollection.add(
     new Route(
@@ -27,6 +31,8 @@ RoutesCollection.add(
         'actionSignup'
     ),
 );
+
+/** === todo group === */
 
 RoutesCollection.add(
     new Route(
@@ -78,6 +84,8 @@ RoutesCollection.add(
     ),
 );
 
+/** === user permissions group === */
+
 RoutesCollection.add(
     new Route(
         'GET',
@@ -87,6 +95,8 @@ RoutesCollection.add(
         [AuthOnlyMiddleware]
     ),
 );
+
+/** === admin users === **/
 
 RoutesCollection.add(
     new Route(
@@ -158,6 +168,8 @@ RoutesCollection.add(
     ),
 );
 
+/** === todo access group group === */
+
 RoutesCollection.add(
     new Route(
         'GET',
@@ -201,12 +213,79 @@ RoutesCollection.add(
 RoutesCollection.add(
     new Route(
         'GET',
+        '/todo-access-group/todo/:id/list',
+        TodoAccessGroupTodoController,
+        'actionList',
+        [
+            AuthOnlyMiddleware,
+            HasAccessToTodoAccessGroupMiddleware,
+        ]
+    ),
+);
+
+RoutesCollection.add(
+    new Route(
+        'POST',
+        '/todo-access-group/todo/:id/create',
+        TodoAccessGroupTodoController,
+        'actionCreate',
+        [
+            AuthOnlyMiddleware,
+            HasAccessToTodoAccessGroupMiddleware,
+        ]
+    ),
+);
+
+RoutesCollection.add(
+    new Route(
+        'PUT',
+        '/todo-access-group/todo/:id/update/:todoId',
+        TodoAccessGroupTodoController,
+        'actionUpdate',
+        [
+            AuthOnlyMiddleware,
+            HasAccessToTodoAccessGroupMiddleware,
+        ]
+    ),
+);
+
+RoutesCollection.add(
+    new Route(
+        'DELETE',
+        '/todo-access-group/todo/:id/delete/:todoId',
+        TodoAccessGroupTodoController,
+        'actionDelete',
+        [
+            AuthOnlyMiddleware,
+            HasAccessToTodoAccessGroupMiddleware,
+        ]
+    ),
+);
+
+RoutesCollection.add(
+    new Route(
+        'PUT',
+        '/todo-access-group/todo/:id/set-status/:todoId',
+        TodoAccessGroupTodoController,
+        'actionSetStatus',
+        [
+            AuthOnlyMiddleware,
+            HasAccessToTodoAccessGroupMiddleware,
+        ]
+    ),
+);
+
+RoutesCollection.add(
+    new Route(
+        'GET',
         '/todo-access-user-group/list/:id',
         TodoAccessUserGroupController,
         'actionList',
         [AuthOnlyMiddleware]
     ),
 );
+
+/** === todo access user group group === */
 
 RoutesCollection.add(
     new Route(
@@ -228,10 +307,12 @@ RoutesCollection.add(
     ),
 );
 
+/** === users group === */
+
 RoutesCollection.add(
     new Route(
         'GET',
-        '/users-match-by-email/:email',
+        '/users/match-by-email/:email',
         UserController,
         'actionMatchUsersByEmail',
         [AuthOnlyMiddleware]

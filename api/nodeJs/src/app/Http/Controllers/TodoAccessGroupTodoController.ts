@@ -14,7 +14,7 @@ import TodoStatusRepository from '../../Repository/TodoStatusRepository';
 import TodoItemCreate from '../../Console/Commands/TodoItemCreate';
 import TodoItemUpdate from '../../Console/Commands/TodoItemUpdate';
 
-export default class TodoController extends CrudController
+export default class TodoAccessGroupTodoController extends CrudController
 {
     protected userRepo: UserRepository;
 
@@ -39,8 +39,8 @@ export default class TodoController extends CrudController
     protected async list(req: Request): Promise<object[]>
     {
         this.defineUserRepo(req);
-        
-        return await this.userRepo.getTodoesByStatusGroups();
+
+        return await this.userRepo.getTodoesByStatusGroupsByAccessGroup(Number(req.params.id));
     }
 
     /**

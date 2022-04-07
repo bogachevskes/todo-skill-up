@@ -53,7 +53,7 @@
         },
         methods: {
             loadTodoGroups: function () {
-                axios.get(`todo/list`, { params: {todo_group_id: this.$route.params.id} })
+                axios.get(`/todo-access-group/todo/${this.$route.params.id}/list`)
                     .then((result) => {
                         this.groups = TodoGroupsService.createGroups(result.data.items);
                     });
