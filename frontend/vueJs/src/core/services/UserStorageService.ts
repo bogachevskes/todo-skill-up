@@ -2,7 +2,6 @@ import axios from '../../axios/base';
 import UserIdentity from '../models/UserIdentity';
 import TodoGroup from '../models/TodoGroup';
 import TodoStatus from '../models/TodoStatus';
-import TodoItem from '../models/TodoItem';
 import TodoGroupsService from './TodoGroupsService';
 
 export default class UserStorageLoader
@@ -228,6 +227,19 @@ export default class UserStorageLoader
                 this.identity.set('permissions', result.data.items);
 
                 return Promise.resolve(this.identity.get('permissions'));
+            });
+    }
+
+    /**
+     * @return void
+     */
+    public loadTodoAccessGroups(): void
+    {
+        return axios.get('todo-access-group/list')
+            .then(result => {
+                this.identity.set('todoAccessGroups', result.data.items);
+
+                return Promise.resolve(this.identity.get('todoAccessGroups'));
             });
     }
 

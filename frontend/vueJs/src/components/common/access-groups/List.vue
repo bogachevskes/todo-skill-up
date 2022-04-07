@@ -29,29 +29,22 @@
     import Actions from '@common-components/Actions';
 
     import axios from '@axios/base';
-    import { mapState} from 'vuex';
 
     import TodoItem from '@models/TodoItem';
 
     import { eventBus } from '@store/eventBus';
 
+    import TodoGroupsService from '@services/TodoGroupsService';
+
     export default {
         data: function () {
             return {
-                groupStatuses: null,
+                groups: [],
+                statuses: [],
             };
         },
         computed: {
-            ...mapState([
-                'groups',
-            ]),
-            statuses: function () {
-                if (! Array.isArray(this.groupStatuses)) {
-                    this.groupStatuses = this.$userStorage.getGroupsPairs();
-                }
 
-                return this.groupStatuses;
-            },
         },
         components: {
             'group-item': Group,
@@ -59,6 +52,28 @@
             'actions-item': Actions,
         },
         methods: {
+            loadTodoGroups: function () {
+                axios.get(`todo/list`, { params: {todo_group_id: this.$route.params.id} })
+                    .then((result) => {
+                        this.groups = TodoGroupsService.createGroups(result.data.items);
+                    });
+            },
+            createStatuses: function () {
+                const pairs = [];
+
+                for (const group of this.groups) {
+
+                    const status = group.status;
+                    
+                    pairs.push({
+                        id: status.id,
+                        name: status.name,
+                    });
+
+                }
+
+                this.statuses = pairs;
+            },
             addCard: function () {
                 eventBus.showCardManageModal(
                         TodoItem.getInstance(),
@@ -97,8 +112,10 @@
                     );
             },
         },
-        beforeCreate: function () {
-            this.$store.dispatch('updateGroupsList', this.$userStorage);
+        beforeRouteEnter (_to, _from, next) {
+              next(vm => {
+                vm.loadTodoGroups();
+            })
         },
     }
 </script>

@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import CrudController from '../../../Framework/Http/Controller/CrudController';
 import AutoBind from '../../../Framework/Decorators/AutoBind';
 import NotFound from '../../../Framework/Exceptions/NotFound';
@@ -39,6 +39,11 @@ export default class TodoController extends CrudController
     protected async list(req: Request): Promise<object[]>
     {
         this.defineUserRepo(req);
+
+        if (req.query.todo_group_id !== undefined) {
+            
+            return await this.userRepo.getTodoesByStatusGroupsByAccessGroup(Number(req.query.todo_group_id));
+        }
         
         return await this.userRepo.getTodoesByStatusGroups();
     }

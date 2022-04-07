@@ -4,6 +4,7 @@ const ROUTE_TODO_LIST = 'todo-list';
 const ROUTE_USERS_TODOES_LIST = 'user-todoes-list';
 const ROUTE_CREATE_USER = 'create-user';
 const ROUTE_UPDATE_USER = 'update-user';
+const ROUTE_SHOW_TODO_ACCESS_GROUP = 'todo-access-group';
 
 import Home from '@common-components/Home';
 import LoginPage from '@common-components/LoginPage';
@@ -14,6 +15,7 @@ import UsersTodoes from '@common-components/manage/components/UsersTodoes';
 import Users from '@common-components/manage/components/Users';
 import CreateUser from '@common-components/manage/components/CreateUser';
 import UpdateUser from '@common-components/manage/components/UpdateUser';
+import AccessGroupList from '@common-components/access-groups/List';
 
 const routes = [
     {
@@ -41,6 +43,11 @@ const routes = [
         },
     },
     {
+        path: `/${ROUTE_SHOW_TODO_ACCESS_GROUP}/:id`,
+        name: ROUTE_SHOW_TODO_ACCESS_GROUP,
+        component: AccessGroupList,
+    },
+    {
         path: '/manage',
         components: {
             default: Manage,
@@ -65,7 +72,7 @@ const routes = [
                 path: 'update-user/:id',
                 name: ROUTE_UPDATE_USER,
                 component: UpdateUser,
-            }
+            },
         ]
     }
 ];
@@ -77,5 +84,6 @@ export {
     ROUTE_USERS_TODOES_LIST,
     ROUTE_CREATE_USER,
     ROUTE_UPDATE_USER,
+    ROUTE_SHOW_TODO_ACCESS_GROUP,
     routes,
 };

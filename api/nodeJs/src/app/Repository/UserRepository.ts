@@ -294,6 +294,16 @@ export default class UserRepository
     }
 
     /**
+     * 
+     * @param accessGroupId number
+     * @returns Promise<TodoStatusGroup[]>
+     */
+    public async getTodoesByStatusGroupsByAccessGroup(accessGroupId: number): Promise<TodoStatusGroup[]>
+    {
+        return await TodoItemRepository.getTodoesGroupedByStatuses(this.user.id, accessGroupId);
+    }
+
+    /**
      * Добавление задания.
      * 
      * @param  TodoItemCreateRequest data

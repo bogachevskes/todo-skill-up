@@ -4,10 +4,22 @@ import TodoStatusGroup from '../Entity/TodoStatusGroup';
 
 export default class TodoStatusGroupRepository
 {
-    public static async createGroup(status: TodoStatus, userId: number): Promise<TodoStatusGroup>
+    /**
+     * @param status TodoStatus
+     * @param userId number
+     * @param accessGroupId number|null
+     * @returns Promise<TodoStatusGroup>
+     */
+    public static async createGroup(status: TodoStatus, userId: number, accessGroupId: number|null = null): Promise<TodoStatusGroup>
     {
+        const condition = { statusId: status.id, userId };
+
+        if (accessGroupId !== null) {
+            condition['todoAccessGroupId'] = accessGroupId;
+        }
+        
         const todoes: TodoItem[] = await TodoItem.find({
-                where: { statusId: status.id, userId }
+                where: {...condition},
             });
         
         return new TodoStatusGroup(status, todoes);

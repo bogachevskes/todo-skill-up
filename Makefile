@@ -50,6 +50,10 @@ frontend-vue-yarn-build:
 	$(MAKE) frontend-vue-node-exec cmd="yarn run build"
 	@$(MAKE) -s frontend-vue-chown
 
+frontend-vue-yarn-watch:
+	$(MAKE) frontend-vue-node-exec cmd="yarn run watch"
+	@$(MAKE) -s frontend-vue-chown
+
 frontend-vue-chown:
 	$(MAKE) frontend-vue-node-exec cmd="chown -R 1000:1000 ./"
 
