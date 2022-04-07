@@ -32,6 +32,18 @@ RoutesCollection.add(
     ),
 );
 
+/** === users group === */
+
+RoutesCollection.add(
+    new Route(
+        'GET',
+        '/users/match-by-email/:email',
+        UserController,
+        'actionMatchUsersByEmail',
+        [AuthOnlyMiddleware]
+    ),
+);
+
 /** === todo group === */
 
 RoutesCollection.add(
@@ -275,17 +287,20 @@ RoutesCollection.add(
     ),
 );
 
+/** === todo access user group group === */
+
 RoutesCollection.add(
     new Route(
         'GET',
         '/todo-access-user-group/list/:id',
         TodoAccessUserGroupController,
         'actionList',
-        [AuthOnlyMiddleware]
+        [
+            AuthOnlyMiddleware,
+            HasAccessToTodoAccessGroupMiddleware,
+        ]
     ),
 );
-
-/** === todo access user group group === */
 
 RoutesCollection.add(
     new Route(
@@ -293,29 +308,23 @@ RoutesCollection.add(
         '/todo-access-user-group/create/:id',
         TodoAccessUserGroupController,
         'actionCreate',
-        [AuthOnlyMiddleware]
+        [
+            AuthOnlyMiddleware,
+            HasAccessToTodoAccessGroupMiddleware,
+        ]
     ),
 );
 
 RoutesCollection.add(
     new Route(
         'DELETE',
-        '/todo-access-user-group/delete/:id',
+        '/todo-access-user-group/:id/delete/:groupId',
         TodoAccessUserGroupController,
         'actionDelete',
-        [AuthOnlyMiddleware]
-    ),
-);
-
-/** === users group === */
-
-RoutesCollection.add(
-    new Route(
-        'GET',
-        '/users/match-by-email/:email',
-        UserController,
-        'actionMatchUsersByEmail',
-        [AuthOnlyMiddleware]
+        [
+            AuthOnlyMiddleware,
+            HasAccessToTodoAccessGroupMiddleware,
+        ]
     ),
 );
 

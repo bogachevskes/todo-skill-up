@@ -2,9 +2,15 @@
     <section class="main-content columns is-fullheight is-info">
         <actions-item></actions-item>
         <div class="container column is-10">
-            <div class="section has-background-info">
-                <manage-card-item></manage-card-item>
-                <div class="columns">
+            <div class="section has-background-info" style="padding: 20px;">
+                <manage-users-item
+                    :users="users"
+                    :loadUsers="loadUsers"
+                ></manage-users-item>
+                <manage-card-item
+                    :loadTodoGroups="loadTodoGroups"
+                ></manage-card-item>
+                <div class="columns mt-1">
                     <group-item
                         v-for="(group, index) in groups"
                         :key="index"
@@ -26,6 +32,7 @@
 <script>
     import Group from './list/Group';
     import ManageCard from './list/ManageCard';
+    import ManageUsers from './list/ManageUsers';
     import Actions from '@common-components/Actions';
 
     import axios from '@axios/base';
@@ -41,6 +48,7 @@
             return {
                 groups: [],
                 statuses: [],
+                users: [],
             };
         },
         computed: {
@@ -50,12 +58,21 @@
             'group-item': Group,
             'manage-card-item': ManageCard,
             'actions-item': Actions,
+            'manage-users-item': ManageUsers,
         },
         methods: {
             loadTodoGroups: function () {
                 axios.get(`/todo-access-group/todo/${this.$route.params.id}/list`)
                     .then((result) => {
                         this.groups = TodoGroupsService.createGroups(result.data.items);
+
+                        this.createStatuses();
+                    });
+            },
+            loadUsers: function () {
+                axios.get(`/todo-access-user-group/list/${this.$route.params.id}`)
+                    .then((result) => {
+                        this.users = result.data.items;
                     });
             },
             createStatuses: function () {
@@ -81,9 +98,9 @@
                     );
             },
             moveToGroup: function (cardId, statusId) {
-                axios.put(`todo/set-status/${cardId}`, { statusId })
+                axios.put(`todo-access-group/todo/${this.$route.params.id}/set-status/${cardId}`, { statusId })
                     .then(() => {
-                        this.$store.dispatch('updateGroupsList', this.$userStorage);
+                        this.loadTodoGroups();
                     });
             },
             changeStatus: function (card, event) {
@@ -100,9 +117,9 @@
                 this.moveToGroup(cardId, group.status.id);
             },
             deleteCard: function (id) {
-                axios.delete(`todo/delete/${id}`)
+                axios.delete(`/todo-access-group/todo/${this.$route.params.id}/delete/${id}`)
                     .then(() => {
-                        this.$store.dispatch('updateGroupsList', this.$userStorage);
+                        this.loadTodoGroups();
                     });
             },
             editCard: function (card) {
@@ -113,8 +130,9 @@
             },
         },
         beforeRouteEnter (_to, _from, next) {
-              next(vm => {
+            next(vm => {
                 vm.loadTodoGroups();
+                vm.loadUsers();
             })
         },
     }

@@ -94,9 +94,16 @@
     const CASE_EDIT = 'update';
 
     export default {
+        props: {
+            loadTodoGroups: {
+                type: Function,
+                default: null,
+            },
+        },
         data: function () {
             return {
                 formData: {
+                    todoAccessGroupId: null,
                     plannedComplitionAt: null,
                 },
                 action: null,
@@ -121,13 +128,19 @@
                 }
             },
             executeCreation: function () {
-                axios.post('todo/create', {form: this.formData})
+                
+                this.formData.todoAccessGroupId = this.$route.params.id,
+                
+                axios.post(`/todo-access-group/todo/${this.$route.params.id}/create`, {form: this.formData})
                     .then(
                             res => this.onCardProcessingComplete()
                         );
             },
             executeUpdating: function () {
-                axios.put(`todo/update/${this.formData.id}`, {formData: this.formData})
+                axios.put(
+                    `/todo-access-group/todo/${this.$route.params.id}/update/${this.formData.id}`,
+                    { formData: this.formData }
+                    )
                     .then(
                             res => this.onCardProcessingComplete()
                         );
@@ -136,7 +149,7 @@
                 this.deactivateModal();
                 this.$v.$reset();
                 this.flushFormData();
-                this.$store.dispatch('updateGroupsList', this.$userStorage);
+                this.loadTodoGroups();
             },
             handleCardProcessing: function () {
                 
@@ -167,31 +180,22 @@
                 return 'Не определено';
             }
         },
-        watch: {
-            'formData.plannedComplitionAt': function (value) {
-                if (value) {
-                    return;
-                }
-
-                this.setComplitionDate(new Date);
-            },
-        },
         mounted: function () {
             const
                 currentDate = new Date(),
                 calendar = bulmaCalendar.attach(
-                '#planned_complition_at',
-                {
-                    type: 'date',
-                    displayMode: 'dialog',
-                    startDate: currentDate,
-                    minDate: currentDate,
-                    showClearButton: false,
-                    todayLabel: 'Сегодня',
-                    cancelLabel:'Закрыть',
-                    dateFormat: 'dd.MM.yyyy',
-                }
-            )[0];
+                    '#planned_complition_at',
+                    {
+                        type: 'date',
+                        displayMode: 'dialog',
+                        startDate: currentDate,
+                        minDate: currentDate,
+                        showClearButton: false,
+                        todayLabel: 'Сегодня',
+                        cancelLabel:'Закрыть',
+                        dateFormat: 'dd.MM.yyyy',
+                    }
+                )[0];
 
             this.setComplitionDate(currentDate);
 

@@ -99,9 +99,9 @@ export default class TodoAccessUserGroupController extends CrudController
     {
         this.defineUserRepo(req);
         
-        await this.findTodoAccessUserGroupModel(id);
+        await this.findTodoAccessUserGroupModel(Number(req.params.groupId));
         
-        return await TodoAccessUserGroupRepository.deleteById(id);
+        return await TodoAccessUserGroupRepository.deleteById(Number(req.params.groupId));
     }
 
     /**

@@ -88,7 +88,7 @@ export default class TodoAccessGroupTodoController extends CrudController
 
         context.walk(req.body.formData);
 
-        context.set('id', id);
+        context.set('id', Number(req.params.todoId));
 
         cmd.userRepo = this.userRepo;
 
@@ -116,7 +116,7 @@ export default class TodoAccessGroupTodoController extends CrudController
     {
         this.defineUserRepo(req);
         
-        const todoItem = await this.findTodoModel(id);
+        const todoItem = await this.findTodoModel(Number(req.params.todoId));
         
         return await TodoItemRepository.deleteById(todoItem.id);
     }
@@ -134,7 +134,7 @@ export default class TodoAccessGroupTodoController extends CrudController
         this.defineUserRepo(req);
 
         const
-            cardId      = parseInt(req.params.id),
+            cardId      = parseInt(req.params.todoId),
             statusId    = parseInt(req.body.statusId);
 
         const

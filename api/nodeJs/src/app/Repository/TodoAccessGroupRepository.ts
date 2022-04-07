@@ -113,4 +113,33 @@ export default class TodoAccessGroupRepository
 
         return await TodoAccessGroup.findOne({select: ['id', 'name', 'description', 'createdAt', 'updatedAt'], where: {id: model.id}});
     }
+
+    /**
+     * @param groupId number
+     * @param userId number
+     * @return Promise<boolean>
+     */
+     public static async isUserExistsInGroup(groupId: number, userId: number): Promise<boolean>
+     {
+         const query = this.getQueryBuilder()
+             .select('COUNT(tag.id) as exist')
+             .leftJoin('tag.users', 'taug')
+             .where(`
+                 (
+                    taug.userId = :userId
+                    AND
+                    taug.todoAccessGroupId = :groupId
+                 )
+                 OR
+                 (
+                    tag.id = :groupId
+                    AND
+                    tag.userId = :userId
+                 )
+             `, {userId, groupId});
+ 
+         const result = await query.getRawOne();
+ 
+         return Boolean(Number(result['exist']));
+     }
 }
