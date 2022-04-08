@@ -23,18 +23,13 @@
                 </router-link>
             </li>
             <li>
-                <a href="#">
-                    Общий доступ
-                </a>
+                <button
+                    class="button is-success"
+                    @click="() => {}"
+                >
+                    Создать доску
+                </button>
                 <ul>
-                    <li class="mb-2">
-                        <button
-                            class="button is-success"
-                            @click="() => {}"
-                        >
-                            Создать доску
-                        </button>
-                    </li>
                     <li v-for="(data, index) in todoAccessGroups" :key="index">
                         <router-link
                             class=""

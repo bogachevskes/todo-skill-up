@@ -129,11 +129,15 @@
                     );
             },
         },
-        beforeRouteEnter (_to, _from, next) {
-            next(vm => {
-                vm.loadTodoGroups();
-                vm.loadUsers();
-            })
+        mounted: function () {
+            this.loadTodoGroups();
+            this.loadUsers();
+        },
+        beforeRouteUpdate: function (_to, _from, next) {
+            this.loadTodoGroups();
+            this.loadUsers();
+
+            next();
         },
     }
 </script>

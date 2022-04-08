@@ -2,7 +2,7 @@
     <section class="main-content columns is-fullheight is-info">
         <actions-item></actions-item>
         <div class="container column is-10">
-            <div class="section has-background-info">
+            <div class="section has-background-info" style="padding: 20px;">
                 <manage-card-item></manage-card-item>
                 <div class="columns">
                     <group-item
