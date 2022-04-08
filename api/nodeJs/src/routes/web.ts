@@ -292,7 +292,7 @@ RoutesCollection.add(
 RoutesCollection.add(
     new Route(
         'GET',
-        '/todo-access-user-group/list/:id',
+        '/todo-access-user-group/:id/list',
         TodoAccessUserGroupController,
         'actionList',
         [
@@ -305,7 +305,7 @@ RoutesCollection.add(
 RoutesCollection.add(
     new Route(
         'POST',
-        '/todo-access-user-group/create/:id',
+        '/todo-access-user-group/:id/create',
         TodoAccessUserGroupController,
         'actionCreate',
         [

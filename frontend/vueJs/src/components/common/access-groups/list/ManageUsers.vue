@@ -141,7 +141,7 @@
                 
                 this.isLoading = true;
 
-                axios.post(`/todo-access-user-group/create/${this.$route.params.id}`, {formData: this.formData})
+                axios.post(`/todo-access-user-group/${this.$route.params.id}/create`, {formData: this.formData})
                     .then(res => {
                         this.isLoading = false;
                         this.deactivateModal();

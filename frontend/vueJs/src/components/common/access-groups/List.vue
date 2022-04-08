@@ -70,7 +70,7 @@
                     });
             },
             loadUsers: function () {
-                axios.get(`/todo-access-user-group/list/${this.$route.params.id}`)
+                axios.get(`/todo-access-user-group/${this.$route.params.id}/list`)
                     .then((result) => {
                         this.users = result.data.items;
                     });
