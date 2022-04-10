@@ -1,5 +1,5 @@
 import Route from './Route';
-
+import RoutesResource from './RoutesResource';
 export default class RoutesCollection
 {
     /**
@@ -46,5 +46,57 @@ export default class RoutesCollection
         const instance = this.getInstance();
 
         return instance.routes;
+    }
+
+    /**
+     * 
+     * @param  resource RoutesResource
+     * @return void
+     */
+    public static addResource(resource: RoutesResource): void
+    {
+        let methodsMap = {
+            'GET': {
+                path: 'list',
+                action: 'actionList',
+            },
+            'POST': {
+                path: 'create',
+                action: 'actionCreate'
+            },
+            'PUT': {
+                path: 'update/:id',
+                action: 'actionUpdate'
+            },
+            'DELETE': {
+                path: 'delete/:id',
+                action: 'actionDelete'
+            },
+        };
+
+        if ('disableMethods' in resource.rules) {
+            
+            resource.rules['disableMethods'].forEach(method => {
+                delete methodsMap[method];
+            });
+
+        }
+
+        for (const method in methodsMap) {
+
+            const path = resource.routes[method].path || methodsMap[method].path,
+                action = resource.routes[method].action || methodsMap[method].action;
+
+            this.add(
+                new Route(
+                    method,
+                    `/${resource.path}/${path}`,
+                    resource.controller,
+                    action,
+                    resource.middleware
+                )
+            );
+            
+        }
     }
 }

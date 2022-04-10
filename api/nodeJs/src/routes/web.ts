@@ -1,4 +1,5 @@
 import RoutesCollection from '../Framework/Http/Router/RoutesCollection';
+import RoutesResource from '../Framework/Http/Router/RoutesResource';
 import Route from '../Framework/Http/Router/Route';
 import AuthOnlyMiddleware from '../app/Http/Middleware/AuthOnlyMiddleware';
 import HasAccessToTodoAccessGroupMiddleware from '../app/Http/Middleware/HasAccessToTodoAccessGroupMiddleware';
@@ -287,45 +288,29 @@ RoutesCollection.add(
     ),
 );
 
-/** === todo access user group group === */
-
-RoutesCollection.add(
-    new Route(
-        'GET',
-        '/todo-access-user-group/:id/list',
+RoutesCollection.addResource(
+    new RoutesResource(
+        'todo-access-user-group',
         TodoAccessUserGroupController,
-        'actionList',
+        {
+            'GET': {
+                'path': ':id/list'
+            },
+            'POST': {
+                'path': ':id/create'
+            },
+            'DELETE': {
+                'path': ':id/delete/:groupId'
+            },
+        },
         [
             AuthOnlyMiddleware,
             HasAccessToTodoAccessGroupMiddleware,
-        ]
-    ),
-);
-
-RoutesCollection.add(
-    new Route(
-        'POST',
-        '/todo-access-user-group/:id/create',
-        TodoAccessUserGroupController,
-        'actionCreate',
-        [
-            AuthOnlyMiddleware,
-            HasAccessToTodoAccessGroupMiddleware,
-        ]
-    ),
-);
-
-RoutesCollection.add(
-    new Route(
-        'DELETE',
-        '/todo-access-user-group/:id/delete/:groupId',
-        TodoAccessUserGroupController,
-        'actionDelete',
-        [
-            AuthOnlyMiddleware,
-            HasAccessToTodoAccessGroupMiddleware,
-        ]
-    ),
+        ],
+        {
+            'disableMethods': ['PUT'],
+        },
+    )
 );
 
 export default RoutesCollection;
