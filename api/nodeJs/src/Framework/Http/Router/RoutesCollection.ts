@@ -84,8 +84,13 @@ export default class RoutesCollection
 
         for (const method in methodsMap) {
 
-            const path = resource.routes[method].path || methodsMap[method].path,
-                action = resource.routes[method].action || methodsMap[method].action;
+            let path = methodsMap[method].path,
+                action = methodsMap[method].action;
+            
+            if (method in resource.routes) {
+                path = resource.routes[method].path || path;
+                action = resource.routes[method].action || action;
+            }
 
             this.add(
                 new Route(
