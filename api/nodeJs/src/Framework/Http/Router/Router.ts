@@ -23,31 +23,30 @@ export default class Router
     }
 
     /**
-     * @param  Function middlewareClass 
-     * @return Function
-     */
-    protected resolveMiddleware(middlewareClass: Function): Function
-    {
-        const middleware: MiddlewareInterface = eval(`new middlewareClass`);
-
-        return asyncMiddleware(middleware.execute);
-    }
-
-    /**
      * @param  Function[] middlewareClasses
      * @return Function[]
      */
-    protected resolveMiddlewareMultiple(middlewareClasses: Function[]): Function[]
+    protected resolveMiddlewareMultiple(middlewareClasses: Function[]): Function
     {
-        const handlers: Function[] = [];
+        let chainHandler,
+            nextHandler;
         
-        for (const handler of middlewareClasses) {
-            handlers.push(
-                this.resolveMiddleware(handler)
-            );
+        for (const middlewareClass of middlewareClasses) {
+
+            if (chainHandler === undefined) {
+                chainHandler = eval(`new middlewareClass`);
+
+                nextHandler = chainHandler;
+
+                continue;
+            }
+
+            nextHandler.nextHandler = eval(`new middlewareClass`);
+
+            nextHandler = nextHandler.nextHandler;
         }
 
-        return handlers;
+        return asyncMiddleware(chainHandler.execute);
     }
 
     /**
@@ -71,13 +70,13 @@ export default class Router
         
         for (const route of this.routes) {
             
-            let handlers: Function[]  = [];
+            let handlers: Function[] = [];
 
-            if (route.middleware.length !== null) {
+            if (route.middleware.length > 0) {
                 
-                const middleware: Function [] = this.resolveMiddlewareMultiple(route.middleware);
+                const middleware: Function = this.resolveMiddlewareMultiple(route.middleware);
                 
-                handlers = handlers.concat(middleware);
+                handlers.push(middleware);
             }
             
             handlers.push(

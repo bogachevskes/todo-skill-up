@@ -1,3 +1,4 @@
+import { Request } from 'express';
 import Middleware from '../../../Framework/Http/Middleware/Middleware';
 import BadRequest from '../../../Framework/Exceptions/BadRequest';
 
@@ -13,11 +14,11 @@ export default class HasAccessToTodoAccessGroupMiddleware extends Middleware
     /**
      * @see Middleware
      */
-    protected async handle(): Promise<void>
+    protected async handle(req: Request): Promise<void>
     {
-        const user: User = this.req['user'];
+        const user: User = req['user'];
 
-        if (await TodoAccessGroupRepository.isUserExistsInGroup(Number(this.req.params.id), user.id) === false) {
+        if (await TodoAccessGroupRepository.isUserExistsInGroup(Number(req.params.id), user.id) === false) {
             
             throw new BadRequest('Доступ к группе запрещен');
         }

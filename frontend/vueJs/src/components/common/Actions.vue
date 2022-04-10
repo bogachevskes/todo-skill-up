@@ -12,25 +12,25 @@
                     Список задач
                 </router-link>
             </li>
-            <li v-if="canManageUsers">
+            <li v-if="canManageUsers" class="mt-1">
                 <router-link
                     to="/manage/users"
                     tag="a"
                     active-class="is-active"
                     exact
                 >
-                    Управление пользователями
+                    Пользователи
                 </router-link>
             </li>
             <li>
                 <button
-                    class="button is-success"
+                    class="button is-success mt-1"
                     @click="() => {}"
                 >
                     Создать доску
                 </button>
                 <ul>
-                    <li v-for="(data, index) in todoAccessGroups" :key="index">
+                    <li v-for="(data, index) in todoAccessGroups" :key="index" class="mt-1">
                         <router-link
                             class=""
                             active-class="is-active"

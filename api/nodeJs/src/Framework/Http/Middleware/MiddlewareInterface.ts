@@ -4,6 +4,8 @@ export default interface MiddlewareInterface
 {
     useAsync: boolean;
 
+    nextHandler: MiddlewareInterface;
+
     /**
      * @param Request req 
      * @param Response res 

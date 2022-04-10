@@ -1,3 +1,4 @@
+import { Request } from 'express';
 import jwt from 'jsonwebtoken';
 import Middleware from '../../../Framework/Http/Middleware/Middleware';
 
@@ -19,9 +20,9 @@ export default class AuthOnlyMiddleware extends Middleware
     /**
      * @see Middleware
      */
-    protected async handle(): Promise<void>
+    protected async handle(req: Request): Promise<void>
     {
-        const token: string = String(this.req.get('X-BASE-AUTH'));
+        const token: string = String(req.get('X-BASE-AUTH'));
     
         let decodedToken;
     
@@ -41,6 +42,6 @@ export default class AuthOnlyMiddleware extends Middleware
             throw new BadRequest('Пользователь заблокирован');
         }
     
-        this.req['user'] = user;
+        req['user'] = user;
     }
 }
