@@ -45,7 +45,10 @@ const routes = [
     {
         path: `/${ROUTE_SHOW_TODO_ACCESS_GROUP}/:id`,
         name: ROUTE_SHOW_TODO_ACCESS_GROUP,
-        component: AccessGroupList,
+        components: {
+            default: AccessGroupList,
+            'invite-actions': InviteActions,
+        },
     },
     {
         path: '/manage',
