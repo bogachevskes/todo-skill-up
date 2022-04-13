@@ -3,26 +3,44 @@
         <actions-item></actions-item>
         <div class="container column is-10">
             <div class="section has-background-info" style="padding: 20px;">
-                <div class="box">
-                    {{ group.description }}
-                    Создал {{ group.user_name }} ({{ getDate(group.createdAt) }})
-                    <button
-                        class="button is-warning"
-                        @click="modals.updateTodoAccessGroup.isActive = true"
-                    >
-                        Изменить
-                    </button>
-                    <button
-                        class="button is-danger"
-                        @click="deleteGroup()"
-                    >
-                        Удалить
-                    </button>
+                <div class="columns mt-1">
+
+                    <div class="column is-6">
+                        <div class="box">
+                            <div style="display: inline-block;">
+                                {{ group.description }}
+                                <br>
+                                Создал
+                                <span class="tag is-primary is-medium">
+                                    {{ group.user_name }} ({{ getDate(group.createdAt) }})
+                                </span>
+                            </div>
+                            <div v-if="Number(group.user_id) === $userStorage.getUserId()"
+                                class="is-pulled-right" style="display: inline-block; vertical-align:top; margin-top: 8px;"
+                            >
+                                <button
+                                    class="button is-warning"
+                                    @click="modals.updateTodoAccessGroup.isActive = true"
+                                >
+                                    Изменить
+                                </button>
+                                <button
+                                    class="button is-danger"
+                                    @click="deleteGroup()"
+                                >
+                                    Удалить
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column is-6">
+                        <manage-users-item
+                            :users="users"
+                            :loadUsers="loadUsers"
+                        ></manage-users-item>
+                    </div>
+
                 </div>
-                <manage-users-item
-                    :users="users"
-                    :loadUsers="loadUsers"
-                ></manage-users-item>
                 <manage-card-item
                     :loadTodoGroups="loadTodoGroups"
                 ></manage-card-item>
@@ -165,7 +183,8 @@
             deleteGroup: function () {
                 axios.delete(`/todo-access-group/delete/${this.$route.params.id}`)
                     .then(() => {
-                        this.loadTodoGroups();
+                        this.$store.dispatch('updateTodoAccessGroups', this.$userStorage);
+                        this.$router.push('/todo-list');
                     });
             },
             editCard: function (card) {

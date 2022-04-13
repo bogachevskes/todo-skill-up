@@ -68,7 +68,7 @@ export default class TodoItem extends BaseEntity
     })
     public updatedAt: Date;
 
-    @ManyToOne(_type => TodoAccessGroup)
+    @ManyToOne(_type => TodoAccessGroup, { onDelete: 'CASCADE' })
     public todoAccessGroup: TodoAccessGroup;
 
     @ManyToOne(_type => TodoStatus)

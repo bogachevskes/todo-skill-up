@@ -70,6 +70,7 @@ export default class TodoAccessGroupRepository
             'tag.name as name',
             'tag.description as description',
             'tag.createdAt as createdAt',
+            'u.id as user_id',
             'u.name as user_name',
             'u.email as user_email',
         ])
