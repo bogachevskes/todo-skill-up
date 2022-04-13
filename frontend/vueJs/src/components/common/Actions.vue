@@ -9,7 +9,7 @@
                     active-class="is-active"
                     exact
                 >
-                    Список задач
+                    Мои задачи
                 </router-link>
             </li>
             <li v-if="canManageUsers" class="mt-1">
@@ -25,7 +25,7 @@
             <li>
                 <button
                     class="button is-success mt-1"
-                    @click="() => {}"
+                    @click="modals.addTodoAccessGroup.isActive = true"
                 >
                     Создать доску
                 </button>
@@ -42,14 +42,27 @@
                 </ul>
             </li>
         </ul>
+        <access-groups-modal-item
+            :modal="modals.addTodoAccessGroup"
+        ></access-groups-modal-item>
     </aside>
 </template>
 
 <script>
     import { mapGetters, mapState } from 'vuex';
     import { ROUTE_SHOW_TODO_ACCESS_GROUP } from '@router/routes';
+    import ActionsModal from './access-groups/ActionsModal';
 
     export default {
+        data: function () {
+            return {
+                modals: {
+                    addTodoAccessGroup: {
+                        isActive: false,
+                    }
+                },
+            };
+        },
         computed: {
             ...mapState([
                 'todoAccessGroups',
@@ -69,6 +82,9 @@
                     }
                 }
             },
+        },
+        components: {
+            'access-groups-modal-item': ActionsModal,
         },
     }
 </script>

@@ -126,7 +126,28 @@ RoutesCollection.addResource(
         [
             AuthOnlyMiddleware,
         ],
+        {
+            'PUT': {
+                'middleware': [HasAccessToTodoAccessGroupMiddleware],
+            },
+            'DELETE': {
+                'middleware': [HasAccessToTodoAccessGroupMiddleware],
+            },
+        },
     )
+);
+
+RoutesCollection.add(
+    new Route(
+        'GET',
+        '/todo-access-group/get-group/:id',
+        TodoAccessGroupController,
+        'actionGetGroup',
+        [
+            AuthOnlyMiddleware,
+            HasAccessToTodoAccessGroupMiddleware,
+        ]
+    ),
 );
 
 RoutesCollection.addResource(

@@ -59,6 +59,27 @@ export default class TodoAccessGroupRepository
     }
 
     /**
+     * @param  id 
+     * @returns Promise<TodoAccessGroup | undefined>
+     */
+    public static async findOneById(id: number): Promise<Object | undefined>
+    {
+        const query = this.getQueryBuilder()
+            .select([
+            'tag.id as id',
+            'tag.name as name',
+            'tag.description as description',
+            'tag.createdAt as createdAt',
+            'u.name as user_name',
+            'u.email as user_email',
+        ])
+        .leftJoin('tag.user', 'u')
+        .where('tag.id = :id', { id });
+
+        return query.getRawOne();
+    }
+
+    /**
      * @param  userId 
      * @param  id 
      * @returns Promise<TodoAccessGroup | undefined>

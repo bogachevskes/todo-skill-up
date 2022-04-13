@@ -1,5 +1,6 @@
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import CrudController from '../../../Framework/Http/Controller/CrudController';
+import AutoBind from '../../../Framework/Decorators/AutoBind';
 import NotFound from '../../../Framework/Exceptions/NotFound';
 import BadRequest from '../../../Framework/Exceptions/BadRequest';
 import CommandContext from '../../../Framework/Base/CommandContext';
@@ -130,6 +131,23 @@ export default class TodoAccessGroupController extends CrudController
         }
 
         throw new NotFound('Группа не найдена');
+    }
+
+    /**
+     * Изменить статус задачи.
+     * 
+     * @param  req Request
+     * @param  res Response
+     * @return Promise<Response>
+     */
+    @AutoBind
+    public async actionGetGroup(req: Request, res: Response): Promise<Response>
+    {
+        this.defineUserRepo(req);
+
+        const model = await TodoAccessGroupRepository.findOneById(Number(req.params.id));
+        
+        return res.json({ item: model });
     }
 
 }

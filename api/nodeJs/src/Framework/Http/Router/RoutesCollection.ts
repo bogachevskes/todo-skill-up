@@ -85,11 +85,13 @@ export default class RoutesCollection
         for (const method in methodsMap) {
 
             let path = methodsMap[method].path,
-                action = methodsMap[method].action;
+                action = methodsMap[method].action,
+                middleware = [];
             
             if (method in resource.routes) {
                 path = resource.routes[method].path || path;
                 action = resource.routes[method].action || action;
+                middleware = resource.routes[method].middleware || [];
             }
 
             this.add(
@@ -98,7 +100,7 @@ export default class RoutesCollection
                     `/${resource.path}/${path}`,
                     resource.controller,
                     action,
-                    resource.middleware
+                    resource.middleware.concat(middleware)
                 )
             );
             
