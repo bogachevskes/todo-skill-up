@@ -2,7 +2,7 @@
     <div class="navbar-item">
         <div class="buttons">
             <router-link
-                v-if="isLogged && (! isOnTodoPage)"
+                v-if="isLogged && $route.path === '/'"
                 class="button"
                 :to="getTodoListRoute"
                 tag="a"
@@ -57,9 +57,6 @@
             notLogged: function () {
                 return ! this.isLogged;
             },
-            isOnTodoPage: function () {
-                return this.$route.path === '/todo-list';
-            }
         },
         methods: {
             logout: function () {

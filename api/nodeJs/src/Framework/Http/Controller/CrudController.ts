@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import Controller from './Controller';
 import AutoBind from '../../Decorators/AutoBind';
 import * as _ from 'lodash';

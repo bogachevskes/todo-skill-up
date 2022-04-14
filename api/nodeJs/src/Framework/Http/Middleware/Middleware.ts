@@ -1,28 +1,23 @@
 import { NextFunction, Request, Response } from 'express';
-import MiddleWareInterface from './MiddlewareInterface';
+import MiddlewareInterface from './MiddlewareInterface';
 import AutoBind from '../../../Framework/Decorators/AutoBind';
 
-export default abstract class Middleware implements MiddleWareInterface
+export default abstract class Middleware implements MiddlewareInterface
 {
     /**
      * @see MiddleWareInterface
      */
     public useAsync: boolean = true;
-    
-    /**
-     * @type Request
-     */
-    protected req: Request;
 
     /**
-     * @type Response
+     * @var MiddlewareInterface | null
      */
-    protected res: Response;
+    public nextHandler: MiddlewareInterface;
     
     /**
      * @return Response|void|never
      */
-    protected abstract handle(): Promise<boolean|void|never>;
+    protected abstract handle(req: Request, res: Response): Promise<boolean|void|never>;
     
     /**
      * @param  Request req 
@@ -33,17 +28,18 @@ export default abstract class Middleware implements MiddleWareInterface
     @AutoBind
     public async execute(req: Request, res: Response, next: NextFunction): Promise<void>
     {
-        this.req = req;
-
-        this.res = res;
-        
-        const result = await this.handle();
+        const result = await this.handle(req, res);
 
         if (result === false) {
             
             return;
         }
         
+        if (this.nextHandler !== undefined) {
+
+            await this.nextHandler.execute(req, res, next);
+        }
+
         next();
     }
 }

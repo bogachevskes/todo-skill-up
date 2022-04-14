@@ -8,9 +8,7 @@
             </div>
         </div>
         <div class="layout-main">
-            <keep-alive>
-                <router-view></router-view>
-            </keep-alive>
+            <router-view :key="$route.fullPath"></router-view>
         </div>
         <div class="layout-footer">
             <app-footer></app-footer>

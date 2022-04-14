@@ -51,6 +51,7 @@ new Vue({
         if (this.$store.getters.isLogged) {
             this.$store.dispatch('updateToken');
             this.$store.dispatch('updatePermissions', this.$userStorage);
+            this.$store.dispatch('updateTodoAccessGroups', this.$userStorage);
         }
 
     },

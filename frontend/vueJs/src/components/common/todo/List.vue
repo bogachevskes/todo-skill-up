@@ -1,9 +1,9 @@
 <template>
-    <section class="hero is-info is-fullheight" style="min-height:600px;">
-        <div class="hero-body">
-            <div class="container">
+    <section class="main-content columns is-fullheight is-info">
+        <actions-item></actions-item>
+        <div class="container column is-10">
+            <div class="section has-background-info" style="padding: 20px;">
                 <manage-card-item></manage-card-item>
-                <actions-item></actions-item>
                 <div class="columns">
                     <group-item
                         v-for="(group, index) in groups"

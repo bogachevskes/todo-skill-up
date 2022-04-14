@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn, Index, ManyToMany, JoinTable, BaseEntity } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, Index, BaseEntity } from 'typeorm';
 
 @Index('idx-todo_status_name', ['name'])
 @Index('udx-users_email', ['initialDefault'], { unique: true })
@@ -35,8 +35,8 @@ export default class TodoStatus extends BaseEntity
     @Column("timestamp", {
         name: 'updated_at',
         nullable: true,
-        //default: () => "CURRENT_TIMESTAMP()",
-        //onUpdate: "CURRENT_TIMESTAMP()"
+        default: () => "CURRENT_TIMESTAMP()",
+        onUpdate: "CURRENT_TIMESTAMP()"
     })
     public updatedAt: Date;
 

@@ -1,11 +1,17 @@
 import RoutesCollection from '../Framework/Http/Router/RoutesCollection';
+import RoutesResource from '../Framework/Http/Router/RoutesResource';
 import Route from '../Framework/Http/Router/Route';
 import AuthOnlyMiddleware from '../app/Http/Middleware/AuthOnlyMiddleware';
+import HasAccessToTodoAccessGroupMiddleware from '../app/Http/Middleware/HasAccessToTodoAccessGroupMiddleware';
 
 import AuthController from '../app/Http/Controllers/AuthController';
 import AdminUserController from '../app/Http/Controllers/Admin/AdminUserController';
 import UserPermissionsController from '../app/Http/Controllers/UserPermissionsController';
 import TodoController from '../app/Http/Controllers/TodoController';
+import TodoAccessGroupController from '../app/Http/Controllers/TodoAccessGroupController';
+import TodoAccessGroupTodoController from '../app/Http/Controllers/TodoAccessGroupTodoController';
+import TodoAccessUserGroupController from '../app/Http/Controllers/TodoAccessUserGroupController';
+import UserController from '../app/Http/Controllers/UserController';
 
 RoutesCollection.add(
     new Route(
@@ -28,41 +34,23 @@ RoutesCollection.add(
 RoutesCollection.add(
     new Route(
         'GET',
-        '/todo/list',
-        TodoController,
-        'actionList',
-        [AuthOnlyMiddleware]
+        '/users/match-by-email/:email',
+        UserController,
+        'actionMatchUsersByEmail',
+        [
+            AuthOnlyMiddleware
+        ]
     ),
 );
 
-RoutesCollection.add(
-    new Route(
-        'POST',
-        '/todo/create',
+RoutesCollection.addResource(
+    new RoutesResource(
+        'todo',
         TodoController,
-        'actionCreate',
-        [AuthOnlyMiddleware]
-    ),
-);
-
-RoutesCollection.add(
-    new Route(
-        'PUT',
-        '/todo/update/:id',
-        TodoController,
-        'actionUpdate',
-        [AuthOnlyMiddleware]
-    ),
-);
-
-RoutesCollection.add(
-    new Route(
-        'DELETE',
-        '/todo/delete/:id',
-        TodoController,
-        'actionDelete',
-        [AuthOnlyMiddleware]
-    ),
+        [
+            AuthOnlyMiddleware,
+        ],
+    )
 );
 
 RoutesCollection.add(
@@ -88,30 +76,12 @@ RoutesCollection.add(
 RoutesCollection.add(
     new Route(
         'GET',
-        '/admin/users/list',
-        AdminUserController,
-        'actionList',
-        [AuthOnlyMiddleware]
-    ),
-);
-
-RoutesCollection.add(
-    new Route(
-        'PUT',
-        '/admin/users/set-active-state/:id',
-        AdminUserController,
-        'actionSetActiveState',
-        [AuthOnlyMiddleware]
-    ),
-);
-
-RoutesCollection.add(
-    new Route(
-        'GET',
         '/admin/users/todoes/:id',
         AdminUserController,
         'actionTodoes',
-        [AuthOnlyMiddleware]
+        [
+            AuthOnlyMiddleware
+        ]
     ),
 );
 
@@ -121,38 +91,126 @@ RoutesCollection.add(
         '/admin/users/get-user-data/:id',
         AdminUserController,
         'actionGetUserData',
-        [AuthOnlyMiddleware]
+        [
+            AuthOnlyMiddleware
+        ]
     ),
 );
 
 RoutesCollection.add(
     new Route(
         'PUT',
-        '/admin/users/update/:id',
+        '/admin/users/set-active-state/:id',
         AdminUserController,
-        'actionUpdate',
-        [AuthOnlyMiddleware]
+        'actionSetActiveState',
+        [
+            AuthOnlyMiddleware
+        ]
     ),
+);
+
+RoutesCollection.addResource(
+    new RoutesResource(
+        'admin/users',
+        AdminUserController,
+        [
+            AuthOnlyMiddleware,
+        ],
+    )
+);
+
+RoutesCollection.addResource(
+    new RoutesResource(
+        'todo-access-group',
+        TodoAccessGroupController,
+        [
+            AuthOnlyMiddleware,
+        ],
+        {
+            'PUT': {
+                'middleware': [HasAccessToTodoAccessGroupMiddleware],
+            },
+            'DELETE': {
+                'middleware': [HasAccessToTodoAccessGroupMiddleware],
+            },
+        },
+    )
 );
 
 RoutesCollection.add(
     new Route(
-        'DELETE',
-        '/admin/users/delete/:id',
-        AdminUserController,
-        'actionDelete',
-        [AuthOnlyMiddleware]
+        'GET',
+        '/todo-access-group/get-group/:id',
+        TodoAccessGroupController,
+        'actionGetGroup',
+        [
+            AuthOnlyMiddleware,
+            HasAccessToTodoAccessGroupMiddleware,
+        ]
     ),
+);
+
+RoutesCollection.addResource(
+    new RoutesResource(
+        'todo-access-group/todo',
+        TodoAccessGroupTodoController,
+        [
+            AuthOnlyMiddleware,
+            HasAccessToTodoAccessGroupMiddleware,
+        ],
+        {
+            'GET': {
+                'path': ':id/list'
+            },
+            'POST': {
+                'path': ':id/create'
+            },
+            'PUT': {
+                'path': ':id/update/:todoId',
+            },
+            'DELETE': {
+                'path': ':id/delete/:todoId',
+            },
+        },
+    )
 );
 
 RoutesCollection.add(
     new Route(
-        'POST',
-        '/admin/users/create',
-        AdminUserController,
-        'actionCreate',
-        [AuthOnlyMiddleware]
+        'PUT',
+        '/todo-access-group/todo/:id/set-status/:todoId',
+        TodoAccessGroupTodoController,
+        'actionSetStatus',
+        [
+            AuthOnlyMiddleware,
+            HasAccessToTodoAccessGroupMiddleware,
+        ]
     ),
+);
+
+RoutesCollection.addResource(
+    new RoutesResource(
+        'todo-access-user-group',
+        TodoAccessUserGroupController,
+        [
+            AuthOnlyMiddleware,
+            HasAccessToTodoAccessGroupMiddleware,
+        ],
+        {
+            'GET': {
+                'path': ':id/list'
+            },
+            'POST': {
+                'path': ':id/create'
+            },
+            'DELETE': {
+                'path': ':id/delete/:groupId'
+            },
+        },
+        {
+            'disableMethods': ['PUT'],
+        },
+    )
 );
 
 export default RoutesCollection;

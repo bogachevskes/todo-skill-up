@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "removeComments": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "module": "commonjs",
+        "target": "es2017",
+        "incremental": true,
+        "strictNullChecks": true,
+        "esModuleInterop": true,
+        "baseUrl": "./src",
+        "outDir": "./dist/server",
+    },
+}

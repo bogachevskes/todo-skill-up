@@ -1,4 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn, Index, ManyToMany, JoinTable, BaseEntity } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, Index, OneToMany, BaseEntity } from 'typeorm';
+import UserRole from './UserRole';
+import RolePermission from './RolePermission';
+import Permission from './Permission';
 import User from './User';
 
 @Index('idx-roles_name', ['name'])
@@ -34,15 +37,15 @@ export default class Roles extends BaseEntity
     @Column("timestamp", {
         name: 'updated_at',
         nullable: true,
-        //default: () => "CURRENT_TIMESTAMP()",
-        //onUpdate: "CURRENT_TIMESTAMP()"
+        default: () => "CURRENT_TIMESTAMP()",
+        onUpdate: "CURRENT_TIMESTAMP()"
     })
     public updatedAt: Date;
 
-    @ManyToMany(type => User)
-    @JoinTable({
-        name: 'user_roles',
-    })
-    public users: User[];
+    @OneToMany(() => UserRole, userRole => userRole.role)
+    public userRoles: UserRole[];
+
+    @OneToMany(() => RolePermission, rolePermission => rolePermission.role)
+    public rolePermission: RolePermission[];
 
 }

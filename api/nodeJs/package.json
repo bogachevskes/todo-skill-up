@@ -2,7 +2,7 @@
   "name": "api-node",
   "description": "Todo App NodeJs API",
   "version": "1.0.0",
-  "author": "ace7upp@gmail.com",
+  "author": "Andrey Bogachevskiy",
   "license": "MIT",
   "scripts": {
     "console": "node ./dist/server/entry/console.js",
@@ -14,7 +14,6 @@
     "@types/express": "^4.17.8",
     "@types/jsonwebtoken": "^8.5.0",
     "@types/node": "^14.11.2",
-    "@types/socket.io": "^2.1.11",
     "@types/validator": "^13.1.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
@@ -30,9 +29,9 @@
     "nodemailer": "^6.4.6",
     "nodemailer-sendgrid-transport": "^0.2.0",
     "reflect-metadata": "^0.1.13",
-    "socket.io": "^2.4.0",
     "ts-node": "^9.0.0",
-    "typeorm": "^0.2.29",
+    "typeorm": "0.2.41",
+    "typeorm-naming-strategies": "^4.0.0",
     "validator.ts": "^0.2.2",
     "winston": "^3.2.1",
     "winston-daily-rotate-file": "^4.4.2"

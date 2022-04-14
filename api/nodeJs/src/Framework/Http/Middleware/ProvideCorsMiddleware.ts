@@ -1,3 +1,4 @@
+import { Request, Response } from 'express';
 import Middleware from './Middleware';
 
 /**
@@ -9,14 +10,14 @@ export default class ProvideCorsMiddleware extends Middleware
     /**
      * @see Middleware
      */
-    protected async handle(): Promise<boolean|void>
+    protected async handle(req: Request, res: Response): Promise<boolean|void>
     {
-        this.res.setHeader('Access-Control-Allow-Origin', '*');
-        this.res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, PATCH, DELETE');
-        this.res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept, X-BASE-AUTH');
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, PATCH, DELETE');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept, X-BASE-AUTH');
     
-        if ('OPTIONS' == this.req.method) {
-            this.res.sendStatus(204);
+        if (req.method === 'OPTIONS') {
+            res.sendStatus(204);
     
             return false;
         }

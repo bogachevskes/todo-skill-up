@@ -153,12 +153,11 @@
 
 <script>
     import { required, email, minLength, sameAs } from 'vuelidate/lib/validators';
-    import { mapGetters } from 'vuex';
     import axios from '@axios/base';
 
     import { eventBus } from '@store/eventBus';
     
-    import { inputMethods, inputComputedMethods, validationMixinAsset, filterErrorResponseDetails } from '@libs/libStack';
+    import { inputMethods, inputComputedMethods, validationMixinAsset } from '@libs/libStack';
 
     import { library } from '@fortawesome/fontawesome-svg-core';
     import { faEnvelope, faLock, faExclamationTriangle, faUser } from '@fortawesome/free-solid-svg-icons';
@@ -229,6 +228,7 @@
 
                         this.$store.dispatch('updateToken');
                         this.$store.dispatch('updatePermissions', this.$userStorage);
+                        this.$store.dispatch('updateTodoAccessGroups', this.$userStorage);
 
                         this.$router.push('/todo-list');
 

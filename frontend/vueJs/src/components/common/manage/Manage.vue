@@ -1,8 +1,8 @@
 <template>
-    <section class="hero is-info is-fullheight" style="min-height:600px;">
-        <div class="hero-body">
-            <div class="container">
-                <actions-item></actions-item>
+    <section class="main-content columns is-fullheight is-info">
+        <actions-item></actions-item>
+        <div class="container column">
+            <div class="section has-background-info" style="padding: 20px;">
                 <router-view></router-view>
             </div>
         </div>

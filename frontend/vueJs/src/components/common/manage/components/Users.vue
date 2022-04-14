@@ -66,7 +66,7 @@
 
     import VbSwitch from 'vue-bulma-switch';
 
-    import { ROUTE_USERS_TODOES_LIST, ROUTE_CREATE_USER, ROUTE_UPDATE_USER } from '@router/routes';
+    import { ROUTE_USERS_TODOES_LIST, ROUTE_UPDATE_USER } from '@router/routes';
 
     import { library } from '@fortawesome/fontawesome-svg-core';
     import { faEye, faEdit, faTrash, faUserPlus } from '@fortawesome/free-solid-svg-icons';

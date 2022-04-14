@@ -1,6 +1,7 @@
 import { Column, Entity, BaseEntity, PrimaryGeneratedColumn, ManyToOne, Index } from 'typeorm';
 import TodoStatus from './TodoStatus';
 import User from './User';
+import TodoAccessGroup from './TodoAccessGroup';
 
 @Index('idx-todo_item_name', ['name'])
 @Index('idx-todo_item_description', ['description'])
@@ -14,14 +15,19 @@ export default class TodoItem extends BaseEntity
     public id: number;
 
     @Column({
-        primary: true,
+        unsigned: true,
+        comment: 'Группа доступа',
+        nullable: true,
+    })
+    public todoAccessGroupId: number | null;
+
+    @Column({
         unsigned: true,
         comment: 'Пользователь',
     })
     public userId: number;
 
     @Column({
-        primary: true,
         unsigned: true,
         comment: 'Статус',
     })
@@ -57,15 +63,18 @@ export default class TodoItem extends BaseEntity
     @Column("timestamp", {
         name: 'updated_at',
         nullable: true,
-        //default: () => "CURRENT_TIMESTAMP()",
-        //onUpdate: "CURRENT_TIMESTAMP()"
+        default: () => "CURRENT_TIMESTAMP()",
+        onUpdate: "CURRENT_TIMESTAMP()"
     })
     public updatedAt: Date;
 
+    @ManyToOne(_type => TodoAccessGroup, { onDelete: 'CASCADE' })
+    public todoAccessGroup: TodoAccessGroup;
+
     @ManyToOne(_type => TodoStatus)
-    status: TodoStatus;
+    public status: TodoStatus;
 
     @ManyToOne(_type => User)
-    user: User;
+    public user: User;
 
 }

@@ -1,19 +1,22 @@
-import { Column, Entity, BaseEntity, ManyToOne } from 'typeorm';
+import { Column, Entity, BaseEntity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import User from './User';
 import Role from './Role';
 
 @Entity('user_roles')
 export default class UserRole extends BaseEntity
 {
-    @ManyToOne(_type => User)
-    users: User;
+    @PrimaryGeneratedColumn({ unsigned: true })
+    public id: number;
 
-    @ManyToOne(_type => Role)
-    roles: Role;
+    @Column({ unsigned: true })
+    userId: number;
 
-    @Column({ primary: true, unsigned: true, })
-    usersId: number;
+    @Column({ unsigned: true })
+    public roleId: number;
 
-    @Column({ primary: true, unsigned: true, })
-    rolesId: number;
+    @ManyToOne(() => User, user => user.userRoles)
+    user: User;
+
+    @ManyToOne(() => Role, role => role.userRoles)
+    role: Role;
 }

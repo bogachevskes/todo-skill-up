@@ -23,7 +23,7 @@ export default class UsersRoleRepository
     public static async unsetRole(user: User, role: Role): Promise<boolean>
     {
         await this.getQueryBuilder()
-            .where('usersId = :usersId and rolesId = :rolesId', { usersId: user.id, rolesId: role.id })
+            .where('user_id = :userId and role_id = :roleId', { userId: user.id, roleId: role.id })
             .delete()
             .execute();
 
@@ -40,7 +40,7 @@ export default class UsersRoleRepository
     public static async hasRole(userId: number, roleId: number): Promise<boolean>
     {
         const result = await this.getQueryBuilder()
-            .where('usersId = :usersId and rolesId = :rolesId', { usersId: userId, rolesId: roleId })
+            .where('user_id = :userId and role_id = :roleId', { userId: userId, roleId: roleId })
             .getCount();
         
         return Boolean(result);
@@ -66,8 +66,8 @@ export default class UsersRoleRepository
     {
         const result = await this.getQueryBuilder()
             .select('role.name')
-            .leftJoinAndSelect('user_role.roles', 'role')
-            .where('user_role.usersId IN (:userId)', { userId })
+            .leftJoinAndSelect('user_role.role', 'role')
+            .where('user_role.user_id IN (:userId)', { userId })
             .getRawMany();
 
         return result.map(role => role.name);

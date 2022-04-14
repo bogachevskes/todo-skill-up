@@ -48,12 +48,6 @@ export default class TodoStatusRepository
             return initial.id;
         }
 
-        const model = TodoStatus.findOne();
-
-        if (model instanceof TodoStatus) {
-            return model.id;
-        }
-        
         throw new Error('Необходимо создать хотя бы 1 статус');
     }
 

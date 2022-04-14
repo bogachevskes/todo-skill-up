@@ -1,20 +1,22 @@
-import { Column, Entity, BaseEntity, ManyToOne } from 'typeorm';
+import { Column, Entity, BaseEntity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import Role from './Role';
 import Permission from './Permission';
 
 @Entity('role_permissions')
 export default class RolePermission extends BaseEntity
 {
-    @ManyToOne(_type => Role)
-    roles: Role;
+    @PrimaryGeneratedColumn({ unsigned: true })
+    public id: number;
 
-    @ManyToOne(_type => Permission)
-    permissions: Permission;
+    @Column({ unsigned: true })
+    public roleId: number;
 
-    @Column({ primary: true, unsigned: true, })
-    rolesId: number;
+    @Column({ unsigned: true })
+    public permissionId: number;
 
-    @Column({ primary: true, unsigned: true, })
-    permissionsId: number;
+    @ManyToOne(() => Role, role => role.rolePermission)
+    public role: Role;
 
+    @ManyToOne(() => Permission, permission => permission.rolePermission)
+    public permission: Permission;
 }

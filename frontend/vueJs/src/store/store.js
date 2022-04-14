@@ -13,6 +13,7 @@ export const store = new Vuex.Store({
         userId: null,
         groups: [],
         permissions:[],
+        todoAccessGroups: [],
     },
     getters: {
         getToken: function (state) {
@@ -45,6 +46,9 @@ export const store = new Vuex.Store({
         setUserPermissions: function (state, permissions) {
             state.permissions = permissions;
         },
+        setUserTodoAccessGroups: function (state, groups) {
+            state.todoAccessGroups = groups;
+        },
     },
     actions: {
         setUserData: function ({commit}, userData) {
@@ -68,6 +72,10 @@ export const store = new Vuex.Store({
             userComponent.loadPermissions()
                 .then(permissions => commit('setUserPermissions', permissions));
         },
+        updateTodoAccessGroups: function ({commit}, userComponent) {
+            userComponent.loadTodoAccessGroups()
+                .then(groups => commit('setUserTodoAccessGroups', groups));
+        }
     },
     modules: {
         router: router,

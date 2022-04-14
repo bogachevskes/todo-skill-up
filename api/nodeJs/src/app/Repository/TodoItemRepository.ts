@@ -3,7 +3,7 @@ import RuntimeError from '../../Framework/Exceptions/RuntimeError';
 import TodoItem from '../Entity/TodoItem';
 import TodoStatus from '../Entity/TodoStatus';
 import TodoStatusGroup from '../Entity/TodoStatusGroup';
-import TodoItemInterface from '../Entity/Base/TodoItemInterface';
+import TodoItemCreateRequest from '../FormRequest/TodoItem/TodoItemCreateRequest';
 import TodoStatusRepository from './TodoStatusRepository';
 import TodoStatusGroupRepository from './TodoStatusGroupRepository';
 
@@ -72,10 +72,10 @@ export default class TodoItemRepository
     /**
      * Создает новое задание.
      * 
-     * @param  TodoItemInterface data 
+     * @param  TodoItemCreateRequest data 
      * @return Promise<TodoItem>
      */
-    public static async createNew(data: TodoItemInterface): Promise<TodoItem>
+    public static async createNew(data: TodoItemCreateRequest): Promise<TodoItem>
     {
         data.statusId = await TodoStatusRepository.getInitialStatusId();
         
@@ -107,16 +107,17 @@ export default class TodoItemRepository
      * задания пользователя по статусам.
      * 
      * @param  number userId 
+     * @param  number accessGroupId
      * @return Promise<TodoStatusGroup[]>
      */
-    public static async getTodoesGroupedByStatuses(userId: number): Promise<TodoStatusGroup[]>
+    public static async getTodoesGroupedByStatuses(userId: number, accessGroupId: number|null = null): Promise<TodoStatusGroup[]>
     {
         const statusGroups: TodoStatusGroup[] = [];
 
         const statuses = await TodoStatus.find();
 
         for (const status of statuses) {
-            const statusGroup: TodoStatusGroup = await TodoStatusGroupRepository.createGroup(status, userId);
+            const statusGroup: TodoStatusGroup = await TodoStatusGroupRepository.createGroup(status, userId, accessGroupId);
             statusGroups.push(statusGroup);
         }
 
@@ -132,19 +133,11 @@ export default class TodoItemRepository
      */
     public static async update(item: TodoItem, attributes: object): Promise<TodoItem>
     {
-        await this.getQueryBuilder()
-            .update(TodoItem)
-            .set(attributes)
-            .where("id = :id", { id: item.id })
-            .execute();
+        const model = this.loadModel(item, attributes);
+        
+        await model.save();
 
-        const updatedItem = await this.findById(item.id);
-
-        if (updatedItem instanceof TodoItem) {
-            return updatedItem;
-        }
-
-        throw new RuntimeError('Модель задания не найдена после обновления');
+        return model;
     }
 
 }
