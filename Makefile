@@ -1,10 +1,12 @@
 include docker.env
 
 FRONTEND_VUE_COMPOSE_PROJECT_NAME=todo-skill-up-frontend-vue
+FRONTEND_NUXT_COMPOSE_PROJECT_NAME=todo-skill-up-frontend-nuxt
 API_NODE_COMPOSE_PROJECT_NAME=todo-skill-up-api-node
 WS_NODE_COMPOSE_PROJECT_NAME=todo-skill-up-ws-node
 
 FRONTEND_VUE_NODE_CLI=frontend-vue-node-cli
+FRONTEND_NUXT_NODE_CLI=frontend-nuxt-node-cli
 API_NODE_CLI=api-node-cli
 WS_NODE_CLI=ws-node-cli
 
@@ -61,6 +63,80 @@ frontend-vue-node-shell:
 	$(MAKE) frontend-vue-node-exec cmd="sh"
 
 # ============================== END FRONTEND VUE =================================== #
+
+# ============================== BEGIN FRONTEND NUXT =================================== #
+
+frontend-nuxt-docker-ps:
+	@docker-compose --env-file ./docker.env -f docker-compose-frontend-nuxt.yml -p ${FRONTEND_NUXT_COMPOSE_PROJECT_NAME} ps
+
+up-frontend-nuxt:
+	@docker-compose --env-file ./docker.env -f docker-compose-frontend-nuxt.yml -p ${FRONTEND_NUXT_COMPOSE_PROJECT_NAME} up -d --remove-orphans
+
+down-frontend-nuxt:
+	@docker-compose --env-file ./docker.env -f docker-compose-frontend-nuxt.yml -p ${FRONTEND_NUXT_COMPOSE_PROJECT_NAME} down --remove-orphans
+
+restart-frontend-nuxt: down-frontend-nuxt \
+	up-frontend-nuxt
+
+docker-build-frontend-nuxt: docker-build-frontend-nuxt-app \
+	docker-build-frontend-nuxt-node-cli
+
+docker-build-frontend-nuxt-app:
+	@docker build -t ${REGISTRY}/todo-skill-up-frontend-nuxt:${IMAGE_TAG} \
+		-f frontend/nuxtJs/docker/${ENV}/nginx/Dockerfile frontend/nuxtJs/docker
+
+docker-build-frontend-nuxt-node-cli:
+	@docker build -t ${REGISTRY}/todo-skill-up-frontend-nuxt-node-cli:${IMAGE_TAG} \
+		-f frontend/nuxtJs/docker/${ENV}/node-cli/Dockerfile frontend/nuxtJs/docker
+
+frontend-nuxt-init: frontend-nuxt-yarn-install frontend-nuxt-yarn-build
+
+frontend-nuxt-node-exec:
+	@docker-compose --env-file ./docker.env -f docker-compose-frontend-nuxt.yml -p ${FRONTEND_NUXT_COMPOSE_PROJECT_NAME} run --rm $(FRONTEND_NUXT_NODE_CLI) $(cmd)
+
+frontend-nuxt-yarn-install:
+	$(MAKE) frontend-nuxt-node-exec cmd="yarn install --no-bin-links"
+	$(MAKE) -s frontend-nuxt-chown
+
+frontend-nuxt-yarn-remove:
+	$(MAKE) frontend-nuxt-node-exec cmd="yarn remove $(package)"
+	$(MAKE) -s frontend-nuxt-chown
+
+frontend-nuxt-yarn-dev:
+	$(MAKE) frontend-nuxt-node-exec cmd="yarn run dev"
+	@$(MAKE) -s frontend-nuxt-chown
+
+frontend-nuxt-yarn-build:
+	$(MAKE) frontend-nuxt-node-exec cmd="yarn run build"
+	@$(MAKE) -s frontend-nuxt-chown
+
+frontend-nuxt-yarn-start:
+	$(MAKE) frontend-nuxt-node-exec cmd="yarn run start"
+	@$(MAKE) -s frontend-nuxt-chown
+
+frontend-nuxt-yarn-lint-js:
+	$(MAKE) frontend-nuxt-node-exec cmd="yarn run lint:js"
+	@$(MAKE) -s frontend-nuxt-chown
+
+frontend-nuxt-yarn-lint-prettier:
+	$(MAKE) frontend-nuxt-node-exec cmd="yarn run lint:prettier"
+	@$(MAKE) -s frontend-nuxt-chown
+
+frontend-nuxt-yarn-lint:
+	$(MAKE) frontend-nuxt-node-exec cmd="yarn run lint"
+	@$(MAKE) -s frontend-nuxt-chown
+
+frontend-nuxt-yarn-lintfix:
+	$(MAKE) frontend-nuxt-node-exec cmd="yarn run lintfix"
+	@$(MAKE) -s frontend-nuxt-chown
+
+frontend-nuxt-chown:
+	$(MAKE) frontend-nuxt-node-exec cmd="chown -R 1000:1000 ./"
+
+frontend-nuxt-node-shell:
+	$(MAKE) frontend-nuxt-node-exec cmd="sh"
+
+# ============================== END FRONTEND NUXT =================================== #
 
 # ============================== BEGIN API NodeJs =================================== #
 

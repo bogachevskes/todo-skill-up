@@ -1,0 +1,15 @@
+version: '3.7'
+services:
+
+  frontend-nuxt:
+    image: ${REGISTRY}/todo-skill-up-frontend-nuxt:${IMAGE_TAG}
+    ports:
+      - "${FRONTEND_PORT}:80"
+    volumes:
+      - "./frontend/nuxtJs:/app"
+
+  frontend-nuxt-node-nuxt:
+    image: ${REGISTRY}/todo-skill-up-frontend-nuxt-node-nuxt:${IMAGE_TAG}
+    volumes:
+      - "./frontend/nuxtJs:/app"
+    tty: true
