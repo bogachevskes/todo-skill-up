@@ -8,8 +8,8 @@ services:
     volumes:
       - "./frontend/nuxtJs:/app"
 
-  frontend-nuxt-node-nuxt:
-    image: ${REGISTRY}/todo-skill-up-frontend-nuxt-node-nuxt:${IMAGE_TAG}
+  frontend-nuxt-node-cli:
+    image: ${REGISTRY}/todo-skill-up-frontend-nuxt-node-cli:${IMAGE_TAG}
     volumes:
       - "./frontend/nuxtJs:/app"
     tty: true
