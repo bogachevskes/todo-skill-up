@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "nuxt",
-    "build": "nuxt build",
-    "start": "nuxt start",
-    "lint:js": "eslint --ext \".js,.ts,.vue\" --ignore-path .gitignore .",
-    "lint:prettier": "prettier --check .",
+    "dev": "./node_modules/nuxt/dist/nuxt.js",
+    "build": "./node_modules/nuxt/dist/nuxt.js build",
+    "start": "./node_modules/nuxt/dist/nuxt.js start",
+    "lint:js": "./node_modules/eslint/bin/eslint.js --ext \".js,.ts,.vue\" --ignore-path .gitignore .",
+    "lint:prettier": "./node_modules/prettier/bin-prettier.js --check .",
     "lint": "yarn lint:js && yarn lint:prettier",
-    "lintfix": "prettier --write --list-different . && yarn lint:js --fix"
+    "lintfix": "./node_modules/prettier/bin-prettier.js --write --list-different . && yarn lint:js --fix"
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.13.6",
