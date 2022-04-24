@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "./node_modules/nuxt/dist/nuxt.js",
-    "build": "./node_modules/nuxt/dist/nuxt.js build",
-    "start": "./node_modules/nuxt/dist/nuxt.js start",
+    "dev": "./node_modules/nuxt/bin/nuxt.js --hostname '0' --port 3000",
+    "build": "./node_modules/nuxt/bin/nuxt.js build",
+    "start": "./node_modules/nuxt/bin/nuxt.js start --port=80",
     "lint:js": "./node_modules/eslint/bin/eslint.js --ext \".js,.ts,.vue\" --ignore-path .gitignore .",
     "lint:prettier": "./node_modules/prettier/bin-prettier.js --check .",
     "lint": "yarn lint:js && yarn lint:prettier",

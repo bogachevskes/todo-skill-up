@@ -69,6 +69,9 @@ frontend-vue-node-shell:
 frontend-nuxt-docker-ps:
 	@docker-compose --env-file ./docker.env -f docker-compose-frontend-nuxt.yml -p ${FRONTEND_NUXT_COMPOSE_PROJECT_NAME} ps
 
+frontend-nuxt-docker-logs:
+	@docker-compose --env-file ./docker.env -f docker-compose-frontend-nuxt.yml -p ${FRONTEND_NUXT_COMPOSE_PROJECT_NAME} logs -f
+
 up-frontend-nuxt:
 	@docker-compose --env-file ./docker.env -f docker-compose-frontend-nuxt.yml -p ${FRONTEND_NUXT_COMPOSE_PROJECT_NAME} up -d --remove-orphans
 
@@ -83,7 +86,7 @@ docker-build-frontend-nuxt: docker-build-frontend-nuxt-app \
 
 docker-build-frontend-nuxt-app:
 	@docker build -t ${REGISTRY}/todo-skill-up-frontend-nuxt:${IMAGE_TAG} \
-		-f frontend/nuxtJs/docker/${ENV}/nginx/Dockerfile frontend/nuxtJs/docker
+		-f frontend/nuxtJs/docker/${ENV}/node-app/Dockerfile frontend/nuxtJs/docker
 
 docker-build-frontend-nuxt-node-cli:
 	@docker build -t ${REGISTRY}/todo-skill-up-frontend-nuxt-node-cli:${IMAGE_TAG} \
