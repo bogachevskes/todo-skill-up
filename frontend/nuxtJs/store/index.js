@@ -3,7 +3,7 @@ export const actions = {
         
         dispatch('todoes/setUserData', context.$userStorage.getUserData());
 
-        if (getters['todoes/isLogged']) {
+        if (getters['todoes/isLogged'] === true) {
             dispatch('todoes/updateToken');
             dispatch('todoes/updatePermissions', context.$userStorage);
             dispatch('todoes/updateTodoAccessGroups', context.$userStorage);
@@ -13,7 +13,7 @@ export const actions = {
         
         dispatch('todoes/setUserData', context.$userStorage.getUserData());
 
-        if (getters['todoes/isLogged']) {
+        if (getters['todoes/isLogged'] === true) {
             dispatch('todoes/updateToken');
             dispatch('todoes/updatePermissions', context.$userStorage);
             dispatch('todoes/updateTodoAccessGroups', context.$userStorage);
