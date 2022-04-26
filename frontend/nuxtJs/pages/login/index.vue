@@ -3,8 +3,10 @@
         <div class="hero-body">
             <div class="container">
                 <div class="columns is-vcentered">
-                    <Invite />
-                    <Register v-if="isLogged === false" />
+                    <div class="column is-6-tablet is-7-desktop is-8-widescreen">
+                        <TheProjectTitle />
+                    </div>
+                    <Login v-if="isLogged === false" />
                 </div>
             </div>
         </div>
@@ -13,18 +15,13 @@
 
 <script>
     import { mapGetters } from "vuex";
-    import Invite from '@/components/home/Invite';
-    import Register from '@/components/home/Register';
+    import Login from '@/components/login/Login';
+    import TheProjectTitle from '@/components/TheProjectTitle';
     
     export default {
-        name: 'IndexPage',
         components: {
-            Invite,
-            Register,
-        },
-        beforeRouteLeave: function (to, from, next) {
-            this.$eventBus.hideInviteIntro();
-            next();
+            TheProjectTitle,
+            Login,
         },
         computed: {
             ...mapGetters('todoes', [

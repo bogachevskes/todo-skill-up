@@ -101,6 +101,10 @@ frontend-nuxt-yarn-install:
 	$(MAKE) frontend-nuxt-node-exec cmd="yarn install --no-bin-links"
 	$(MAKE) -s frontend-nuxt-chown
 
+frontend-nuxt-yarn-add:
+	$(MAKE) frontend-nuxt-node-exec cmd="yarn add $(package)"
+	$(MAKE) -s frontend-nuxt-chown
+
 frontend-nuxt-yarn-remove:
 	$(MAKE) frontend-nuxt-node-exec cmd="yarn remove $(package)"
 	$(MAKE) -s frontend-nuxt-chown
