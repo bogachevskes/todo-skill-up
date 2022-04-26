@@ -111,6 +111,7 @@
                     .then(result => {
 
                         this.$userStorage.fillStorage(result);
+                        this.$userStorage.setClientCookies(result);
                         
                         this.isLoading = false;
 

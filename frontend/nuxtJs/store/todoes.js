@@ -8,22 +8,27 @@ export const state = () => ({
 
 export const getters = {
     getToken: function (state) {
+        
         return state.token;
     },
     notLogged: function (state) {
-        
+
         return state.token === null || state.user_id === null;
     },
     isLogged: function (_state, getters) {
-        return ! getters.notLogged;
+        
+        return getters.notLogged === false;
     },
     hasPermission: function (state, permissionName) {
+        
         return state.permissions.includes(permissionName);
     },
     canManageUsers: function (state) {
+        
         return state.permissions.includes('canManageUsers');
     },
     canManageUsersTodoes: function (state) {
+        
         return state.permissions.includes('canManageUsersTodoes');
     },
 }
@@ -71,5 +76,5 @@ export const actions = {
     updateTodoAccessGroups: function ({commit}, userComponent) {
         userComponent.loadTodoAccessGroups()
             .then(groups => commit('setUserTodoAccessGroups', groups));
-    }
+    },
 };

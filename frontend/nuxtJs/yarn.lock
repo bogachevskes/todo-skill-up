@@ -3141,6 +3141,11 @@ cookie@^0.3.1:
   resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.3.1.tgz#e7e0a1f9ef43b4c8ba925c5c5a96e806d16873bb"
   integrity sha1-5+Ch+e9DtMi6klxcWpboBtFoc7s=
 
+cookie@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.5.0.tgz#d1f5d71adec6558c58f389987c366aa47e994f8b"
+  integrity sha512-YZ3GUyn/o8gfKJlnlX7g7xq4gyO6OSuhGPKaaGssGB2qgDUS0gPgtTvoyZLTt9Ab6dC4hfc9dV5arkvc/OCmrw==
+
 copy-concurrently@^1.0.0:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/copy-concurrently/-/copy-concurrently-1.0.5.tgz#92297398cae34937fcafd6ec8139c18051f0b5e0"
@@ -5429,6 +5434,11 @@ jiti@^1.9.2:
   resolved "https://registry.yarnpkg.com/jiti/-/jiti-1.13.0.tgz#3cdfc4e651ca0cca4c62ed5e47747b5841d41a8e"
   integrity sha512-/n9mNxZj/HDSrincJ6RP+L+yXbpnB8FybySBa+IjIaoH9FIxBbrbRT5XUbe8R7zuVM2AQqNMNDDqz0bzx3znOQ==
 
+js-cookie@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/js-cookie/-/js-cookie-3.0.1.tgz#9e39b4c6c2f56563708d7d31f6f5f21873a92414"
+  integrity sha512-+0rgsUXZu4ncpPxRL+lNEptWMOWl9etvPHc/koSRp6MPwpRYAhmk0dUG00J4bxVV3r9uUzfo24wW0knS07SKSw==
+
 js-tokens@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
@@ -6234,6 +6244,11 @@ nuxt-buefy@^0.4.13:
   integrity sha512-wqu7DkZo9c4yj+kLeBGYGEAqaLrnaDoYssGGha5s8Xp6CTtunLPq0Kdj26yu4k0rtI4M7qZaEuRgw9CMLHLhVw==
   dependencies:
     buefy "^0.9.20"
+
+nuxt-client-init-module@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/nuxt-client-init-module/-/nuxt-client-init-module-0.3.0.tgz#e11cb2c4a0dc103a45af33fc8a0d520693c43b44"
+  integrity sha512-blPr3zPRdu89WQVt/B38nhFAcNkxL68mM0POmmg6u5s3wUVmwKM1ARMl3xcQSGS//6JbGFV7fgBSQfj0t+cdPw==
 
 nuxt@^2.15.8:
   version "2.15.8"

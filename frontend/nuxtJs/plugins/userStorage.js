@@ -1,13 +1,16 @@
-import Vue from 'vue';
 import UserStorageService from './services/UserStorageService';
 
-const userStorage = {};
+export default function (ctx, inject)
+{
+    const userStorage = UserStorageService.getInstance();
 
-userStorage.install = function (Vue) {
+    userStorage.axios = ctx.$axios;
 
-    Vue.prototype.$userStorage = UserStorageService.getInstance();
+    if (Boolean(process.server) === true && ctx.req.headers.cookie !== undefined) {
 
-    Vue.prototype.$userStorage.axios = Vue.$axios;
+        userStorage.fillCookies(String(ctx.req.headers.cookie));
+
+    }
+
+    inject('userStorage', userStorage);
 }
-
-Vue.use(userStorage);

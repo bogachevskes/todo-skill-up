@@ -57,6 +57,7 @@
         methods: {
             logout: function () {
                 this.$userStorage.flushData();
+                this.$userStorage.flushClientCookie();
 
                 this.$store.dispatch('setUserData', this.$userStorage.getUserData());
 

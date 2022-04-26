@@ -1,5 +1,6 @@
 import { NuxtAxiosInstance } from '@nuxtjs/axios';
 import IndexedInterface from '../base/IndexedInterface';
+import CookieStorage from './CookieStorage';
 import UserIdentity from '../models/UserIdentity';
 import TodoGroup from '../models/TodoGroup';
 import TodoStatus from '../models/TodoStatus';
@@ -20,7 +21,7 @@ export default class UserStorageLoader
     /**
      * @var Storage
      */
-    protected storage: Storage | null;
+    protected storage: Storage | CookieStorage;
 
     /**
      * @var UserIdentity
@@ -31,10 +32,46 @@ export default class UserStorageLoader
         private wasLoaded: boolean = false,
         private identityKeys: any[] = []
     ) {
-        this.storage = process.client ? localStorage : null;
+        this.storage = process.client ? localStorage : new CookieStorage;
         this.identity = new UserIdentity;
         this.loadIdentityKeys();
-        this.fillFomStorage();
+    }
+
+    /**
+     * @param  string cookie
+     * @return void
+     */
+    public fillCookies(cookies: string): void
+    {
+        if ((this.storage instanceof CookieStorage) === false) {
+            throw new Error('Необходимо использовать CookieStorage как хранилище');
+        }
+
+        const parser = require('cookie');
+
+        this.storage.setItems(parser.parse(cookies));
+    }
+
+    /**
+     * @param  cookies 
+     * @return void
+     */
+    public setClientCookies(cookies: object): void
+    {
+        if (Boolean(process.client) === false) {
+            
+            throw new Error('Использование метода возможно только на стороне клиента');
+        }
+
+        const Cookie = require('js-cookie');
+
+        const cookieValues: IndexedInterface = {};
+
+        Object.assign(cookieValues, cookies);
+
+        for (const cookie in cookieValues) {
+            Cookie.set(cookie, cookieValues[cookie], {expires: 360});
+        }
     }
 
     /**
@@ -108,12 +145,8 @@ export default class UserStorageLoader
      */
     public fillFomStorage(): void
     {
-        if (this.storage === null) {
-            return;
-        }
-        
         for (const item of this.identityKeys) {
-            
+
             this.identity.set(
                 item,
                 this.storage.getItem(item)
@@ -133,10 +166,6 @@ export default class UserStorageLoader
      */
     public fillStorage(data: IndexedInterface): void
     {
-        if (this.storage === null) {
-            return;
-        }
-        
         const keys = Object.keys(data);
         
         for (const key of keys) {
@@ -185,11 +214,19 @@ export default class UserStorageLoader
      */
     protected flushStorage(): void
     {
-        if (this.storage === null) {
-            return;
-        }
-        
         this.storage.clear();
+    }
+
+    /**
+     * @return void
+     */
+    protected flushClientCookie(): void
+    {
+        const Cookie = require('js-cookie');
+        
+        this.identityKeys.forEach((name) => {
+            Cookie.remove(name);
+        });
     }
 
     /**
@@ -201,6 +238,11 @@ export default class UserStorageLoader
     {
         this.flushStorage();
         this.fillFomStorage();
+
+        if (Boolean(process.client) === true) {
+            
+            this.flushClientCookie();
+        }
     }
 
     /**
@@ -225,7 +267,7 @@ export default class UserStorageLoader
     {
         this.getAxios().$get('todo/list')
             .then(result => {
-                const groups = TodoGroupsService.createGroups(result.data.items);
+                const groups = TodoGroupsService.createGroups(result.items);
                 
                 this.identity.set('groups', groups);
 
@@ -245,7 +287,8 @@ export default class UserStorageLoader
     {
         return this.getAxios().$get('user-permissions/list')
             .then(result => {
-                this.identity.set('permissions', result.data.items);
+                
+                this.identity.set('permissions', result.items);
 
                 return Promise.resolve(this.identity.get('permissions'));
             });
@@ -258,7 +301,7 @@ export default class UserStorageLoader
     {
         return this.getAxios().$get('todo-access-group/list')
             .then(result => {
-                this.identity.set('todoAccessGroups', result.data.items);
+                this.identity.set('todoAccessGroups', result.items);
 
                 return Promise.resolve(this.identity.get('todoAccessGroups'));
             });
