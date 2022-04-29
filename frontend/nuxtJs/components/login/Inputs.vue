@@ -127,8 +127,6 @@
                     })
                     .catch(error => {
 
-                        console.log(error);
-
                         this.isLoading = false;
 
                         const errorData = error.response.data;

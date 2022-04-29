@@ -1,10 +1,9 @@
-import Configurable from '../base/Configurable';
 import TodoGroupInterface from '../base/TodoGroupInterface';
 import TodoStatus from './TodoStatus';
 import TodoItem from './TodoItem';
 import TodoItemService from '../services/TodoItemService';
 
-export default class TodoGroup extends Configurable implements TodoGroupInterface
+export default class TodoGroup implements TodoGroupInterface
 {
     public status: TodoStatus | undefined;
 
@@ -22,8 +21,12 @@ export default class TodoGroup extends Configurable implements TodoGroupInterfac
             status: TodoStatus.getInstance(groups.status),
             todoes: TodoItemService.createCards(groups.todoes),
         };
+
+        const instance = new this;
+
+        Object.assign(instance, configuration);
         
-        return new this(configuration);
+        return instance;
     }
 
     /**
