@@ -27,7 +27,7 @@
             next();
         },
         computed: {
-            ...mapGetters('todoes', [
+            ...mapGetters('todo', [
                 'isLogged',
             ]),
         },

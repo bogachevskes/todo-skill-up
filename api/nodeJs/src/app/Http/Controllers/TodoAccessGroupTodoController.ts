@@ -40,7 +40,7 @@ export default class TodoAccessGroupTodoController extends CrudController
     {
         this.defineUserRepo(req);
 
-        return await this.userRepo.getTodoesByStatusGroupsByAccessGroup(Number(req.params.id));
+        return await this.userRepo.getTodoByStatusGroupsByAccessGroup(Number(req.params.id));
     }
 
     /**

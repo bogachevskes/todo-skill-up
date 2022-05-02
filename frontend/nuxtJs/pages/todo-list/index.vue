@@ -36,7 +36,7 @@
             };
         },
         computed: {
-            ...mapState('todoes', [
+            ...mapState('todo', [
                 'groups',
             ]),
             statuses: function () {
@@ -57,7 +57,7 @@
             moveToGroup: function (cardId, statusId) {
                 this.$axios.$put(`todo/set-status/${cardId}`, { statusId })
                     .then(() => {
-                        this.$store.dispatch('todoes/updateGroupsList', this.$userStorage);
+                        this.$store.dispatch('todo/updateGroupsList', this.$userStorage);
                     });
             },
             changeStatus: function (card, event) {
@@ -76,7 +76,7 @@
             deleteCard: function (id) {
                 this.$axios.$delete(`todo/delete/${id}`)
                     .then(() => {
-                        this.$store.dispatch('todoes/updateGroupsList', this.$userStorage);
+                        this.$store.dispatch('todo/updateGroupsList', this.$userStorage);
                     });
             },
             editCard: function (card) {
@@ -91,7 +91,7 @@
             Group,
         },
         beforeCreate: function () {
-            this.$store.dispatch('todoes/updateGroupsList', this.$userStorage);
+            this.$store.dispatch('todo/updateGroupsList', this.$userStorage);
         },
     }
 </script>

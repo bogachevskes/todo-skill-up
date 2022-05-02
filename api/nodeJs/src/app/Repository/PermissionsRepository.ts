@@ -14,7 +14,7 @@ export default class PermissionsRepository
      * списком зада пользователей.
      * @var string
      */
-    public static PERMISSION_CAN_MANAGE_USERS_TODOES: string = 'canManageUsersTodoes';
+    public static PERMISSION_CAN_MANAGE_USERS_TODO: string = 'canManageUsersTodo';
     
     /**
      * Поиск по имени.

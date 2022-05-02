@@ -27,9 +27,9 @@ export const getters = {
         
         return state.permissions.includes('canManageUsers');
     },
-    canManageUsersTodoes: function (state) {
+    canManageUsersTodo: function (state) {
         
-        return state.permissions.includes('canManageUsersTodoes');
+        return state.permissions.includes('canManageUsersTodo');
     },
 }
 

@@ -14,7 +14,7 @@
             </li>
             <li v-if="canManageUsers" class="mt-1">
                 <NuxtLink
-                    :to="ROUTE_MANAGE_USERS"
+                    :to="ROUTE_USERS"
                     active-class="is-active"
                     exact
                 >
@@ -32,7 +32,7 @@
                     <li v-for="(data, index) in todoAccessGroups" :key="index" class="mt-1">
                         <NuxtLink
                             class=""
-                            :to="`${ROUTE_SHOW_TODO_ACCESS_GROUP}/${parseInt(data.id)}`"
+                            :to="`${ROUTE_USER_SHOW_TODO_ACCESS_GROUP}/${parseInt(data.id)}`"
                             active-class="is-active"
                             exact
                         >
@@ -49,7 +49,7 @@
 <script>
 
     import { mapGetters, mapState } from "vuex";
-    import { ROUTE_TODO_LIST, ROUTE_MANAGE_USERS, ROUTE_SHOW_TODO_ACCESS_GROUP } from '@/constants/routes';
+    import { ROUTE_TODO_LIST, ROUTE_USERS, ROUTE_USER_SHOW_TODO_ACCESS_GROUP } from '@/constants/routes';
 
     import AccessGroupsActionsModal from './left-side-bar/AccessGroupsActionsModal';
 
@@ -64,17 +64,17 @@
             };
         },
         computed: {
-            ...mapState('todoes', [
+            ...mapState('todo', [
                 'todoAccessGroups',
             ]),
-            ...mapGetters('todoes', [
+            ...mapGetters('todo', [
                 'isLogged',
                 'canManageUsers',
-                'canManageUsersTodoes',
+                'canManageUsersTodo',
             ]),
             ROUTE_TODO_LIST: () => ROUTE_TODO_LIST,
-            ROUTE_MANAGE_USERS: () => ROUTE_MANAGE_USERS,
-            ROUTE_SHOW_TODO_ACCESS_GROUP: () => ROUTE_SHOW_TODO_ACCESS_GROUP,
+            ROUTE_USERS: () => ROUTE_USERS,
+            ROUTE_USER_SHOW_TODO_ACCESS_GROUP: () => ROUTE_USER_SHOW_TODO_ACCESS_GROUP,
         },
         components: {
             AccessGroupsActionsModal,

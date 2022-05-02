@@ -169,7 +169,7 @@
             deleteGroup: function () {
                 this.$axios.$delete(`/todo-access-group/delete/${this.$route.params.id}`)
                     .then(() => {
-                        this.$store.dispatch('todoes/updateTodoAccessGroups', this.$userStorage);
+                        this.$store.dispatch('todo/updateTodoAccessGroups', this.$userStorage);
                         this.$router.push('/todo-list');
                     });
             },

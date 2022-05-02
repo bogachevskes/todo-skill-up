@@ -17,7 +17,7 @@
                             v-if="hasCards"
                         >
                             <Card
-                                v-for="(card, index) in group.todoes"
+                                v-for="(card, index) in group.todo"
                                 :key="index"
                                 :statuses="statuses"
                                 :card="card"
@@ -83,7 +83,7 @@
         },
         computed: {
             hasCards: function () {
-                return this.group.todoes.length > 0;
+                return this.group.todo.length > 0;
             },
             hasNoCards: function () {
                 return ! this.hasCards;

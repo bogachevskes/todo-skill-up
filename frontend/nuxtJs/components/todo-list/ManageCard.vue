@@ -136,7 +136,7 @@
                 this.deactivateModal();
                 this.$v.$reset();
                 this.flushFormData();
-                this.$store.dispatch('todoes/updateGroupsList', this.$userStorage);
+                this.$store.dispatch('todo/updateGroupsList', this.$userStorage);
             },
             handleCardProcessing: function () {
                 

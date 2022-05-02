@@ -47,7 +47,7 @@
     
     export default {
         computed: {
-            ...mapGetters('todoes', [
+            ...mapGetters('todo', [
                 'isLogged',
             ]),
             ROUTE_TODO_LIST: () => ROUTE_TODO_LIST,
@@ -59,7 +59,7 @@
                 this.$userStorage.flushData();
                 this.$userStorage.flushClientCookie();
 
-                this.$store.dispatch('todoes/setUserData', this.$userStorage.getUserData());
+                this.$store.dispatch('todo/setUserData', this.$userStorage.getUserData());
 
                 window.location.href = '/login';
             }

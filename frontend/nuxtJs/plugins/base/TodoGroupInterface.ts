@@ -5,5 +5,5 @@ export default interface TodoGroupInterface
 {
     status: TodoStatus | undefined;
 
-    todoes: TodoItem[];
+    todo: TodoItem[];
 }

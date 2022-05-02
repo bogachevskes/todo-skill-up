@@ -118,7 +118,7 @@
                 this.modal.isActive = false;
                 this.$v.$reset();
                 this.flushFormData();
-                this.$store.dispatch('todoes/updateTodoAccessGroups', this.$userStorage);
+                this.$store.dispatch('todo/updateTodoAccessGroups', this.$userStorage);
                 this.afterAction(this);
             },
             handleCardProcessing: function () {

@@ -110,7 +110,7 @@ export default class TodoItemRepository
      * @param  number accessGroupId
      * @return Promise<TodoStatusGroup[]>
      */
-    public static async getTodoesGroupedByStatuses(userId: number, accessGroupId: number|null = null): Promise<TodoStatusGroup[]>
+    public static async getTodoGroupedByStatuses(userId: number, accessGroupId: number|null = null): Promise<TodoStatusGroup[]>
     {
         const statusGroups: TodoStatusGroup[] = [];
 

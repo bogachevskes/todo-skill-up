@@ -42,12 +42,12 @@
                     size="is-small"
                 />
                 <input
-                        class="input"
-                        :class="printIsOnWarning($v.formData.password.$error)"
-                        type="password"
-                        placeholder="*******"
-                        @blur="blurField(['formData','password'])"
-                        v-model="formData.password"
+                    class="input"
+                    :class="printIsOnWarning($v.formData.password.$error)"
+                    type="password"
+                    placeholder="*******"
+                    @blur="blurField(['formData','password'])"
+                    v-model="formData.password"
                 />
                 <b-icon
                     icon="exclamation-thick"
@@ -115,11 +115,11 @@
                         
                         this.isLoading = false;
 
-                        this.$store.dispatch('todoes/setUserData', this.$userStorage.getUserData());
+                        this.$store.dispatch('todo/setUserData', this.$userStorage.getUserData());
 
-                        this.$store.dispatch('todoes/updateToken');
-                        this.$store.dispatch('todoes/updatePermissions', this.$userStorage);
-                        this.$store.dispatch('todoes/updateTodoAccessGroups', this.$userStorage);
+                        this.$store.dispatch('todo/updateToken');
+                        this.$store.dispatch('todo/updatePermissions', this.$userStorage);
+                        this.$store.dispatch('todo/updateTodoAccessGroups', this.$userStorage);
 
                         this.$router.push('/todo-list');
 

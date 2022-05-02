@@ -7,7 +7,7 @@ export default class TodoGroup implements TodoGroupInterface
 {
     public status: TodoStatus | undefined;
 
-    public todoes: TodoItem[] = [];
+    public todo: TodoItem[] = [];
     
     /**
      * Создает новую модель.
@@ -19,7 +19,7 @@ export default class TodoGroup implements TodoGroupInterface
     {
         const configuration = {
             status: TodoStatus.getInstance(groups.status),
-            todoes: TodoItemService.createCards(groups.todoes),
+            todo: TodoItemService.createCards(groups.todo),
         };
 
         const instance = new this;

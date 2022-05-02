@@ -76,9 +76,9 @@ RoutesCollection.add(
 RoutesCollection.add(
     new Route(
         'GET',
-        '/admin/users/todoes/:id',
+        '/admin/users/todo/:id',
         AdminUserController,
-        'actionTodoes',
+        'actionTodo',
         [
             AuthOnlyMiddleware
         ]
