@@ -1,6 +1,5 @@
 export const actions = {
     nuxtClientInit({ dispatch, getters }, context) {
-        
         dispatch('todo/setUserData', context.$userStorage.getUserData());
 
         if (getters['todo/isLogged'] === true) {
@@ -8,9 +7,8 @@ export const actions = {
             dispatch('todo/updatePermissions', context.$userStorage);
             dispatch('todo/updateTodoAccessGroups', context.$userStorage);
         }
-    }, 
+    },
     nuxtServerInit({ dispatch, getters }, context) {
-        
         dispatch('todo/setUserData', context.$userStorage.getUserData());
 
         if (getters['todo/isLogged'] === true) {
@@ -18,5 +16,5 @@ export const actions = {
             dispatch('todo/updatePermissions', context.$userStorage);
             dispatch('todo/updateTodoAccessGroups', context.$userStorage);
         }
-    }, 
-}
+    },
+};

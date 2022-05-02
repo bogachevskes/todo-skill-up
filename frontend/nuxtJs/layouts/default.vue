@@ -15,20 +15,18 @@
 </template>
 
 <script>
-    
-    import TheNavBar from '@/components/TheNavBar';
-    import TheFooter from '@/components/TheFooter';
-    import TheSuccessModal from '@/components/modals/TheSuccessModal';
-    import TheErrorModal from '@/components/modals/TheErrorModal';
-    
-    export default {
-        name: 'DefaultLayout',
-        components: {
-            TheNavBar,
-            TheFooter,
-            TheSuccessModal,
-            TheErrorModal,
-        },
-    }
-    
+import TheNavBar from '@/components/TheNavBar';
+import TheFooter from '@/components/TheFooter';
+import TheSuccessModal from '@/components/modals/TheSuccessModal';
+import TheErrorModal from '@/components/modals/TheErrorModal';
+
+export default {
+    name: 'DefaultLayout',
+    components: {
+        TheNavBar,
+        TheFooter,
+        TheSuccessModal,
+        TheErrorModal,
+    },
+};
 </script>

@@ -1,5 +1,7 @@
 <template>
-    <aside class="column is-2 is-narrow-mobile is-fullheight section is-hidden-mobile">
+    <aside
+        class="column is-2 is-narrow-mobile is-fullheight section is-hidden-mobile"
+    >
         <p class="menu-label is-hidden-touch">Возможности</p>
         <ul class="menu-list">
             <li>
@@ -13,11 +15,7 @@
                 </NuxtLink>
             </li>
             <li v-if="canManageUsers" class="mt-1">
-                <NuxtLink
-                    :to="ROUTE_USERS"
-                    active-class="is-active"
-                    exact
-                >
+                <NuxtLink :to="ROUTE_USERS" active-class="is-active" exact>
                     Пользователи
                 </NuxtLink>
             </li>
@@ -29,10 +27,16 @@
                     Создать доску
                 </button>
                 <ul>
-                    <li v-for="(data, index) in todoAccessGroups" :key="index" class="mt-1">
+                    <li
+                        v-for="(data, index) in todoAccessGroups"
+                        :key="index"
+                        class="mt-1"
+                    >
                         <NuxtLink
                             class=""
-                            :to="`${ROUTE_USER_SHOW_TODO_ACCESS_GROUP}/${parseInt(data.id)}`"
+                            :to="`${ROUTE_USER_SHOW_TODO_ACCESS_GROUP}/${parseInt(
+                                data.id
+                            )}`"
                             active-class="is-active"
                             exact
                         >
@@ -47,41 +51,41 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex';
+import AccessGroupsActionsModal from './left-side-bar/AccessGroupsActionsModal';
+import {
+    ROUTE_TODO_LIST,
+    ROUTE_USERS,
+    ROUTE_USER_SHOW_TODO_ACCESS_GROUP,
+} from '@/constants/routes';
 
-    import { mapGetters, mapState } from "vuex";
-    import { ROUTE_TODO_LIST, ROUTE_USERS, ROUTE_USER_SHOW_TODO_ACCESS_GROUP } from '@/constants/routes';
 
-    import AccessGroupsActionsModal from './left-side-bar/AccessGroupsActionsModal';
-
-    export default {
-        data: function () {
-            return {
-                modals: {
-                    addTodoAccessGroup: {
-                        isActive: false,
-                    }
+export default {
+    data () {
+        return {
+            modals: {
+                addTodoAccessGroup: {
+                    isActive: false,
                 },
-            };
-        },
-        computed: {
-            ...mapState('todo', [
-                'todoAccessGroups',
-            ]),
-            ...mapGetters('todo', [
-                'isLogged',
-                'canManageUsers',
-                'canManageUsersTodo',
-            ]),
-            ROUTE_TODO_LIST: () => ROUTE_TODO_LIST,
-            ROUTE_USERS: () => ROUTE_USERS,
-            ROUTE_USER_SHOW_TODO_ACCESS_GROUP: () => ROUTE_USER_SHOW_TODO_ACCESS_GROUP,
-        },
-        components: {
-            AccessGroupsActionsModal,
-        },
-    };
+            },
+        };
+    },
+    computed: {
+        ...mapState('todo', ['todoAccessGroups']),
+        ...mapGetters('todo', [
+            'isLogged',
+            'canManageUsers',
+            'canManageUsersTodo',
+        ]),
+        ROUTE_TODO_LIST: () => ROUTE_TODO_LIST,
+        ROUTE_USERS: () => ROUTE_USERS,
+        ROUTE_USER_SHOW_TODO_ACCESS_GROUP: () =>
+            ROUTE_USER_SHOW_TODO_ACCESS_GROUP,
+    },
+    components: {
+        AccessGroupsActionsModal,
+    },
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

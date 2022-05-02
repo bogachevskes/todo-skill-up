@@ -1,6 +1,6 @@
 <template>
     <div class="column is-10">
-        <div class="section has-background-info" style="padding: 20px;">
+        <div class="section has-background-info" style="padding: 20px">
             <div class="columns">
                 <Group
                     v-for="(group, index) in groups"
@@ -13,37 +13,33 @@
 </template>
 
 <script>
-    
-    import TodoGroupsService from '@/plugins/services/TodoGroupsService';
+import TodoGroupsService from '@/plugins/services/TodoGroupsService';
 
-    import Group from '@/components/todo-list/Group';
-    
-    export default {
-        layout: 'desk',
-        data: function () {
-            return {
-                groups: [],
-            };
+import Group from '@/components/todo-list/Group';
+
+export default {
+    components: {
+        Group,
+    },
+    beforeRouteEnter(to, from, next) {
+        next((vm) => {
+            vm.loadUserTodo(vm.$route.params.id);
+        });
+    },
+    layout: 'desk',
+    data () {
+        return {
+            groups: [],
+        };
+    },
+    methods: {
+        loadUserTodo (userId) {
+            this.$axios.$get(`admin/users/todo/${userId}`).then((result) => {
+                this.groups = TodoGroupsService.createGroups(result.items);
+            });
         },
-        methods: {
-            loadUserTodo: function (userId) {
-                this.$axios.$get(`admin/users/todo/${userId}`)
-                    .then(result => {
-                        this.groups = TodoGroupsService.createGroups(result.items);
-                    });
-            },
-        },
-        components: {
-            Group,
-        },
-        beforeRouteEnter (to, from, next) {
-              next(vm => {
-                vm.loadUserTodo(vm.$route.params.id);
-            })
-        },
-    }
+    },
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

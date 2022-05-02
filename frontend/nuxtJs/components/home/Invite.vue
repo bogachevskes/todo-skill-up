@@ -1,73 +1,67 @@
 <template>
-
-    <div class="column is-6-tablet is-7-desktop is-8-widescreen is-hidden-mobile">
-        <h1 class="subtitle is-2" v-if="(! showProjectLabel)">
+    <div
+        class="column is-6-tablet is-7-desktop is-8-widescreen is-hidden-mobile"
+    >
+        <h1 v-if="!showProjectLabel" class="subtitle is-2">
             Создать план задач{{ period }}?
         </h1>
         <div v-if="showProjectLabel" class="is-hidden-mobile">
             <TheProjectTitle />
         </div>
     </div>
-
 </template>
 
 <script>
-    import TheProjectTitle from '../TheProjectTitle';
+import TheProjectTitle from '../TheProjectTitle';
 
-    import events from '@/constants/events';
-    
-    export default {
-        data: function () {
-            return {
-                period: null,
-                periods: [
-                    'день',
-                    'месяц',
-                    'год',
-                    'бесконечность',
-                ],
-                showProjectLabel: false,
-            };
-        },
-        methods: {
-            hideIntro: function () {
-                this.showProjectLabel = true;
-                
-                return this;
-            },
-            setPeriod: function () {
-                let counter = 0;
-                
-                const periodInterval = setInterval(() => {
-                    this.period = ' на ' + this.periods[counter];
+import events from '@/constants/events';
 
-                    counter++;
-                    
-                    if (counter > this.periods.length) {
-                        clearInterval(periodInterval);
-                        this.hideIntro();
-                    }
+export default {
+    components: {
+        TheProjectTitle,
+    },
+    data () {
+        return {
+            period: null,
+            periods: ['день', 'месяц', 'год', 'бесконечность'],
+            showProjectLabel: false,
+        };
+    },
+    mounted () {
+        this.setPeriod();
 
-                    if (this.showProjectLabel) {
-                        clearInterval(periodInterval);
-                    }
+        this.$eventBus.$on(events.HIDE_INTRO, () => {
+            this.hideIntro();
 
-                }, 2000);
-            },
-        },
-        mounted: function () {
-            this.setPeriod();
+            return this;
+        });
 
-            this.$eventBus.$on(events.HIDE_INTRO, () => {
-                this.hideIntro();
-
-                return this;
-            });
+        return this;
+    },
+    methods: {
+        hideIntro () {
+            this.showProjectLabel = true;
 
             return this;
         },
-        components: {
-            TheProjectTitle,
+        setPeriod () {
+            let counter = 0;
+
+            const periodInterval = setInterval(() => {
+                this.period = ' на ' + this.periods[counter];
+
+                counter++;
+
+                if (counter > this.periods.length) {
+                    clearInterval(periodInterval);
+                    this.hideIntro();
+                }
+
+                if (this.showProjectLabel) {
+                    clearInterval(periodInterval);
+                }
+            }, 2000);
         },
-    }
+    },
+};
 </script>

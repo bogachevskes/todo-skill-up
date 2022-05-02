@@ -1,20 +1,18 @@
 <template>
-
     <div>
         <h1 class="title">Вход</h1>
-        <div class="box" style="min-width:380px;">
+        <div class="box" style="min-width: 380px">
             <Inputs />
         </div>
     </div>
-
 </template>
 
 <script>
-    import Inputs from './Inputs';
-    
-    export default {
-        components: {
-            Inputs,
-        },
-    }
+import Inputs from './Inputs';
+
+export default {
+    components: {
+        Inputs,
+    },
+};
 </script>

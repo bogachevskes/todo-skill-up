@@ -1,7 +1,5 @@
-export default abstract class Configurable
-{
-    public constructor(parameters: object = {})
-    {
+export default abstract class Configurable {
+    public constructor(parameters: object = {}) {
         this.configure(parameters);
     }
 
@@ -9,8 +7,7 @@ export default abstract class Configurable
      * @param  parameters object
      * @return void
      */
-    protected configure(parameters: object): void
-    {
+    protected configure(parameters: object): void {
         Object.assign(this, parameters);
     }
 }

@@ -1,15 +1,13 @@
 import IndexedInterface from './IndexedInterface';
 
-export default class CommandContext
-{
+export default class CommandContext {
     protected params: object = {};
 
     /**
-     * @param  params 
+     * @param  params
      * @return void
      */
-    public setMultiple(params: object): void
-    {
+    public setMultiple(params: object): void {
         Object.assign(this.params, params);
     }
 
@@ -18,21 +16,19 @@ export default class CommandContext
      * @param  value any
      * @return void
      */
-    public set(key: string, value: any): void
-    {
-        Object.assign(this.params, {[key]: value});
+    public set(key: string, value: any): void {
+        Object.assign(this.params, { [key]: value });
     }
 
     /**
      * @param  key string
      * @return any
      */
-    public get(key: string): any
-    {
+    public get(key: string): any {
         const params: IndexedInterface = {};
-        
+
         Object.assign(params, this.params);
-        
+
         if (key in params) {
             return params[key];
         }
@@ -43,17 +39,14 @@ export default class CommandContext
     /**
      * @returns any[]
      */
-    public getKeys(): any[]
-    {
+    public getKeys(): any[] {
         return Object.keys(this.params);
     }
 
     /**
      * @returns object
      */
-    public getParams(): object
-    {
+    public getParams(): object {
         return this.params;
     }
-
 }

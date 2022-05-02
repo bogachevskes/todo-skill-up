@@ -21,10 +21,7 @@ export default {
     css: [],
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-    plugins: [
-        '~/plugins/eventBus',
-        '~/plugins/userStorage',
-    ],
+    plugins: ['~/plugins/eventBus', '~/plugins/userStorage'],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
@@ -55,8 +52,8 @@ export default {
 
     watchers: {
         webpack: {
-          aggregateTimeout: 300,
-          poll: 1000
-        }
-    }
+            aggregateTimeout: 300,
+            poll: 1000,
+        },
+    },
 };

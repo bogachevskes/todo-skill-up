@@ -1,4 +1,3 @@
-export default interface IndexedInterface
-{
+export default interface IndexedInterface {
     [index: string]: string;
 }

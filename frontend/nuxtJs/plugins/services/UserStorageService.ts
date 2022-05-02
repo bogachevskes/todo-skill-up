@@ -1,18 +1,17 @@
 import { NuxtAxiosInstance } from '@nuxtjs/axios';
 import IndexedInterface from '../base/IndexedInterface';
-import CookieStorage from './CookieStorage';
 import UserIdentity from '../models/UserIdentity';
 import TodoGroup from '../models/TodoGroup';
 import TodoStatus from '../models/TodoStatus';
+import CookieStorage from './CookieStorage';
 import TodoGroupsService from './TodoGroupsService';
 
-export default class UserStorageLoader
-{
+export default class UserStorageLoader {
     /**
      * @var NuxtAxiosInstance
      */
     public axios: NuxtAxiosInstance | undefined;
-    
+
     /**
      * @var UserStorageLoader
      */
@@ -32,8 +31,8 @@ export default class UserStorageLoader
         private wasLoaded: boolean = false,
         private identityKeys: any[] = []
     ) {
-        this.storage = process.client ? localStorage : new CookieStorage;
-        this.identity = new UserIdentity;
+        this.storage = process.client ? localStorage : new CookieStorage();
+        this.identity = new UserIdentity();
         this.loadIdentityKeys();
     }
 
@@ -41,10 +40,11 @@ export default class UserStorageLoader
      * @param  string cookie
      * @return void
      */
-    public fillCookies(cookies: string): void
-    {
-        if ((this.storage instanceof CookieStorage) === false) {
-            throw new Error('Необходимо использовать CookieStorage как хранилище');
+    public fillCookies(cookies: string): void {
+        if (this.storage instanceof CookieStorage === false) {
+            throw new TypeError(
+                'Необходимо использовать CookieStorage как хранилище'
+            );
         }
 
         const parser = require('cookie');
@@ -53,14 +53,14 @@ export default class UserStorageLoader
     }
 
     /**
-     * @param  cookies 
+     * @param  cookies
      * @return void
      */
-    public setClientCookies(cookies: object): void
-    {
+    public setClientCookies(cookies: object): void {
         if (Boolean(process.client) === false) {
-            
-            throw new Error('Использование метода возможно только на стороне клиента');
+            throw new Error(
+                'Использование метода возможно только на стороне клиента'
+            );
         }
 
         const Cookie = require('js-cookie');
@@ -70,88 +70,76 @@ export default class UserStorageLoader
         Object.assign(cookieValues, cookies);
 
         for (const cookie in cookieValues) {
-            Cookie.set(cookie, cookieValues[cookie], {expires: 360});
+            Cookie.set(cookie, cookieValues[cookie], { expires: 360 });
         }
     }
 
     /**
      * Получение значений сущности пользователя.
-     * 
+     *
      * @return void
      */
-    protected loadIdentityKeys(): void
-    {
+    protected loadIdentityKeys(): void {
         this.identityKeys = this.identity.getKeys();
     }
 
     /**
      * Присвоение признака о
      * загрузке сущности пользователя.
-     * 
+     *
      * @param  boolean condition
      * @return void
      */
-    protected setWasLoaded(condition: boolean): void
-    {
+    protected setWasLoaded(condition: boolean): void {
         this.wasLoaded = condition;
     }
 
     /**
      * Установка признака
      * о загрузке сущности пользователя.
-     * 
+     *
      * @return void
      */
-    protected setStorageLoaded(): void
-    {
+    protected setStorageLoaded(): void {
         this.setWasLoaded(true);
     }
 
     /**
      * Сброс признака
      * о загрузке сущности пользователя.
-     * 
+     *
      * @return void
      */
-    protected setStorageNotLoaded(): void
-    {
+    protected setStorageNotLoaded(): void {
         this.setWasLoaded(false);
     }
 
     /**
      * Проверка признака
      * загрузки сущности пользователя.
-     * 
+     *
      * @return boolean
      */
-    protected isStorageLoaded(): boolean
-    {
+    protected isStorageLoaded(): boolean {
         return this.wasLoaded === true;
     }
 
     /**
      * @return boolean
      */
-    protected storageNotLoaded(): boolean
-    {
-        return ! this.isStorageLoaded();
+    protected storageNotLoaded(): boolean {
+        return !this.isStorageLoaded();
     }
 
     /**
      * Загрузка сущности
      * пользователя из памяти браузера.
-     * 
+     *
      * @return void
      */
-    public fillFomStorage(): void
-    {
+    public fillFomStorage(): void {
         for (const item of this.identityKeys) {
-
-            this.identity.set(
-                item,
-                this.storage.getItem(item)
-            );
-
+            this.identity.set(item, this.storage.getItem(item));
         }
 
         this.setStorageLoaded();
@@ -160,14 +148,13 @@ export default class UserStorageLoader
     /**
      * Запись данных сущности
      * пользователя в память браузера.
-     * 
-     * @param  IndexedInterface data 
+     *
+     * @param  IndexedInterface data
      * @return void
      */
-    public fillStorage(data: IndexedInterface): void
-    {
+    public fillStorage(data: IndexedInterface): void {
         const keys = Object.keys(data);
-        
+
         for (const key of keys) {
             this.storage.setItem(key, data[key]);
         }
@@ -178,52 +165,48 @@ export default class UserStorageLoader
     /**
      * Возвращает
      * сущность пользователя.
-     * 
+     *
      * @return object
      */
-    public getUserData(): object
-    {
+    public getUserData(): object {
         if (this.storageNotLoaded()) {
             this.fillFomStorage();
         }
-        
+
         return this.identity.getParams();
     }
 
     /**
      * Возвращает идентификатор пользователя.
-     * 
+     *
      * @return number|null
      */
-    public getUserId(): number | null
-    {
+    public getUserId(): number | null {
         const userId = this.identity.get('userId');
 
         if (userId) {
             return parseInt(userId);
         }
-        
+
         return null;
     }
 
     /**
      * Сброс данных
      * в памяти браузера.
-     * 
+     *
      * @return void
      */
-    protected flushStorage(): void
-    {
+    protected flushStorage(): void {
         this.storage.clear();
     }
 
     /**
      * @return void
      */
-    protected flushClientCookie(): void
-    {
+    protected flushClientCookie(): void {
         const Cookie = require('js-cookie');
-        
+
         this.identityKeys.forEach((name) => {
             Cookie.remove(name);
         });
@@ -231,16 +214,14 @@ export default class UserStorageLoader
 
     /**
      * Сброс сущности пользователя.
-     * 
+     *
      * @return void
      */
-    public flushData(): void
-    {
+    public flushData(): void {
         this.flushStorage();
         this.fillFomStorage();
 
         if (Boolean(process.client) === true) {
-            
             this.flushClientCookie();
         }
     }
@@ -248,8 +229,7 @@ export default class UserStorageLoader
     /**
      * @returns NuxtAxiosInstance | never
      */
-    private getAxios(): NuxtAxiosInstance | never
-    {
+    private getAxios(): NuxtAxiosInstance | never {
         if (this.axios === undefined) {
             throw new Error('Axios должен быть установлен как зависимость');
         }
@@ -259,23 +239,23 @@ export default class UserStorageLoader
 
     /**
      * Загрузка туду-заданий пользователя.
-     * 
+     *
      * @param  Function|null
      * @return void
      */
-    public loadTodoItems(callback: Function|null = null): void
-    {
-        this.getAxios().$get('todo/list')
-            .then(result => {
+    public loadTodoItems(callback: Function | null = null): void {
+        this.getAxios()
+            .$get('todo/list')
+            .then((result) => {
                 const groups = TodoGroupsService.createGroups(result.items);
-                
+
                 this.identity.set('groups', groups);
 
                 if (callback instanceof Function) {
                     callback();
                 }
             })
-            .catch(error => {
+            .catch((error) => {
                 // TODO: Добавить хендлер
             });
     }
@@ -283,11 +263,10 @@ export default class UserStorageLoader
     /**
      * @return any
      */
-    public loadPermissions(): any
-    {
-        return this.getAxios().$get('user-permissions/list')
-            .then(result => {
-                
+    public loadPermissions(): any {
+        return this.getAxios()
+            .$get('user-permissions/list')
+            .then((result) => {
                 this.identity.set('permissions', result.items);
 
                 return Promise.resolve(this.identity.get('permissions'));
@@ -297,10 +276,10 @@ export default class UserStorageLoader
     /**
      * @return any
      */
-    public loadTodoAccessGroups(): any
-    {
-        return this.getAxios().$get('todo-access-group/list')
-            .then(result => {
+    public loadTodoAccessGroups(): any {
+        return this.getAxios()
+            .$get('todo-access-group/list')
+            .then((result) => {
                 this.identity.set('todoAccessGroups', result.items);
 
                 return Promise.resolve(this.identity.get('todoAccessGroups'));
@@ -309,49 +288,42 @@ export default class UserStorageLoader
 
     /**
      * Возвращает туду-задания пользователя.
-     * 
+     *
      * @return TodoGroup[]
      */
-    public getTodoItems(): TodoGroup[]
-    {
+    public getTodoItems(): TodoGroup[] {
         return this.identity.get('groups');
     }
 
     /**
      * @return object[]
      */
-    public getGroupsPairs(): object[]
-    {
-        const
-            groups = this.getTodoItems(),
-            pairs: object[] = [];
+    public getGroupsPairs(): object[] {
+        const groups = this.getTodoItems();
+            const pairs: object[] = [];
 
         for (const group of groups) {
+            const status: TodoStatus = group.status || new TodoStatus();
 
-            const status: TodoStatus = group.status || new TodoStatus;
-            
             pairs.push({
                 id: status.id,
                 name: status.name,
             });
-
         }
 
         return pairs;
     }
-    
+
     /**
      * Возвращает экземпляр класса.
-     * 
+     *
      * @return UserStorageLoader
      */
-    public static getInstance(): UserStorageLoader
-    {
-        if (! (this.instance instanceof this)) {
-            this.instance = new this;
+    public static getInstance(): UserStorageLoader {
+        if (!(this.instance instanceof this)) {
+            this.instance = new this();
         }
 
         return this.instance;
     }
-
 }

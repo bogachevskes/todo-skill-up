@@ -1,16 +1,16 @@
-import { MIN_PASSWORD_LENGTH, MIN_NAME_LENGTH } from '@/constants/validation';
 import { validationMixin } from 'vuelidate';
+import { MIN_PASSWORD_LENGTH, MIN_NAME_LENGTH } from '@/constants/validation';
 
 /**
  * aka inputTraits
  */
 const inputMethods = {
-    printIsOnWarning: function (hasError) {
+    printIsOnWarning (hasError) {
         return {
             'is-danger': hasError,
         };
     },
-    blurField: function (filed) {
+    blurField (filed) {
         if (typeof filed === 'string') {
             this.$v[filed].$touch();
 
@@ -20,7 +20,7 @@ const inputMethods = {
         if (Array.isArray(filed)) {
             let input = this.$v;
 
-            for (let level of filed) {
+            for (const level of filed) {
                 input = input[level];
             }
 
@@ -29,16 +29,16 @@ const inputMethods = {
 
         return this;
     },
-    setOnLoading: function (prop = 'onLoading') {
+    setOnLoading (prop = 'onLoading') {
         this[prop] = true;
 
         return this;
     },
-    setOffLoading: function (prop = 'onLoading') {
+    setOffLoading (prop = 'onLoading') {
         this[prop] = false;
 
         return this;
-    }
+    },
 };
 
 const inputComputedMethods = {

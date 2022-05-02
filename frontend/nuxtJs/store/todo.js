@@ -2,79 +2,70 @@ export const state = () => ({
     token: null,
     userId: null,
     groups: [],
-    permissions:[],
+    permissions: [],
     todoAccessGroups: [],
 });
 
 export const getters = {
-    getToken: function (state) {
-        
+    getToken (state) {
         return state.token;
     },
-    notLogged: function (state) {
-
+    notLogged (state) {
         return state.token === null || state.user_id === null;
     },
-    isLogged: function (_state, getters) {
-        
+    isLogged (_state, getters) {
         return getters.notLogged === false;
     },
-    hasPermission: function (state, permissionName) {
-        
+    hasPermission (state, permissionName) {
         return state.permissions.includes(permissionName);
     },
-    canManageUsers: function (state) {
-        
+    canManageUsers (state) {
         return state.permissions.includes('canManageUsers');
     },
-    canManageUsersTodo: function (state) {
-        
+    canManageUsersTodo (state) {
         return state.permissions.includes('canManageUsersTodo');
     },
-}
+};
 
 export const mutations = {
-    setUserState: function (state, userData) {
+    setUserState (state, userData) {
         state.token = userData.token;
         state.userId = userData.userId;
     },
-    setUserGroups: function (state, groups) {
+    setUserGroups (state, groups) {
         state.groups = groups;
     },
-    setUserPermissions: function (state, permissions) {
+    setUserPermissions (state, permissions) {
         state.permissions = permissions;
     },
-    setUserTodoAccessGroups: function (state, groups) {
+    setUserTodoAccessGroups (state, groups) {
         state.todoAccessGroups = groups;
     },
 };
 
 export const actions = {
-    setUserData: function ({commit}, userData) {
+    setUserData ({ commit }, userData) {
         commit('setUserState', userData);
     },
-    setGroups: function ({commit}, groups) {
+    setGroups ({ commit }, groups) {
         commit('setUserGroups', groups);
     },
-    updateGroupsList: function ({dispatch}, userStorage) {
+    updateGroupsList ({ dispatch }, userStorage) {
         userStorage.loadTodoItems(() => {
-            dispatch(
-                    'setGroups',
-                    userStorage.getTodoItems()
-                );
+            dispatch('setGroups', userStorage.getTodoItems());
         });
     },
-    updateToken: function ({getters}) {
-
+    updateToken ({ getters }) {
         this.$axios.defaults.headers.common['X-BASE-AUTH'] = getters.getToken;
-
     },
-    updatePermissions: function ({commit}, userComponent) {
-        userComponent.loadPermissions()
-            .then(permissions => commit('setUserPermissions', permissions));
+    updatePermissions ({ commit }, userComponent) {
+        userComponent
+            .loadPermissions()
+            .then((permissions) => commit('setUserPermissions', permissions));
     },
-    updateTodoAccessGroups: function ({commit}, userComponent) {
-        userComponent.loadTodoAccessGroups()
-            .then(groups => commit('setUserTodoAccessGroups', groups));
+    updateTodoAccessGroups ({ commit }, userComponent) {
+        userComponent
+            .loadTodoAccessGroups()
+            .then((groups) => commit('setUserTodoAccessGroups', groups));
     },
 };

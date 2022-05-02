@@ -5,17 +5,17 @@ export const state = {
 };
 
 export const setters = {
-    showModal: function () {
+    showModal () {
         this.isActive = true;
 
         return this;
     },
-    hideModal: function (callback = null) {
+    hideModal (callback = null) {
         this.isActive = false;
 
         try {
             this.unsetModalInfo();
-        } catch (e) { }
+        } catch (e) {}
 
         return this;
     },
