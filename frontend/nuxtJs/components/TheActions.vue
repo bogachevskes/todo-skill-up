@@ -4,7 +4,7 @@
         <ul class="menu-list">
             <li>
                 <NuxtLink
-                    class="button has-text-left"
+                    class="has-text-left"
                     :to="ROUTE_TODO_LIST"
                     active-class="is-active"
                     exact

@@ -87,6 +87,12 @@
     import events from '@/constants/events';
 
     export default {
+        props: {
+            loadTodoGroups: {
+                type: Function,
+                default: null,
+            },
+        },
         data: function () {
             return {
                 formData: {
@@ -116,9 +122,11 @@
             },
             executeCreation: function () {
                 
+                this.formData.todoAccessGroupId = this.$route.params.id;
+
                 this.formData.plannedComplitionAt = DateHelper.format(this.plannedComplitionAt, 'YYYY-MM-DD HH:mm:ss');
                 
-                this.$axios.$post('todo/create', {form: this.formData})
+                this.$axios.$post(`/todo-access-group/todo/${this.$route.params.id}/create`, {form: this.formData})
                     .then(
                             res => this.onCardProcessingComplete()
                         );
@@ -127,7 +135,10 @@
                 
                 this.formData.plannedComplitionAt = DateHelper.format(this.plannedComplitionAt, 'YYYY-MM-DD HH:mm:ss');
                 
-                this.$axios.$put(`todo/update/${this.formData.id}`, {formData: this.formData})
+                this.$axios.$put(
+                    `/todo-access-group/todo/${this.$route.params.id}/update/${this.formData.id}`,
+                    { formData: this.formData }
+                    )
                     .then(
                             res => this.onCardProcessingComplete()
                         );
@@ -136,7 +147,7 @@
                 this.deactivateModal();
                 this.$v.$reset();
                 this.flushFormData();
-                this.$store.dispatch('todoes/updateGroupsList', this.$userStorage);
+                this.loadTodoGroups();
             },
             handleCardProcessing: function () {
                 
@@ -150,6 +161,9 @@
                 }
                 
                 throw new Error('Handling is not defined');
+            },
+            setComplitionDate: function (date) {
+                this.formData.plannedComplitionAt = DateHelper.format(date, 'YYYY-MM-DD HH:mm:ss');
             },
         },
         computed: {
@@ -165,7 +179,7 @@
             }
         },
         mounted: function () {
-            
+
             this.$eventBus.$on(events.SHOW_CARD_MANAGE_MODAL, (card, action) => {
                 this.action = action;
                 this.formData = {...card};
