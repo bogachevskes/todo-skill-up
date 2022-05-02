@@ -5,11 +5,11 @@ export default class TodoStatusGroup
 {
     public status: TodoStatus;
 
-    public todoes: TodoItem[] = [];
+    public todo: TodoItem[] = [];
 
-    public constructor(status: TodoStatus, todoes: TodoItem[] = [])
+    public constructor(status: TodoStatus, todo: TodoItem[] = [])
     {
         this.status = status;
-        this.todoes = todoes;
+        this.todo = todo;
     }
 }

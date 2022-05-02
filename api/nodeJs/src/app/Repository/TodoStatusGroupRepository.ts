@@ -19,10 +19,10 @@ export default class TodoStatusGroupRepository
             todoAccessGroupId: (accessGroupId === null ? IsNull() : accessGroupId),
         };
         
-        const todoes: TodoItem[] = await TodoItem.find({
+        const todo: TodoItem[] = await TodoItem.find({
                 where: {...condition},
             });
         
-        return new TodoStatusGroup(status, todoes);
+        return new TodoStatusGroup(status, todo);
     }
 }

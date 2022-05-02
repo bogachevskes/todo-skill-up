@@ -277,7 +277,7 @@ export default class UserRepository
      * 
      * @return Promise<TodoItem[]>
      */
-    public async getTodoes(): Promise<TodoItem[]>
+    public async getTodo(): Promise<TodoItem[]>
     {
         return TodoItemRepository.findByUserId(this.user.id);
     }
@@ -288,9 +288,9 @@ export default class UserRepository
      * 
      * @return Promise<TodoStatusGroup[]>
      */
-    public async getTodoesByStatusGroups(): Promise<TodoStatusGroup[]>
+    public async getTodoByStatusGroups(): Promise<TodoStatusGroup[]>
     {
-        return await TodoItemRepository.getTodoesGroupedByStatuses(this.user.id);
+        return await TodoItemRepository.getTodoGroupedByStatuses(this.user.id);
     }
 
     /**
@@ -298,9 +298,9 @@ export default class UserRepository
      * @param accessGroupId number
      * @returns Promise<TodoStatusGroup[]>
      */
-    public async getTodoesByStatusGroupsByAccessGroup(accessGroupId: number): Promise<TodoStatusGroup[]>
+    public async getTodoByStatusGroupsByAccessGroup(accessGroupId: number): Promise<TodoStatusGroup[]>
     {
-        return await TodoItemRepository.getTodoesGroupedByStatuses(this.user.id, accessGroupId);
+        return await TodoItemRepository.getTodoGroupedByStatuses(this.user.id, accessGroupId);
     }
 
     /**

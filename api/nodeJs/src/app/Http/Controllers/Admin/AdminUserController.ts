@@ -42,14 +42,14 @@ export default class AdminUserController extends CrudController
      * @return Promise<Response>
      */
     @AutoBind
-    public async actionTodoes(req: Request, res: Response): Promise<Response>
+    public async actionTodo(req: Request, res: Response): Promise<Response>
     {
         const userId = Number(req.params.id);
         
         await this.defineUserRepo(userId);
         
         return res.json({
-            items: await this.userRepo.getTodoesByStatusGroups(),
+            items: await this.userRepo.getTodoByStatusGroups(),
         });
     }
 

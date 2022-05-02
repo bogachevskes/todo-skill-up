@@ -18,7 +18,7 @@ export default class SeedData extends BaseCommand
 
     protected manageUsersPermission: Permission;
 
-    protected manageUsersTodoesPermissions: Permission;
+    protected manageUsersTodoPermissions: Permission;
     
     protected validateData(): void
     {
@@ -54,7 +54,7 @@ export default class SeedData extends BaseCommand
 
         await command.execute(context);
 
-        context.set('permission', this.manageUsersTodoesPermissions.name);
+        context.set('permission', this.manageUsersTodoPermissions.name);
 
         await command.execute(context);
     }
@@ -87,8 +87,8 @@ export default class SeedData extends BaseCommand
                 'Управление пользователями'
             );
 
-        this.manageUsersTodoesPermissions = await PermissionsRepository.createNew(
-                PermissionsRepository.PERMISSION_CAN_MANAGE_USERS_TODOES,
+        this.manageUsersTodoPermissions = await PermissionsRepository.createNew(
+                PermissionsRepository.PERMISSION_CAN_MANAGE_USERS_TODO,
                 'Управление списком задач пользователей'
             );
 
