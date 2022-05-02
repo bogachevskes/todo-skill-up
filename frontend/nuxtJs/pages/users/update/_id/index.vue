@@ -1,19 +1,24 @@
 <template>
-    <div>
-        <Form
-            :formData="formData"
-            :actionHeading="'Редактировать пользователя'"
-            :actionText="'Сохранить'"
-            :confirmAction="handleUpdating"
-            :passwordStrictRequired="false"
-        />
+    <div class="column">
+        <div class="section has-background-info">
+            <div class="columns">
+                <Form
+                    :formData="formData"
+                    :actionHeading="'Редактировать пользователя'"
+                    :actionText="'Сохранить'"
+                    :confirmAction="handleUpdating"
+                    :passwordStrictRequired="false"
+                />
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
-    import Form from './Form';
+    import Form from '@/components/users/Form';
 
     export default {
+        layout: 'desk',
         data: function () {
             return {
                 userId: null,
@@ -36,7 +41,7 @@
                     .then(result => {
                         this.formData = {
                             ...this.formData,
-                            ...result.data.item
+                            ...result.item
                         };
                     });
             },
@@ -44,11 +49,11 @@
                 this.$axios.$put(`admin/users/update/${this.userId}`, { formData })
                     .then(result => {
 
-                        const resultItem = result.data.item;
+                        const resultItem = result.item;
                         
                         if (resultItem.success) {
                             
-                            this.$router.push('/manage/users');
+                            this.$router.push('/users');
                             return;
                         }
 
@@ -71,7 +76,3 @@
         },
     }
 </script>
-
-<style>
-
-</style>
