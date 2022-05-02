@@ -1,11 +1,13 @@
 <template>
-    <div class="container">
-        <div class="columns">
-            <Group
-                v-for="(group, index) in groups"
-                :key="index"
-                :group="group"
-            />
+    <div class="column is-10">
+        <div class="section has-background-info" style="padding: 20px;">
+            <div class="columns">
+                <Group
+                    v-for="(group, index) in groups"
+                    :key="index"
+                    :group="group"
+                />
+            </div>
         </div>
     </div>
 </template>
@@ -17,6 +19,7 @@
     import Group from '@/components/todo-list/Group';
     
     export default {
+        layout: 'desk',
         data: function () {
             return {
                 groups: [],

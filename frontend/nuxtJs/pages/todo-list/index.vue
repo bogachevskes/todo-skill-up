@@ -1,23 +1,23 @@
 <template>
-        <div class="column is-10">
-            <div class="section has-background-info" style="padding: 20px;">
-                <ManageCard />
-                <div class="columns">
-                    <Group
-                        v-for="(group, index) in groups"
-                        :key="index"
-                        :group="group"
-                        :statuses="statuses"
-                        :addCard="addCard"
-                        :changeStatus="changeStatus"
-                        :onMoveCard="onMoveCard"
-                        :moveCard="moveCard"
-                        :deleteCard="deleteCard"
-                        :editCard="editCard"
-                    />
-                </div>
+    <div class="column is-10">
+        <div class="section has-background-info" style="padding: 20px;">
+            <ManageCard />
+            <div class="columns">
+                <Group
+                    v-for="(group, index) in groups"
+                    :key="index"
+                    :group="group"
+                    :statuses="statuses"
+                    :addCard="addCard"
+                    :changeStatus="changeStatus"
+                    :onMoveCard="onMoveCard"
+                    :moveCard="moveCard"
+                    :deleteCard="deleteCard"
+                    :editCard="editCard"
+                />
             </div>
         </div>
+    </div>
 </template>
 
 <script>
