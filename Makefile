@@ -8,6 +8,7 @@ WS_NODE_COMPOSE_PROJECT_NAME=todo-skill-up-ws-node
 FRONTEND_VUE_NODE_CLI=frontend-vue-node-cli
 FRONTEND_NUXT_NODE_CLI=frontend-nuxt-node-cli
 API_NODE_CLI=api-node-cli
+API_REDIS=api-redis
 WS_NODE_CLI=ws-node-cli
 
 # ============================== BEGIN FRONTEND VUE =================================== #
@@ -203,6 +204,9 @@ api-node-app-cli:
 rebuild-api-node-app: down-api-node \
 	api-node-yarn-build \
 	up-api-node
+
+api-redis-cli:
+	@docker-compose --env-file ./docker.env -f docker-compose-api-node.yml -p ${API_NODE_COMPOSE_PROJECT_NAME} exec $(API_REDIS) redis-cli
 
 # ============================== END API NodeJs =================================== #
 

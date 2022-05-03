@@ -30,3 +30,8 @@ services:
       - ./api/nodeJs/docker/development/mariadb/initdb.d:/docker-entrypoint-initdb.d
     ports:
       - ${API_MYSQL_PORT}:3306
+
+  api-redis:
+    image: ${REDIS_VERSION}
+    ports:
+      - ${REDIS_PORT}:6379
