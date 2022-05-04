@@ -1,68 +1,25 @@
 include docker.env
 
-FRONTEND_VUE_COMPOSE_PROJECT_NAME=todo-skill-up-frontend-vue
+FRONTEND_INFRASTRUCTURE_COMPOSE_PROJECT_NAME=todo-skill-up-infrastructure
 FRONTEND_NUXT_COMPOSE_PROJECT_NAME=todo-skill-up-frontend-nuxt
 API_NODE_COMPOSE_PROJECT_NAME=todo-skill-up-api-node
 WS_NODE_COMPOSE_PROJECT_NAME=todo-skill-up-ws-node
 
-FRONTEND_VUE_NODE_CLI=frontend-vue-node-cli
 FRONTEND_NUXT_NODE_CLI=frontend-nuxt-node-cli
 API_NODE_CLI=api-node-cli
+API_REDIS=api-redis
 WS_NODE_CLI=ws-node-cli
 
-# ============================== BEGIN FRONTEND VUE =================================== #
+# ============================== BEGIN INFRASTRUCTURE =================================== #
 
-frontend-vue-docker-ps:
-	@docker-compose --env-file ./docker.env -f docker-compose-frontend-vue.yml -p ${FRONTEND_VUE_COMPOSE_PROJECT_NAME} ps
+infrastructure-docker-ps:
+	@docker-compose --env-file ./docker.env -f docker-compose-infrastructure.yml -p ${FRONTEND_INFRASTRUCTURE_COMPOSE_PROJECT_NAME} ps
 
-up-frontend-vue:
-	@docker-compose --env-file ./docker.env -f docker-compose-frontend-vue.yml -p ${FRONTEND_VUE_COMPOSE_PROJECT_NAME} up -d --remove-orphans
+infrastructure-docker-logs:
+	@docker-compose --env-file ./docker.env -f docker-compose-infrastructure.yml -p ${FRONTEND_INFRASTRUCTURE_COMPOSE_PROJECT_NAME} logs -f
 
-down-frontend-vue:
-	@docker-compose --env-file ./docker.env -f docker-compose-frontend-vue.yml -p ${FRONTEND_VUE_COMPOSE_PROJECT_NAME} down --remove-orphans
-
-restart-frontend-vue: down-frontend-vue \
-	up-frontend-vue
-
-docker-build-frontend-vue: docker-build-frontend-vue-app \
-	docker-build-frontend-vue-node-cli
-
-docker-build-frontend-vue-app:
-	@docker build -t ${REGISTRY}/todo-skill-up-frontend-vue:${IMAGE_TAG} \
-		-f frontend/vueJs/docker/${ENV}/nginx/Dockerfile frontend/vueJs/docker
-
-docker-build-frontend-vue-node-cli:
-	@docker build -t ${REGISTRY}/todo-skill-up-frontend-vue-node-cli:${IMAGE_TAG} \
-		-f frontend/vueJs/docker/${ENV}/node-cli/Dockerfile frontend/vueJs/docker
-
-frontend-vue-init: frontend-vue-yarn-install frontend-vue-yarn-build
-
-frontend-vue-node-exec:
-	@docker-compose --env-file ./docker.env -f docker-compose-frontend-vue.yml -p ${FRONTEND_VUE_COMPOSE_PROJECT_NAME} run --rm $(FRONTEND_VUE_NODE_CLI) $(cmd)
-
-frontend-vue-yarn-install:
-	$(MAKE) frontend-vue-node-exec cmd="yarn install --no-bin-links"
-	$(MAKE) -s frontend-vue-chown
-
-frontend-vue-yarn-remove:
-	$(MAKE) frontend-vue-node-exec cmd="yarn remove $(package)"
-	$(MAKE) -s frontend-vue-chown
-
-frontend-vue-yarn-build:
-	$(MAKE) frontend-vue-node-exec cmd="yarn run build"
-	@$(MAKE) -s frontend-vue-chown
-
-frontend-vue-yarn-watch:
-	$(MAKE) frontend-vue-node-exec cmd="yarn run watch"
-	@$(MAKE) -s frontend-vue-chown
-
-frontend-vue-chown:
-	$(MAKE) frontend-vue-node-exec cmd="chown -R 1000:1000 ./"
-
-frontend-vue-node-shell:
-	$(MAKE) frontend-vue-node-exec cmd="sh"
-
-# ============================== END FRONTEND VUE =================================== #
+up-infrastructure:
+	@docker-compose --env-file ./docker.env -f docker-compose-infrastructure.yml -p ${FRONTEND_INFRASTRUCTURE_COMPOSE_PROJECT_NAME} up -d --remove-orphans
 
 # ============================== BEGIN FRONTEND NUXT =================================== #
 
@@ -102,7 +59,7 @@ frontend-nuxt-yarn-install:
 	$(MAKE) -s frontend-nuxt-chown
 
 frontend-nuxt-yarn-add:
-	$(MAKE) frontend-nuxt-node-exec cmd="yarn add $(package)"
+	$(MAKE) frontend-nuxt-node-exec cmd="yarn add $(package) --no-bin-links"
 	$(MAKE) -s frontend-nuxt-chown
 
 frontend-nuxt-yarn-remove:
@@ -180,7 +137,7 @@ api-node-yarn-install:
 	$(MAKE) -s api-node-chown
 
 api-node-yarn-add:
-	$(MAKE) api-node-exec cmd="yarn add $(package)"
+	$(MAKE) api-node-exec cmd="yarn add $(package) --no-bin-links"
 	$(MAKE) -s api-node-chown
 
 api-node-yarn-remove:
@@ -203,6 +160,9 @@ api-node-app-cli:
 rebuild-api-node-app: down-api-node \
 	api-node-yarn-build \
 	up-api-node
+
+api-redis-cli:
+	@docker-compose --env-file ./docker.env -f docker-compose-api-node.yml -p ${API_NODE_COMPOSE_PROJECT_NAME} exec $(API_REDIS) redis-cli
 
 # ============================== END API NodeJs =================================== #
 
@@ -244,7 +204,7 @@ ws-node-yarn-install:
 	$(MAKE) -s ws-node-chown
 
 ws-node-yarn-add:
-	$(MAKE) ws-node-exec cmd="yarn add $(package)"
+	$(MAKE) ws-node-exec cmd="yarn add $(package) --no-bin-links"
 	$(MAKE) -s ws-node-chown
 
 ws-node-yarn-remove:
