@@ -1,25 +1,33 @@
 include docker.env
 
-FRONTEND_INFRASTRUCTURE_COMPOSE_PROJECT_NAME=todo-skill-up-infrastructure
+INFRASTRUCTURE_COMPOSE_PROJECT_NAME=todo-skill-up-infrastructure
 FRONTEND_NUXT_COMPOSE_PROJECT_NAME=todo-skill-up-frontend-nuxt
 API_NODE_COMPOSE_PROJECT_NAME=todo-skill-up-api-node
 WS_NODE_COMPOSE_PROJECT_NAME=todo-skill-up-ws-node
 
+INFRASTRUCTURE_REDIS=infrastructure-redis
 FRONTEND_NUXT_NODE_CLI=frontend-nuxt-node-cli
 API_NODE_CLI=api-node-cli
-API_REDIS=api-redis
 WS_NODE_CLI=ws-node-cli
 
 # ============================== BEGIN INFRASTRUCTURE =================================== #
 
 infrastructure-docker-ps:
-	@docker-compose --env-file ./docker.env -f docker-compose-infrastructure.yml -p ${FRONTEND_INFRASTRUCTURE_COMPOSE_PROJECT_NAME} ps
+	@docker-compose --env-file ./docker.env -f docker-compose-infrastructure.yml -p ${INFRASTRUCTURE_COMPOSE_PROJECT_NAME} ps
 
 infrastructure-docker-logs:
-	@docker-compose --env-file ./docker.env -f docker-compose-infrastructure.yml -p ${FRONTEND_INFRASTRUCTURE_COMPOSE_PROJECT_NAME} logs -f
+	@docker-compose --env-file ./docker.env -f docker-compose-infrastructure.yml -p ${INFRASTRUCTURE_COMPOSE_PROJECT_NAME} logs -f
 
 up-infrastructure:
-	@docker-compose --env-file ./docker.env -f docker-compose-infrastructure.yml -p ${FRONTEND_INFRASTRUCTURE_COMPOSE_PROJECT_NAME} up -d --remove-orphans
+	@docker-compose --env-file ./docker.env -f docker-compose-infrastructure.yml -p ${INFRASTRUCTURE_COMPOSE_PROJECT_NAME} up -d --remove-orphans
+
+down-infrastructure:
+	@docker-compose --env-file ./docker.env -f docker-compose-infrastructure.yml -p ${INFRASTRUCTURE_COMPOSE_PROJECT_NAME} down --remove-orphans
+
+infrastructure-redis-cli:
+	@docker-compose --env-file ./docker.env -f docker-compose-api-node.yml -p ${INFRASTRUCTURE_COMPOSE_PROJECT_NAME} exec $(INFRASTRUCTURE_REDIS) redis-cli
+
+# ============================== END INFRASTRUCTURE =================================== #
 
 # ============================== BEGIN FRONTEND NUXT =================================== #
 
@@ -160,9 +168,6 @@ api-node-app-cli:
 rebuild-api-node-app: down-api-node \
 	api-node-yarn-build \
 	up-api-node
-
-api-redis-cli:
-	@docker-compose --env-file ./docker.env -f docker-compose-api-node.yml -p ${API_NODE_COMPOSE_PROJECT_NAME} exec $(API_REDIS) redis-cli
 
 # ============================== END API NodeJs =================================== #
 

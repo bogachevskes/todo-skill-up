@@ -1,5 +1,6 @@
 import "reflect-metadata";
-import * as Connection from 'typeorm';
+import * as TypeOrmConnection from 'typeorm';
+import RedisConnection from '../app/Services/RedisConnection';
 import Router from '../Framework/Http/Router/Router';
 import Kernel from '../Framework/Http/Kernel';
 import Routes from '../routes/web';
@@ -10,6 +11,7 @@ import ConfigService from '../Framework/Utils/ConfigService';
 const result = require('dotenv').config({path: `${process.env.INIT_CWD}/dist/.env`});
 
 if (Boolean(result.error) === true) {
+    
     throw result.error;
 }
 
@@ -33,7 +35,20 @@ const PORT = ConfigService.getPort();
     
     try {
 
-        await Connection.createConnection();
+        new RedisConnection(
+                ConfigService.get('REDIS_HOST'),
+                ConfigService.get('REDIS_PORT')
+            );
+
+        RedisConnection.getClient()
+            .on('error', (err): never => {
+                throw err
+            });
+
+        await RedisConnection.getClient()
+            .connect();
+
+        await TypeOrmConnection.createConnection();
 
         await kernel.handle(PORT);
 
