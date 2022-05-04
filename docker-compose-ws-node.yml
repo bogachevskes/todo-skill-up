@@ -5,28 +5,11 @@ services:
     image: ${REGISTRY}/todo-skill-up-ws-node:${IMAGE_TAG}
     ports:
       - "${WS_PORT}:3005"
-    depends_on:
-      - ${WS_MYSQL_HOST}
     volumes:
       - "./websocket/nodeJs:/app"
 
   ws-node-cli:
     image: ${REGISTRY}/todo-skill-up-api-node-cli:${IMAGE_TAG}
-#    depends_on:
-#      - ${WS_MYSQL_HOST}
     volumes:
       - "./websocket/nodeJs:/app"
     tty: true
-
-  ws-mariadb:
-    image: ${MYSQL_VERSION}
-    environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${WS_MYSQL_USER}
-      MYSQL_PASSWORD: ${WS_MYSQL_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-    volumes:
-      - ${DB_SOURCE_PATH}:/var/lib/mysql
-      - ./ws/nodeJs/docker/development/mariadb/initdb.d:/docker-entrypoint-initdb.d
-    ports:
-      - ${WS_MYSQL_PORT}:3306

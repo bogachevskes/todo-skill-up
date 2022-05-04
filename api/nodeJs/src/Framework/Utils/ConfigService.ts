@@ -1,8 +1,7 @@
-import InvalidArgumentException from '../Exceptions/InvalidArgumentException';
-import Configurable from '../Base/Configurable';
-import serviceConfig from '../../config/_common';
 
-export default class ConfigService extends Configurable
+import env from '../Helpers/env';
+
+export default class ConfigService
 {
     protected static instance: ConfigService|null = null;
 
@@ -10,28 +9,9 @@ export default class ConfigService extends Configurable
      * @param  string key
      * @return number|string
      */
-    public static get(key: string): number|string
+    public static get(key: string): any | never
     {
-        const instance = this.getInstance(),
-            value = instance[key];
-        
-        if (value === undefined) {
-            throw new InvalidArgumentException(`Key ${key} is not found in configuration`);
-        }
-
-        return value;
-    }
-    
-    /**
-     * @return ConfigService
-     */
-    protected static getInstance(): ConfigService
-    {
-        if (! (this.instance instanceof ConfigService)) {
-            this.instance = new this(serviceConfig);
-        }
-        
-        return this.instance;
+        return Number(env(key));
     }
 
     /**
@@ -42,11 +22,7 @@ export default class ConfigService extends Configurable
      */
     public static isProduction(): boolean
     {
-        if (process.env.NODE_ENV === 'production') {
-            return true;
-        }
-
-        return false;
+        return env('NODE_ENV') === 'production';
     }
 
     /**
@@ -56,18 +32,7 @@ export default class ConfigService extends Configurable
      */
     public static getPort(): number
     {
-        return Number(this.get('APP_PORT'));
-    }
-
-    /**
-     * Возвращает порт
-     * запуска веб-сокетов.
-     * 
-     * @return number
-     */
-    public static getSocketPort(): number
-    {
-        return Number(this.get('WEB_SOCKET_PORT'));
+        return Number(env('APP_PORT'));
     }
 
 }

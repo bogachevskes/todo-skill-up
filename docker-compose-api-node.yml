@@ -5,33 +5,11 @@ services:
     image: ${REGISTRY}/todo-skill-up-api-node:${IMAGE_TAG}
     ports:
       - "${API_PORT}:3005"
-    depends_on:
-      - ${API_MYSQL_HOST}
     volumes:
       - "./api/nodeJs:/app"
 
   api-node-cli:
     image: ${REGISTRY}/todo-skill-up-api-node-cli:${IMAGE_TAG}
-    depends_on:
-      - ${API_MYSQL_HOST}
     volumes:
       - "./api/nodeJs:/app"
     tty: true
-
-  api-mariadb:
-    image: ${MYSQL_VERSION}
-    environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${API_MYSQL_USER}
-      MYSQL_PASSWORD: ${API_MYSQL_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-    volumes:
-      - ${DB_SOURCE_PATH}:/var/lib/mysql
-      - ./api/nodeJs/docker/development/mariadb/initdb.d:/docker-entrypoint-initdb.d
-    ports:
-      - ${API_MYSQL_PORT}:3306
-
-  api-redis:
-    image: ${REDIS_VERSION}
-    ports:
-      - ${REDIS_PORT}:6379

@@ -6,8 +6,8 @@
   "license": "MIT",
   "scripts": {
     "console": "node ./dist/server/entry/console.js",
-    "build": "rm -rf ./dist && ./node_modules/typescript/bin/tsc -p ./tsconfig.build.json && cp -R ./src/public ./dist/",
-    "start": "./node_modules/cross-env/src/bin/cross-env.js NODE_ENV=production node ./dist/server/entry/web.js"
+    "build": "rm -rf ./dist && mkdir ./dist && cp -R ./src/public ./.env ./dist/ && ./node_modules/typescript/bin/tsc -p ./tsconfig.build.json",
+    "start": "node ./dist/server/entry/web.js"
   },
   "dependencies": {
     "@types/bluebird": "^3.5.32",
@@ -17,7 +17,7 @@
     "@types/validator": "^13.1.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
-    "cross-env": "^7.0.2",
+    "dotenv": "^16.0.0",
     "express": "^4.17.1",
     "express-async-handler": "^1.2.0",
     "express-validator": "^6.4.0",

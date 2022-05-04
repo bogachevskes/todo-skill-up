@@ -3,7 +3,6 @@ import asyncHandler from 'express-async-handler';
 import { asyncMiddleware } from 'middleware-async';
 import Route from './Route';
 import ControllerInterface from '../Controller/ControllerInterface';
-import MiddlewareInterface from '../Middleware/MiddlewareInterface';
 
 export default class Router
 {
