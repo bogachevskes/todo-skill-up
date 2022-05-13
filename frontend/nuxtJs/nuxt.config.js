@@ -1,4 +1,8 @@
 export default {
+    server: {
+        host: '0',
+        port: process.env.APP_PORT,
+    },
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {
         title: 'TODO LIST',
