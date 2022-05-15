@@ -5,7 +5,6 @@ services:
     image: ${REGISTRY}/todo-skill-up-ws-nest:${IMAGE_TAG}
     ports:
       - "${WS_PORT}:8080"
-      - "${WS_HTTP_PORT}:80"
     volumes:
       - "./websocket/nestJs:/app"
 
