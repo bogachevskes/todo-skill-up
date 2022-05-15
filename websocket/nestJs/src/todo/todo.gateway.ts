@@ -21,37 +21,36 @@ export class TodoGateway implements  OnGatewayInit, OnGatewayConnection, OnGatew
     private logger: Logger = new Logger('AppGateway');
     
     /**
-     * @param { Server } server
+     * @param  { Server } server
      * @return void
      */
-    afterInit(server: Server): void
+    afterInit(_server: Server): void
     {
         this.logger.log(`Initialized on port: ${process.env.APP_PORT}`);
     }
 
     /**
-     * 
-     * @param { Socket } client
+     * @param  { Socket } client
+     * @return void
      */
-    handleDisconnect(client: Socket)
+    handleDisconnect(client: Socket): void
     {
         this.logger.log(`Client disconnected: ${client.id}`);
     }
 
     /**
-     * 
-     * @param { Socket } client 
-     * @param args 
+     * @param  { Socket } client 
+     * @return void
      */
-    handleConnection(client: Socket, ..._args: any[])
+    handleConnection(client: Socket): void
     {
         setInterval(() => client.emit('todo/check', 'connection ready'), 10000);
     }
     
     /**
-     * @param { Socket } client 
-     * @param { object } payload 
-     * @returns string
+     * @param  { Socket } client 
+     * @param  { object } payload 
+     * @returns void
      */
     @SubscribeMessage('todo/message')
     handleMessage(_client: Socket, payload: object): void
