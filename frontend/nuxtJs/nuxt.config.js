@@ -1,4 +1,7 @@
 export default {
+    env: {
+        WS_APP_URL: process.env.WS_APP_URL,
+    },
     server: {
         host: '0',
         port: process.env.APP_PORT,
@@ -25,7 +28,7 @@ export default {
     css: [],
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-    plugins: ['~/plugins/eventBus', '~/plugins/userStorage'],
+    plugins: ['~/plugins/eventBus', '~/plugins/userStorage', '~/plugins/socketClient'],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
@@ -48,7 +51,7 @@ export default {
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {
         // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-        baseURL: process.env.API_APP_HOST,
+        baseURL: process.env.API_APP_URL,
     },
 
     // Build Configuration: https://go.nuxtjs.dev/config-build

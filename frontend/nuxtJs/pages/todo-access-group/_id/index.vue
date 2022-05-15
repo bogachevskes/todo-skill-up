@@ -100,6 +100,7 @@ export default {
     layout: 'desk',
     data () {
         return {
+            socket: null,
             group: [],
             groups: [],
             statuses: [],
@@ -116,6 +117,7 @@ export default {
         this.loadGroupData();
         this.loadTodoGroups();
         this.loadUsers();
+        this.initWsConnection();
     },
     methods: {
         getDate (date) {
@@ -141,6 +143,15 @@ export default {
                 .then((result) => {
                     this.users = result.items;
                 });
+        },
+        initWsConnection () {
+            this.socket = this.$socketClient.create({
+                transports: ['websocket'],
+            });
+
+            setInterval(() => this.socket.emit('todo/message', {message: 'text'}), 1000);
+
+            this.socket.on('todo/check', (msg) => console.log(msg));
         },
         createStatuses () {
             const pairs = [];
