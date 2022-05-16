@@ -2,7 +2,9 @@ import { SubscribeMessage, WebSocketGateway, OnGatewayInit, OnGatewayConnection,
 import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
 
-@WebSocketGateway(Number(process.env.APP_PORT), {
+@WebSocketGateway({
+    path: '/todo',
+    namespace: '/todo',
     transports: ['websocket'],
     cors: {
         origin: process.env.ORIGIN_URL,
@@ -24,7 +26,7 @@ export class TodoGateway implements  OnGatewayInit, OnGatewayConnection, OnGatew
      * @param  { Server } server
      * @return void
      */
-    afterInit(_server: Server): void
+    afterInit(server: Server): void
     {
         this.logger.log(`Initialized on port: ${process.env.APP_PORT}`);
     }
@@ -44,7 +46,7 @@ export class TodoGateway implements  OnGatewayInit, OnGatewayConnection, OnGatew
      */
     handleConnection(client: Socket): void
     {
-        setInterval(() => client.emit('todo/check', 'connection ready'), 10000);
+        setInterval(() => client.emit('check', 'connection ready'), 10000);
     }
     
     /**
@@ -52,9 +54,9 @@ export class TodoGateway implements  OnGatewayInit, OnGatewayConnection, OnGatew
      * @param  { object } payload 
      * @returns void
      */
-    @SubscribeMessage('todo/message')
+    @SubscribeMessage('message')
     handleMessage(_client: Socket, payload: object): void
     {
-        this.server.emit('todo/check', `got message: ${JSON.stringify(payload)}`)
+        this.server.emit('check', `got message: ${JSON.stringify(payload)}`)
     }
 }

@@ -147,11 +147,12 @@ export default {
         initWsConnection () {
             this.socket = this.$socketClient.create({
                 transports: ['websocket'],
-            });
+                path: '/todo',
+            }, '/todo');
 
-            setInterval(() => this.socket.emit('todo/message', {message: 'text'}), 1000);
+            setInterval(() => this.socket.emit('message', {message: 'text'}), 1000);
 
-            this.socket.on('todo/check', (msg) => console.log(msg));
+            this.socket.on('check', (msg) => console.log(msg));
         },
         createStatuses () {
             const pairs = [];
