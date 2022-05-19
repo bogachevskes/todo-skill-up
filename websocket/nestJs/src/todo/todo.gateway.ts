@@ -1,6 +1,7 @@
 import { SubscribeMessage, WebSocketGateway, OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect, WebSocketServer } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
+import AuthMiddleware from '../common/middleware/gateway/auth.middleware';
 
 @WebSocketGateway({
     path: '/todo',
@@ -10,7 +11,7 @@ import { Socket, Server } from 'socket.io';
         origin: process.env.ORIGIN_URL,
     },
 })
-export class TodoGateway implements  OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
+export class TodoGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
     /**
      * @var { Server }
@@ -28,6 +29,8 @@ export class TodoGateway implements  OnGatewayInit, OnGatewayConnection, OnGatew
      */
     afterInit(server: Server): void
     {
+        this.server.use((new AuthMiddleware).handle);
+
         this.logger.log(`Initialized on port: ${process.env.APP_PORT}`);
     }
 
@@ -57,6 +60,6 @@ export class TodoGateway implements  OnGatewayInit, OnGatewayConnection, OnGatew
     @SubscribeMessage('message')
     handleMessage(_client: Socket, payload: object): void
     {
-        this.server.emit('check', `got message: ${JSON.stringify(payload)}`)
+        this.server.emit('check', `got message: ${JSON.stringify(payload)}`);
     }
 }
