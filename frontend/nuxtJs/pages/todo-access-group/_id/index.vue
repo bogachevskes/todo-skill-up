@@ -74,6 +74,7 @@
 </template>
 
 <script>
+
 import Group from '@/components/todo-access-group/Group';
 import ManageCard from '@/components/todo-access-group/ManageCard';
 import ManageUsers from '@/components/todo-access-group/ManageUsers';
@@ -90,21 +91,33 @@ export default {
         ManageUsers,
         AccessGroupsActionsModal,
     },
+    beforeRouteLeave (_to, _from, next) {
+        
+        this.clearIntervals();
+        
+        if (this.socket !== null) {
+
+            this.$socketClient.detachConnection('todo_access_group');
+        }
+
+        next();
+    },
     beforeRouteUpdate (_to, _from, next) {
         this.loadGroupData();
         this.loadTodoGroups();
         this.loadUsers();
+        this.clearIntervals();
 
         next();
     },
     layout: 'desk',
     data () {
         return {
-            socket: null,
             group: [],
             groups: [],
             statuses: [],
             users: [],
+            intervals: [],
             modals: {
                 updateTodoAccessGroup: {
                     isActive: false,
@@ -145,14 +158,38 @@ export default {
                 });
         },
         initWsConnection () {
-            this.socket = this.$socketClient.create({
-                transports: ['websocket'],
-                path: '/todo',
-            }, '/todo');
 
-            setInterval(() => this.socket.emit('message', {message: 'text'}), 1000);
+            if (Boolean(process.client) === false) {
+                
+                return;
+            }
 
-            this.socket.on('check', (msg) => console.log(msg));
+            if (this.$socketClient.hasConnection('todo_access_group') === false) {
+
+                const socket = this.$socketClient
+                    .create({
+                        transports: ['websocket'],
+                        path: '/todo',
+                    }, '/todo');
+
+                this.$socketClient.addConnection('todo_access_group', socket);
+            }
+
+            this.socket = this.$socketClient.getConnection('todo_access_group');
+
+            this.intervals.push(setInterval(() => console.log(this.socket), 1000));
+
+            if (this.socket.hasListeners('check') === false) {
+
+                this.socket.on('check', (msg) => console.log(msg));
+            }
+        },
+        clearIntervals: function () {
+
+            this.intervals.forEach((interval) => {
+                
+                clearInterval(interval);
+            });
         },
         createStatuses () {
             const pairs = [];
