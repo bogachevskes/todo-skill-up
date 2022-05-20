@@ -113,6 +113,7 @@ export default {
     layout: 'desk',
     data () {
         return {
+            socket: null,
             group: [],
             groups: [],
             statuses: [],
