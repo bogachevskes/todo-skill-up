@@ -10,6 +10,15 @@ FRONTEND_NUXT_NODE_CLI=frontend-nuxt-node-cli
 API_NODE_CLI=api-node-cli
 WS_NEST_CLI=ws-nest-cli
 
+# ============================== BEGIN COMMON COMMANDS ================================== #
+
+up-nuxt-node: up-infrastructure \
+	up-frontend-nuxt \
+	up-api-node \
+	up-ws-nest
+
+# ============================== END COMMON COMMANDS ==================================== #
+
 # ============================== BEGIN INFRASTRUCTURE =================================== #
 
 infrastructure-docker-ps:

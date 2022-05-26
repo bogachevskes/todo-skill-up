@@ -171,6 +171,9 @@ export default {
                     .create({
                         transports: ['websocket'],
                         path: '/todo',
+                        query: {
+                            token: this.$store.getters['todo/getToken'],
+                        },
                     }, '/todo');
 
                 this.$socketClient.addConnection('todo_access_group', socket);
@@ -178,11 +181,14 @@ export default {
 
             this.socket = this.$socketClient.getConnection('todo_access_group');
 
-            this.intervals.push(setInterval(() => console.log(this.socket), 1000));
+            if (this.socket.hasListeners('connection_ready') === false) {
 
-            if (this.socket.hasListeners('check') === false) {
+                this.socket.on('connection_ready', () => console.log('connection established'));
+            }
 
-                this.socket.on('check', (msg) => console.log(msg));
+            if (this.socket.hasListeners('connection_upgrade') === false) {
+
+                this.socket.on('connection_upgrade', (msg) => console.log('on connection upgrade'));
             }
         },
         clearIntervals: function () {
