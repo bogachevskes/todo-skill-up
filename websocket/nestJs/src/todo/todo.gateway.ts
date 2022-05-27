@@ -1,7 +1,9 @@
 import { SubscribeMessage, WebSocketGateway, OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect, WebSocketServer } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
-import AuthMiddleware from '../common/middleware/gateway/auth.middleware';
+import { InjectRedis } from '@liaoliaots/nestjs-redis';
+import Redis from 'ioredis';
+import AuthMiddleware from './middleware/auth.middleware';
 
 @WebSocketGateway({
     path: '/todo',
@@ -22,6 +24,10 @@ export class TodoGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
      * @var { Logger }
      */
     private logger: Logger = new Logger('AppGateway');
+
+    constructor(
+        @InjectRedis() private readonly redis: Redis
+    ) {}
     
     /**
      * @param  { Server } server
@@ -32,6 +38,21 @@ export class TodoGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         this.server.use((new AuthMiddleware).handle);
 
         this.logger.log(`Initialized on port: ${process.env.APP_PORT}`);
+
+        this.redis.subscribe('change-todo-state');
+
+        this.redis.on('message', (channel, message) => {
+            
+            if (channel === 'change-todo-state') {
+                const model = JSON.parse(message);
+
+                if (typeof model === 'object') {
+                    this.server.emit('todo-state-changed', model);
+                    console.log('todo-state-changed triggered to client');
+                }
+            }
+        });
+        
     }
 
     /**

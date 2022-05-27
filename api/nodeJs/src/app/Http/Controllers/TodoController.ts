@@ -13,7 +13,6 @@ import TodoItemRepository from '../../Repository/TodoItemRepository';
 import TodoStatusRepository from '../../Repository/TodoStatusRepository';
 import TodoItemCreate from '../../Console/Commands/TodoItemCreate';
 import TodoItemUpdate from '../../Console/Commands/TodoItemUpdate';
-import RedisConnection from '../../Services/RedisConnection';
 
 export default class TodoController extends CrudController
 {
@@ -146,9 +145,6 @@ export default class TodoController extends CrudController
             todoItem,
             todoStatus,
         );
-
-        RedisConnection.getClient()
-            .publish('change-todo-state', JSON.stringify(todoItem));
         
         return res.json({
             item: result,

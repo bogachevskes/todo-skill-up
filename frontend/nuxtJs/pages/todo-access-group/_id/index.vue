@@ -190,6 +190,11 @@ export default {
 
                 this.socket.on('connection_upgrade', (msg) => console.log('on connection upgrade'));
             }
+
+            if (this.socket.hasListeners('todo-state-changed') === false) {
+
+                this.socket.on('todo-state-changed', (msg) => console.log(msg));
+            }
         },
         clearIntervals: function () {
 

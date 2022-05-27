@@ -1,6 +1,6 @@
 import { Socket } from 'socket.io';
 import { NextFunction } from 'express';
-import User from '../../../users/user.entity';
+import User from '../../users/user.entity';
 
 export default class AuthMiddleware
 {
