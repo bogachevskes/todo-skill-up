@@ -1,15 +1,18 @@
 import { Socket } from 'socket.io';
 import { NextFunction } from 'express';
 import User from '../../users/user.entity';
+import UsersService from '../services/users.service';
 
 export default class AuthMiddleware
 {
+    constructor(private readonly usersService: UsersService) { }
+    
     /**
      * @param  { Socket } socket 
      * @param  { NextFunction } next 
      * @return { Promise<void> }
      */
-    public handle(socket: Socket , next: NextFunction): void
+    public async handle(socket: Socket , next: NextFunction): Promise<void>
     {
         try {
             if (socket.handshake.query['token'] === undefined) {
@@ -24,33 +27,21 @@ export default class AuthMiddleware
                 throw new Error('Аутентификация не выполнена');
             }
 
-            // Добавить репозиторий и хранить в редис
-            User.findOne({
-                select: ['id', 'name', 'status'],
-                where: {
-                    id: decodedToken.userId,
-                },
-            })
-            .then((user) => {
+            const user = await this.usersService.findEntity(decodedToken.userId);
 
-                if ((user instanceof User) === false) {
-                    throw new Error('Пользователь не найден');
-                }
+            if ((user instanceof User) === false) {
+                throw new Error('Пользователь не найден');
+            }
 
-                if (Boolean(user.status) === false) {
-                    throw new Error('Пользователь заблокирован');
-                }
+            if (Boolean(user.status) === false) {
+                throw new Error('Пользователь заблокирован');
+            }
 
-                socket.data.user = user;
+            socket.data.user = user;
 
-                socket.emit('connection_ready');
+            socket.emit('connection_ready');
 
-                next();
-            })
-            .catch((err) => {
-                // handle error
-                console.log(err);
-            });
+            next();
 
         } catch (err) {
             // handle error
