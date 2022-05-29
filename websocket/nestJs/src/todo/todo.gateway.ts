@@ -73,8 +73,6 @@ export class TodoGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     handleConnection(client: Socket): void
     {
         this.logger.log(`Client connected: ${client.id}`);
-        
-        setInterval(() => client.emit('connection_upgrade'), 3000);
     }
     
     /**

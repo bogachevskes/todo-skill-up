@@ -75,6 +75,8 @@
 
 <script>
 
+import events from '@/constants/events';
+
 import Group from '@/components/todo-access-group/Group';
 import ManageCard from '@/components/todo-access-group/ManageCard';
 import ManageUsers from '@/components/todo-access-group/ManageUsers';
@@ -183,18 +185,24 @@ export default {
 
             if (this.socket.hasListeners('connection_ready') === false) {
 
-                this.socket.on('connection_ready', () => console.log('connection established'));
+                this.socket.on('connection_ready', () => {
+                    this.$eventBus.$emit(events.ON_NEW_NOTIFICATION, 'Установлено соединение для общего доступа');
+                });
             }
 
-            if (this.socket.hasListeners('connection_upgrade') === false) {
+            if (this.socket.hasListeners('error') === false) {
 
-                this.socket.on('connection_upgrade', (msg) => console.log('on connection upgrade'));
+                this.socket.io.on('error', () => {
+                    this.$eventBus.$emit(events.ON_NEW_NOTIFICATION, 'Ошибка соединения общего доступа', 'danger');
+                });
+
             }
 
             if (this.socket.hasListeners('todo-state-changed') === false) {
 
                 this.socket.on('todo-state-changed', (msg) => console.log(msg));
-            }
+            };
+
         },
         clearIntervals: function () {
 
