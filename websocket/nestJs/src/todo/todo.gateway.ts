@@ -5,6 +5,7 @@ import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import Redis from 'ioredis';
 import AuthMiddleware from './middleware/auth.middleware';
 import UsersService from './services/users.service';
+import ErrorHandler from './exceptions/error.handler';
 
 @WebSocketGateway({
     path: '/todo',
@@ -28,7 +29,8 @@ export class TodoGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     constructor(
         @InjectRedis() private readonly redis: Redis,
-        private readonly usersService: UsersService
+        private readonly usersService: UsersService,
+        private readonly errorHandler: ErrorHandler
     ) {}
     
     /**
@@ -37,7 +39,7 @@ export class TodoGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
      */
     async afterInit(server: Server): Promise<void>
     {
-        this.server.use(await (new AuthMiddleware(this.usersService)).handle.bind(this));
+        this.server.use(await (new AuthMiddleware(this.usersService, this.errorHandler)).handle.bind(this));
 
         this.logger.log(`Initialized on port: ${process.env.APP_PORT}`);
 

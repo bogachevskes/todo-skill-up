@@ -1,11 +1,18 @@
 import { Socket } from 'socket.io';
 import { NextFunction } from 'express';
-import User from '../../users/user.entity';
+import User from '../entities/user.entity';
 import UsersService from '../services/users.service';
+import InvalidAuthenticationException from '../exceptions/invalid_auth.exception';
+import NotFoundException from '../exceptions/not_found.exception';
+import ForbiddenException from '../exceptions/forbidden.exception';
+import ErrorHandler from '../exceptions/error.handler';
 
 export default class AuthMiddleware
 {
-    constructor(private readonly usersService: UsersService) { }
+    constructor(
+        private readonly usersService: UsersService,
+        private readonly errorHandler: ErrorHandler
+    ) { }
     
     /**
      * @param  { Socket } socket 
@@ -15,26 +22,25 @@ export default class AuthMiddleware
     public async handle(socket: Socket , next: NextFunction): Promise<void>
     {
         try {
-            if (socket.handshake.query['token'] === undefined) {
-                throw new Error('Ошибка авторизации');
-            }
 
             const jwt = require('jsonwebtoken');
 
-            const decodedToken = jwt.verify(socket.handshake.query['token'], process.env.TOKEN_SECRET_WORD);
+            const token = socket.handshake.query['token'];
+
+            const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET_WORD);
 
             if (decodedToken.userId === undefined) {
-                throw new Error('Аутентификация не выполнена');
+                throw new InvalidAuthenticationException(`Ошибка чтения токена аутентификации ${token}`);
             }
 
             const user = await this.usersService.findEntity(decodedToken.userId);
 
             if ((user instanceof User) === false) {
-                throw new Error('Пользователь не найден');
+                throw new NotFoundException(`Пользователь #${decodedToken.userId} не найден`);
             }
 
             if (Boolean(user.status) === false) {
-                throw new Error('Пользователь заблокирован');
+                throw new ForbiddenException(`Пользователь #${decodedToken.userId} заблокирован`);
             }
 
             socket.data.user = user;
@@ -44,8 +50,7 @@ export default class AuthMiddleware
             next();
 
         } catch (err) {
-            // handle error
-            console.log(err);
+            this.errorHandler.handle(err, socket);
         }
     }
 }

@@ -13,6 +13,7 @@ services:
       - ./docker/development/mariadb/initdb.d:/docker-entrypoint-initdb.d
     ports:
       - ${MYSQL_PORT}:3306
+    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_general_ci']
 
   infrastructure-redis:
     image: ${REDIS_VERSION}

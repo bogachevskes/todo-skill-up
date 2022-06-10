@@ -3,7 +3,7 @@ import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import Redis from 'ioredis';
-import User from '../../users/user.entity';
+import User from '../entities/user.entity';
 
 @Injectable()
 export default class UsersService
@@ -14,7 +14,6 @@ export default class UsersService
     ){ }
     
     /**
-     * 
      * @param id 
      * @returns 
      */
