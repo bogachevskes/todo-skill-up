@@ -55,9 +55,18 @@ export class TodoGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
                     console.log('todo-state-changed triggered to client');
                 }
             }
-            
+
         });
         
+    }
+
+    /**
+     * @param  { string } key 
+     * @return { string }
+     */
+    private buildAccessGroupRoomKey(key: string): string
+    {
+        return `access-group-room-${key}`;
     }
 
     /**
@@ -87,5 +96,35 @@ export class TodoGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     handleMessage(_client: Socket, payload: object): void
     {
         this.server.emit('check', `got message: ${JSON.stringify(payload)}`);
+    }
+
+    @SubscribeMessage('join_access_group')
+    handleAccessGroupJoin(client: Socket, payload: object): void
+    {
+        if (payload['group'] === undefined) {
+            
+            return;
+        }
+
+        const roomName = this.buildAccessGroupRoomKey(payload['group']);
+
+        client.join(roomName);
+
+        console.log(`Client connected to room id: ${roomName}`);
+    }
+
+    @SubscribeMessage('leave_access_group')
+    handleAccessGroupLeave(client: Socket, payload: object): void
+    {
+        if (payload['group'] === undefined) {
+            
+            return;
+        }
+
+        const roomName = this.buildAccessGroupRoomKey(payload['group']);
+
+        client.leave(roomName);
+
+        console.log(`Client left room id: ${roomName}`);
     }
 }

@@ -110,11 +110,16 @@ export default {
         this.loadUsers();
         this.clearIntervals();
 
+        if (this.currentGroupId !== null) {
+            this.socket.emit('leave_access_group', {group: this.currentGroupId});
+        }
+
         next();
     },
     layout: 'desk',
     data () {
         return {
+            currentGroupId: null,
             socket: null,
             group: [],
             groups: [],
@@ -213,6 +218,10 @@ export default {
 
                 this.socket.on('todo-state-changed', (msg) => console.log(msg));
             };
+
+            this.currentGroupId = this.$route.params.id;
+
+            this.socket.emit('join_access_group', {group: this.currentGroupId});
 
         },
         clearIntervals: function () {

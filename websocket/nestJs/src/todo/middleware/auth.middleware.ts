@@ -52,6 +52,7 @@ export default class AuthMiddleware
         } catch (err) {
 
             this.errorHandler.handle(err, socket);
+            
             next();
             
         }
