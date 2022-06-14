@@ -198,6 +198,17 @@ export default {
 
             }
 
+            if (this.socket.hasListeners('ws_error') === false) {
+               
+                this.socket.on('ws_error', (msg) => {
+                    if (msg.type === 'NotFoundException' || msg.type === 'ForbiddenException') {
+                        this.$eventBus.$emit(events.ON_NEW_NOTIFICATION, 'Ошибка аутентификации', 'danger');
+                        this.socket.close();
+                    }
+                });
+
+            };
+
             if (this.socket.hasListeners('todo-state-changed') === false) {
 
                 this.socket.on('todo-state-changed', (msg) => console.log(msg));

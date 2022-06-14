@@ -28,6 +28,6 @@ export default class ErrorHandler
             message = 'Ошибка сервера';
         }
 
-        socket.emit('ws_error', message);
+        socket.emit('ws_error', {type: err.constructor.name, message});
     }
 }

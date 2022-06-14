@@ -55,6 +55,7 @@ export class TodoGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
                     console.log('todo-state-changed triggered to client');
                 }
             }
+            
         });
         
     }
