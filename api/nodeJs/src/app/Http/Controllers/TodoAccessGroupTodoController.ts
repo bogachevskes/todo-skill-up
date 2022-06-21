@@ -72,8 +72,13 @@ export default class TodoAccessGroupTodoController extends CrudController
 
             throw new Error(error.message);
         }
+
+        const todoItem = context.get('item');
+
+        RedisConnection.getClient()
+            .publish('todo-created', JSON.stringify(todoItem));
         
-        return context.get('item');
+        return todoItem;
     }
 
     /**
@@ -106,8 +111,13 @@ export default class TodoAccessGroupTodoController extends CrudController
 
             throw new Error(error.message);
         }
+
+        const todoItem = context.get('item');
+
+        RedisConnection.getClient()
+            .publish('todo-state-changed', JSON.stringify(todoItem));
         
-        return context.get('item');
+        return todoItem;
     }
 
     /**
@@ -118,8 +128,13 @@ export default class TodoAccessGroupTodoController extends CrudController
         this.defineUserRepo(req);
         
         const todoItem = await this.findTodoModel(Number(req.params.todoId));
+
+        const result = await TodoItemRepository.deleteById(todoItem.id);
+
+        RedisConnection.getClient()
+            .publish('todo-deleted', String(id));
         
-        return await TodoItemRepository.deleteById(todoItem.id);
+        return result;
     }
     
     /**
@@ -148,7 +163,7 @@ export default class TodoAccessGroupTodoController extends CrudController
         );
 
         RedisConnection.getClient()
-            .publish('change-todo-state', JSON.stringify(todoItem));
+            .publish('todo-state-changed', JSON.stringify(todoItem));
         
         return res.json({
             item: result,

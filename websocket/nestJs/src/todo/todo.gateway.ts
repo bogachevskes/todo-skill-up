@@ -6,6 +6,7 @@ import Redis from 'ioredis';
 import AuthMiddleware from './middleware/auth.middleware';
 import UsersService from './services/users.service';
 import ErrorHandler from './exceptions/error.handler';
+import ChannelMessageHandler from './use_cases/channel_message.handler';
 
 @WebSocketGateway({
     path: '/todo',
@@ -43,19 +44,16 @@ export class TodoGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
         this.logger.log(`Initialized on port: ${process.env.APP_PORT}`);
 
-        this.redis.subscribe('change-todo-state');
+        this.redis.subscribe(
+            'todo-created',
+            'todo-state-changed',
+            'todo-deleted'
+        );
+
+        const messageHandler = new ChannelMessageHandler(server);
 
         this.redis.on('message', (channel, message) => {
-            
-            if (channel === 'change-todo-state') {
-                const model = JSON.parse(message);
-
-                if (typeof model === 'object') {
-                    this.server.emit('todo-state-changed', model);
-                    console.log('todo-state-changed triggered to client');
-                }
-            }
-
+            messageHandler.handle(channel, message);
         });
         
     }
