@@ -178,7 +178,7 @@ export default class TodoAccessGroupTodoController extends CrudController
      */
     protected async findTodoModel(id: number): Promise<TodoItem | never>
     {
-        const model = await this.userRepo.findTodoById(id);
+        const model = await TodoItem.findOne(id);
 
         if (model instanceof TodoItem) {
             return model;

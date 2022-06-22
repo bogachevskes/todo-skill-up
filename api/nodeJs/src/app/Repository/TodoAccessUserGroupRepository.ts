@@ -1,7 +1,5 @@
 import { SelectQueryBuilder } from 'typeorm';
-import TodoAccessGroup from '../Entity/TodoAccessGroup';
 import TodoAccessUserGroup from '../Entity/TodoAccessUserGroup';
-import TodoAccessGroupCreateRequest from '../FormRequest/TodoAccessGroup/TodoAccessGroupCreateRequest';
 
 export default class TodoAccessUserGroupRepository
 {

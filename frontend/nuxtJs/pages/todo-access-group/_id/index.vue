@@ -214,10 +214,29 @@ export default {
 
             };
 
+            if (this.socket.hasListeners('todo-created') === false) {
+
+                this.socket.on('todo-created', (msg) => {
+                    
+                    console.log(this.groups);
+                    
+                    console.log('todo-created', msg);
+                });
+            }
+
             if (this.socket.hasListeners('todo-state-changed') === false) {
 
-                this.socket.on('todo-state-changed', (msg) => console.log(msg));
-            };
+                this.socket.on('todo-state-changed', (msg) => {
+                    console.log('todo-state-changed', msg);
+                });
+            }
+
+            if (this.socket.hasListeners('todo-deleted') === false) {
+
+                this.socket.on('todo-deleted', (msg) => {
+                    console.log('todo-deleted', msg);
+                });
+            }
 
             this.currentGroupId = this.$route.params.id;
 

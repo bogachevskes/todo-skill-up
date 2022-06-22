@@ -1,5 +1,6 @@
 import { SelectQueryBuilder } from 'typeorm';
 import TodoAccessGroup from '../Entity/TodoAccessGroup';
+import TodoAccessUserGroup from '../Entity/TodoAccessUserGroup';
 import TodoAccessGroupCreateRequest from '../FormRequest/TodoAccessGroup/TodoAccessGroupCreateRequest';
 
 export default class TodoAccessGroupRepository
@@ -51,7 +52,7 @@ export default class TodoAccessGroupRepository
     {
         const query = this.getQueryBuilder()
             .select(['tag.id', 'tag.name', 'tag.createdAt'])
-            .leftJoin('tag.users', 'taug', )
+            .leftJoin(TodoAccessUserGroup, 'taug', 'tag.id = taug.todoAccessGroupId')
             .where('taug.userId = :userId', { userId })
             .orWhere('tag.userId = :userId', { userId });
 
@@ -143,25 +144,25 @@ export default class TodoAccessGroupRepository
      */
      public static async isUserExistsInGroup(groupId: number, userId: number): Promise<boolean>
      {
-         const query = this.getQueryBuilder()
-             .select('COUNT(tag.id) as exist')
-             .leftJoin('tag.users', 'taug')
-             .where(`
-                 (
+        const query = this.getQueryBuilder()
+            .select('COUNT(tag.id) as exist')
+            .leftJoin(TodoAccessUserGroup, 'taug', 'tag.id = taug.todoAccessGroupId')
+            .where(`
+                (
                     taug.userId = :userId
                     AND
                     taug.todoAccessGroupId = :groupId
-                 )
-                 OR
-                 (
+                )
+                OR
+                (
                     tag.id = :groupId
                     AND
                     tag.userId = :userId
-                 )
-             `, {userId, groupId});
- 
-         const result = await query.getRawOne();
- 
-         return Boolean(Number(result['exist']));
+                )
+            `, {userId, groupId});
+
+        const result = await query.getRawOne();
+
+        return Boolean(Number(result['exist']));
      }
 }

@@ -10,9 +10,6 @@ export default class TodoAccessGroup extends BaseEntity
 {
     @ManyToOne(_type => User, { onDelete: 'CASCADE' })
     public user: User;
-
-    @OneToMany(() => TodoAccessUserGroup, todoAccessUserGroup => todoAccessUserGroup.user)
-    public users:  User[];
     
     @PrimaryGeneratedColumn({ unsigned: true })
     public id: number;

@@ -300,7 +300,7 @@ export default class UserRepository
      */
     public async getTodoByStatusGroupsByAccessGroup(accessGroupId: number): Promise<TodoStatusGroup[]>
     {
-        return await TodoItemRepository.getTodoGroupedByStatuses(this.user.id, accessGroupId);
+        return await TodoItemRepository.getTodoGroupedByStatusesOfAccessGroup(this.user.id, accessGroupId);
     }
 
     /**
