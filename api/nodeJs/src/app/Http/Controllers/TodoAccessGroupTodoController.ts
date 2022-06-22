@@ -132,7 +132,7 @@ export default class TodoAccessGroupTodoController extends CrudController
         const result = await TodoItemRepository.deleteById(todoItem.id);
 
         RedisConnection.getClient()
-            .publish('todo-deleted', String(id));
+            .publish('todo-deleted', JSON.stringify(todoItem));
         
         return result;
     }

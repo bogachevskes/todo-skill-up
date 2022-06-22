@@ -294,7 +294,6 @@ export default class UserRepository
     }
 
     /**
-     * 
      * @param accessGroupId number
      * @returns Promise<TodoStatusGroup[]>
      */

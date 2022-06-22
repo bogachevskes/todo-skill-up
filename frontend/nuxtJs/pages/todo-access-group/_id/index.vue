@@ -217,9 +217,6 @@ export default {
             if (this.socket.hasListeners('todo-created') === false) {
 
                 this.socket.on('todo-created', (msg) => {
-                    
-                    console.log(this.groups);
-                    
                     console.log('todo-created', msg);
                 });
             }
@@ -233,8 +230,27 @@ export default {
 
             if (this.socket.hasListeners('todo-deleted') === false) {
 
-                this.socket.on('todo-deleted', (msg) => {
-                    console.log('todo-deleted', msg);
+                this.socket.on('todo-deleted', (model) => {
+                    for (const group of this.groups) {
+
+                        for (const todo of group.todo) {
+
+                            console.log(Number(todo.id), Number(model.id));
+                            
+                            if (Number(todo.id) !== Number(model.id)) {
+                                continue;
+                            }
+
+                            const index = group.todo.indexOf(todo);
+
+                            group.todo.splice(index, 1);
+
+                            console.log('deleted', todo);
+
+                            break;
+                        }
+
+                    }
                 });
             }
 

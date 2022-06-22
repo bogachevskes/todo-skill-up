@@ -1,6 +1,7 @@
 import TodoStatus from '../Entity/TodoStatus';
 import TodoItem from '../Entity/TodoItem';
 import TodoStatusGroup from '../Entity/TodoStatusGroup';
+import TodoAccessGroup from '../Entity/TodoAccessGroup';
 import TodoAccessUserGroup from '../Entity/TodoAccessUserGroup';
 
 export default class TodoStatusGroupRepository
@@ -30,7 +31,8 @@ export default class TodoStatusGroupRepository
      */
      public static async createGroupOfAccessGroup(status: TodoStatus, userId: number, accessGroupId: number): Promise<TodoStatusGroup>
      {
-        const todo: TodoItem[] = await TodoItem.createQueryBuilder('ti')
+        const query = TodoItem.createQueryBuilder('ti')
+            .leftJoin(TodoAccessGroup, 'tag','ti.todo_access_group_id = tag.id')
             .leftJoin(TodoAccessUserGroup, 'taug', 'ti.todo_access_group_id = taug.todo_access_group_id')
             .where(`
                 ti.statusId = :statusId
@@ -41,6 +43,8 @@ export default class TodoStatusGroupRepository
                     ti.userId = :userId
                     OR
                     taug.userId = :userId
+                    OR
+                    tag.user_id = :userId
                 )`,
                 {
                     statusId: status.id,
@@ -48,9 +52,10 @@ export default class TodoStatusGroupRepository
                     userId,
                 }
             )
-            .groupBy('ti.id')
-            .getMany();
+            .groupBy('ti.id');
+
+        const todo: TodoItem[] = await query.getMany();
          
-         return new TodoStatusGroup(status, todo);
+        return new TodoStatusGroup(status, todo);
      }
 }

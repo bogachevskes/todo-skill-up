@@ -40,7 +40,7 @@ export default class ChannelMessageHandler
             const roomName = this.buildAccessGroupRoomKey(model.todoAccessGroupId);
 
             this.server.to(roomName).emit('todo-created', model);
-            console.log('todo-created triggered to client');
+            console.log('todo-created triggered to client room #' + roomName);
         }
         
         this.handlers['todo-state-changed'] = (message: string) => {
@@ -62,10 +62,20 @@ export default class ChannelMessageHandler
 
         this.handlers['todo-deleted'] = (message: string) => {
 
-            const roomName = this.buildAccessGroupRoomKey(message);
+            const model = JSON.parse(message);
 
-            this.server.to(roomName).emit('todo-deleted', message);
-            console.log('todo-deleted triggered to client');
+            if ((typeof model === 'object') === false) {
+                return;
+            }
+
+            if (model.todoAccessGroupId === undefined) {
+                return;
+            }
+
+            const roomName = this.buildAccessGroupRoomKey(model.todoAccessGroupId);
+
+            this.server.to(roomName).emit('todo-deleted', model);
+            console.log('todo-deleted triggered to client room #' + roomName);
         }
     }
 
