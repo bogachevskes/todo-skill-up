@@ -165,65 +165,21 @@ export default {
                     this.users = result.items;
                 });
         },
-        initWsConnection () {
-
-            if (Boolean(process.client) === false) {
-                
-                return;
-            }
-
-            if (this.$socketClient.hasConnection('todo_access_group') === false) {
-
-                const socket = this.$socketClient
-                    .create({
-                        transports: ['websocket'],
-                        path: '/todo',
-                        query: {
-                            token: this.$store.getters['todo/getToken'],
-                        },
-                    }, '/todo');
-
-                this.$socketClient.addConnection('todo_access_group', socket);
-            }
-
-            this.socket = this.$socketClient.getConnection('todo_access_group');
-
-            if (this.socket.hasListeners('connection_ready') === false) {
-
-                this.socket.on('connection_ready', () => {
+        initWsListeners () {
+            const listeners = {
+                connection_ready: () => {
                     this.$eventBus.$emit(events.ON_NEW_NOTIFICATION, 'Установлено соединение для общего доступа');
-                });
-            }
-
-            if (this.socket.hasListeners('error') === false) {
-
-                this.socket.io.on('error', () => {
-                    this.$eventBus.$emit(events.ON_NEW_NOTIFICATION, 'Ошибка соединения общего доступа', 'danger');
-                });
-
-            }
-
-            if (this.socket.hasListeners('ws_error') === false) {
-               
-                this.socket.on('ws_error', (msg) => {
+                },
+                ws_error: (msg) => {
                     if (msg.type === 'NotFoundException' || msg.type === 'ForbiddenException') {
                         this.$eventBus.$emit(events.ON_NEW_NOTIFICATION, 'Ошибка аутентификации', 'danger');
                         this.socket.close();
                     }
-                });
-
-            };
-
-            if (this.socket.hasListeners('todo-created') === false) {
-
-                this.socket.on('todo-created', (msg) => {
+                },
+                'todo-created': (msg) => {
                     console.log('todo-created', msg);
-                });
-            }
-
-            if (this.socket.hasListeners('todo-state-changed') === false) {
-
-                this.socket.on('todo-state-changed', (model) => {
+                },
+                'todo-state-changed': (model) => {
                     
                     for (const group of this.groups) {
 
@@ -249,12 +205,8 @@ export default {
                         }
 
                     }
-                });
-            }
-
-            if (this.socket.hasListeners('todo-deleted') === false) {
-
-                this.socket.on('todo-deleted', (model) => {
+                },
+                'todo-deleted': (model) => {
                     for (const group of this.groups) {
 
                         for (const todo of group.todo) {
@@ -271,7 +223,47 @@ export default {
                         }
 
                     }
+                },
+            };
+
+            for (const prop in listeners) {
+                
+                if (this.socket.hasListeners('error') === false) {
+                    this.socket.on(prop, listeners[prop]);
+                }
+            }
+        },
+        initWsConnection () {
+
+            if (Boolean(process.client) === false) {
+                
+                return;
+            }
+
+            if (this.$socketClient.hasConnection('todo_access_group') === false) {
+
+                const socket = this.$socketClient
+                    .create({
+                        transports: ['websocket'],
+                        path: '/todo',
+                        query: {
+                            token: this.$store.getters['todo/getToken'],
+                        },
+                    }, '/todo');
+
+                this.$socketClient.addConnection('todo_access_group', socket);
+            }
+
+            this.socket = this.$socketClient.getConnection('todo_access_group');
+
+            this.initWsListeners();
+
+            if (this.socket.hasListeners('error') === false) {
+
+                this.socket.io.on('error', () => {
+                    this.$eventBus.$emit(events.ON_NEW_NOTIFICATION, 'Ошибка соединения общего доступа', 'danger');
                 });
+
             }
 
             this.currentGroupId = this.$route.params.id;
