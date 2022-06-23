@@ -225,8 +225,6 @@ export default {
 
                 this.socket.on('todo-state-changed', (model) => {
                     
-                    console.log(this.groups);
-                    
                     for (const group of this.groups) {
 
                         for (const todo of group.todo) {
@@ -246,15 +244,11 @@ export default {
                                 this.moveCardToGroup(todo);
 
                             }
-                            
-                            console.log('updated todo', todo);
 
                             break;
                         }
 
                     }
-                    
-                    console.log('todo-state-changed', model);
                 });
             }
 
@@ -264,8 +258,6 @@ export default {
                     for (const group of this.groups) {
 
                         for (const todo of group.todo) {
-
-                            console.log(Number(todo.id), Number(model.id));
                             
                             if (Number(todo.id) !== Number(model.id)) {
                                 continue;
