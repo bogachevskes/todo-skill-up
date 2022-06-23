@@ -223,8 +223,38 @@ export default {
 
             if (this.socket.hasListeners('todo-state-changed') === false) {
 
-                this.socket.on('todo-state-changed', (msg) => {
-                    console.log('todo-state-changed', msg);
+                this.socket.on('todo-state-changed', (model) => {
+                    
+                    console.log(this.groups);
+                    
+                    for (const group of this.groups) {
+
+                        for (const todo of group.todo) {
+                            
+                            if (Number(todo.id) !== Number(model.id)) {
+                                continue;
+                            }
+
+                            todo = Object.assign(todo, model);
+
+                            if (Number(todo.statusId) !== Number(group.status.id)) {
+                                
+                                const index = group.todo.indexOf(todo);
+
+                                group.todo.splice(index, 1);
+
+                                this.moveCardToGroup(todo);
+
+                            }
+                            
+                            console.log('updated todo', todo);
+
+                            break;
+                        }
+
+                    }
+                    
+                    console.log('todo-state-changed', model);
                 });
             }
 
@@ -245,8 +275,6 @@ export default {
 
                             group.todo.splice(index, 1);
 
-                            console.log('deleted', todo);
-
                             break;
                         }
 
@@ -258,6 +286,17 @@ export default {
 
             this.socket.emit('join_access_group', {group: this.currentGroupId});
 
+        },
+        moveCardToGroup: function (card) {
+            for (const group of this.groups) {
+                if (Number(card.statusId) !== Number(group.status.id)) {
+                    continue;
+                }
+
+                group.todo= [card].concat(group.todo);
+
+                break;
+            }
         },
         clearIntervals: function () {
 
