@@ -84,6 +84,7 @@ import AccessGroupsActionsModal from '@/components/left-side-bar/AccessGroupsAct
 
 import TodoItem from '@/plugins/models/TodoItem';
 import TodoGroupsService from '@/plugins/services/TodoGroupsService';
+import TodoItemService from '@/plugins/services/TodoItemService';
 import DateHelper from '@/plugins/helpers/DateHelper';
 
 export default {
@@ -176,8 +177,13 @@ export default {
                         this.socket.close();
                     }
                 },
-                'todo-created': (msg) => {
-                    console.log('todo-created', msg);
+                'todo-created': (model) => {
+                    
+                    const card = TodoItemService.createCards([model])[0];
+
+                    this.moveCardToGroupBottom(card);
+                    
+                    console.log('todo-created', model);
                 },
                 'todo-state-changed': (model) => {
                     
@@ -197,7 +203,7 @@ export default {
 
                                 group.todo.splice(index, 1);
 
-                                this.moveCardToGroup(todo);
+                                this.moveCardToGroupTop(todo);
 
                             }
 
@@ -271,13 +277,24 @@ export default {
             this.socket.emit('join_access_group', {group: this.currentGroupId});
 
         },
-        moveCardToGroup: function (card) {
+        moveCardToGroupTop: function (card) {
             for (const group of this.groups) {
                 if (Number(card.statusId) !== Number(group.status.id)) {
                     continue;
                 }
 
-                group.todo= [card].concat(group.todo);
+                group.todo = [card].concat(group.todo);
+
+                break;
+            }
+        },
+        moveCardToGroupBottom: function (card) {
+            for (const group of this.groups) {
+                if (Number(card.statusId) !== Number(group.status.id)) {
+                    continue;
+                }
+
+                group.todo.push(card);
 
                 break;
             }
