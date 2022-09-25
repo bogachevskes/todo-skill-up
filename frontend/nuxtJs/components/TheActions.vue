@@ -51,6 +51,7 @@
 </template>
 
 <script>
+
 import { mapGetters, mapState } from 'vuex';
 import AccessGroupsActionsModal from './left-side-bar/AccessGroupsActionsModal';
 import {

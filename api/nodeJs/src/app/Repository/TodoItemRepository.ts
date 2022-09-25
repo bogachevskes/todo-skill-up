@@ -110,14 +110,34 @@ export default class TodoItemRepository
      * @param  number accessGroupId
      * @return Promise<TodoStatusGroup[]>
      */
-    public static async getTodoGroupedByStatuses(userId: number, accessGroupId: number|null = null): Promise<TodoStatusGroup[]>
+    public static async getTodoGroupedByStatuses(userId: number): Promise<TodoStatusGroup[]>
     {
         const statusGroups: TodoStatusGroup[] = [];
 
         const statuses = await TodoStatus.find();
 
         for (const status of statuses) {
-            const statusGroup: TodoStatusGroup = await TodoStatusGroupRepository.createGroup(status, userId, accessGroupId);
+            const statusGroup: TodoStatusGroup = await TodoStatusGroupRepository.createGroup(status, userId);
+            statusGroups.push(statusGroup);
+        }
+
+        return statusGroups;
+    }
+
+    /**
+     * 
+     * @param  { number } userId 
+     * @param  { number } accessGroupId 
+     * @returns { Promise<TodoStatusGroup[]> }
+     */
+    public static async getTodoGroupedByStatusesOfAccessGroup(userId: number, accessGroupId: number): Promise<TodoStatusGroup[]>
+    {
+        const statusGroups: TodoStatusGroup[] = [];
+
+        const statuses = await TodoStatus.find();
+
+        for (const status of statuses) {
+            const statusGroup: TodoStatusGroup = await TodoStatusGroupRepository.createGroupOfAccessGroup(status, userId, accessGroupId);
             statusGroups.push(statusGroup);
         }
 

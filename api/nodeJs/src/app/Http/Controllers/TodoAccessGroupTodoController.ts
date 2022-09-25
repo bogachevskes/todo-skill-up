@@ -13,6 +13,7 @@ import TodoItemRepository from '../../Repository/TodoItemRepository';
 import TodoStatusRepository from '../../Repository/TodoStatusRepository';
 import TodoItemCreate from '../../Console/Commands/TodoItemCreate';
 import TodoItemUpdate from '../../Console/Commands/TodoItemUpdate';
+import RedisConnection from '../../Services/RedisConnection';
 
 export default class TodoAccessGroupTodoController extends CrudController
 {
@@ -71,8 +72,13 @@ export default class TodoAccessGroupTodoController extends CrudController
 
             throw new Error(error.message);
         }
+
+        const todoItem = context.get('item');
+
+        RedisConnection.getClient()
+            .publish('todo-created', JSON.stringify(todoItem));
         
-        return context.get('item');
+        return todoItem;
     }
 
     /**
@@ -105,8 +111,13 @@ export default class TodoAccessGroupTodoController extends CrudController
 
             throw new Error(error.message);
         }
+
+        const todoItem = context.get('item');
+
+        RedisConnection.getClient()
+            .publish('todo-state-changed', JSON.stringify(todoItem));
         
-        return context.get('item');
+        return todoItem;
     }
 
     /**
@@ -117,8 +128,13 @@ export default class TodoAccessGroupTodoController extends CrudController
         this.defineUserRepo(req);
         
         const todoItem = await this.findTodoModel(Number(req.params.todoId));
+
+        const result = await TodoItemRepository.deleteById(todoItem.id);
+
+        RedisConnection.getClient()
+            .publish('todo-deleted', JSON.stringify(todoItem));
         
-        return await TodoItemRepository.deleteById(todoItem.id);
+        return result;
     }
     
     /**
@@ -145,6 +161,9 @@ export default class TodoAccessGroupTodoController extends CrudController
             todoItem,
             todoStatus,
         );
+
+        RedisConnection.getClient()
+            .publish('todo-state-changed', JSON.stringify(todoItem));
         
         return res.json({
             item: result,
@@ -159,7 +178,7 @@ export default class TodoAccessGroupTodoController extends CrudController
      */
     protected async findTodoModel(id: number): Promise<TodoItem | never>
     {
-        const model = await this.userRepo.findTodoById(id);
+        const model = await TodoItem.findOne(id);
 
         if (model instanceof TodoItem) {
             return model;

@@ -1,7 +1,7 @@
 version: '3.7'
 services:
 
-  mariadb:
+  infrastructure-mariadb:
     image: ${MYSQL_VERSION}
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
@@ -13,8 +13,11 @@ services:
       - ./docker/development/mariadb/initdb.d:/docker-entrypoint-initdb.d
     ports:
       - ${MYSQL_PORT}:3306
+    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_general_ci']
 
-  redis:
+  infrastructure-redis:
     image: ${REDIS_VERSION}
     ports:
       - ${REDIS_PORT}:6379
+    volumes:
+      - ./docker/development/redis/redis.conf:/usr/local/etc/redis/redis.conf

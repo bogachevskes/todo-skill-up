@@ -63,7 +63,7 @@ export default class UserLogin extends BaseCommand
             },
             String(ConfigService.get('TOKEN_SECRET_WORD')),
             {
-                expiresIn: ConfigService.get('TOKEN_EXPIRATION_TIME'),
+                expiresIn: Number(ConfigService.get('TOKEN_EXPIRATION_TIME')),
             }
         );
 

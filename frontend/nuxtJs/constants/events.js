@@ -6,4 +6,6 @@ export default {
     HIDE_INTRO: 'hide:invite-intro',
 
     SHOW_CARD_MANAGE_MODAL: 'show:card_manage_modal',
+
+    ON_NEW_NOTIFICATION: 'notification:success',
 };

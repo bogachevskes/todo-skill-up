@@ -7,11 +7,11 @@ export default class ConfigService
 
     /**
      * @param  string key
-     * @return number|string
+     * @return any | never
      */
     public static get(key: string): any | never
     {
-        return Number(env(key));
+        return env(key);
     }
 
     /**

@@ -1,5 +1,6 @@
 <template>
     <div class="layout-root">
+        <TheNotifications />
         <TheSuccessModal />
         <TheErrorModal />
         <div class="layout-header">
@@ -18,6 +19,7 @@
 </template>
 
 <script>
+import TheNotifications from '@/components/TheNotifications';
 import TheNavBar from '@/components/TheNavBar';
 import TheFooter from '@/components/TheFooter';
 import TheSuccessModal from '@/components/modals/TheSuccessModal';
@@ -27,6 +29,7 @@ import TheActions from '@/components/TheActions';
 export default {
     name: 'DefaultLayout',
     components: {
+        TheNotifications,
         TheNavBar,
         TheFooter,
         TheSuccessModal,
