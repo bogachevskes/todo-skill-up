@@ -29,7 +29,7 @@ export class TodoGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     private logger: Logger = new Logger('AppGateway');
 
     constructor(
-        @InjectRedis() private readonly redis: Redis,
+        @InjectRedis('subscriber') private readonly redis: Redis,
         private readonly usersService: UsersService,
         private readonly errorHandler: ErrorHandler
     ) {}

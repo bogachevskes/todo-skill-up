@@ -10,7 +10,7 @@ export default class UsersService
 {
     constructor(
         @InjectRepository(User) private readonly repository: Repository<User>,
-        @InjectRedis('subscriber') private readonly redis: Redis
+        @InjectRedis() private readonly redis: Redis
     ){ }
     
     /**
