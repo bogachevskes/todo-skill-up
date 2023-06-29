@@ -64,20 +64,20 @@ frontend-install:
 	@docker-compose -p ${PROJECT} run --rm frontend yarn install --no-bin-links
 
 api-install:
-	@docker-compose -p ${PROJECT} run --rm api-cli yarn install --no-bin-links
+	@docker-compose -p ${PROJECT} run --rm --no-deps api-cli yarn install --no-bin-links
 
 # не работает, исправить
 api-build:
-	@docker-compose -p ${PROJECT} run --rm api-cli yarn run build
+	@docker-compose -p ${PROJECT} run --rm --no-deps api-cli yarn run build
 
 api-node-exec:
 	@docker-compose -p ${PROJECT} run --rm api-cli $(cmd)
 
 ws-install:
-	@docker-compose -p ${PROJECT} run --rm ws yarn install --no-bin-links
+	@docker-compose -p ${PROJECT} run --rm --no-deps ws yarn install --no-bin-links
 
 migration-install:
-	@docker-compose -p ${PROJECT} run --rm migrations composer install
+	@docker-compose -p ${PROJECT} run --rm --no-deps migrations composer install
 
 migrate:
 	@docker-compose -p ${PROJECT} run --rm migrations vendor/bin/phinx migrate

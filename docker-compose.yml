@@ -48,6 +48,9 @@ services:
       DB_LOGGING: ${TYPEORM_DB_LOGGING}
       REDIS_HOST: ${REDIS_HOST}
       REDIS_PORT: ${REDIS_PORT}
+    depends_on:
+      - mariadb
+      - redis
     tty: true
 
   ws:
@@ -79,6 +82,9 @@ services:
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
+    depends_on:
+      - mariadb
+      - redis
     volumes:
       - ./migrations:/app
 
@@ -91,7 +97,6 @@ services:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
     volumes:
       - ${MYSQL_SOURCE_PATH}:/var/lib/mysql
-      - ./docker/mariadb/initdb.d:/docker-entrypoint-initdb.d
     ports:
       - ${DB_PORT}:${DB_PORT}
     command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_general_ci']
