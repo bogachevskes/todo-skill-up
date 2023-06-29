@@ -1,7 +1,4 @@
 export default {
-    env: {
-        WS_APP_URL: process.env.WS_APP_URL,
-    },
     server: {
         host: '0',
         port: process.env.APP_PORT,
@@ -51,7 +48,14 @@ export default {
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {
         // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-        baseURL: process.env.API_APP_URL,
+        baseURL: 'http://api',
+    },
+
+    publicRuntimeConfig: {
+        axios: {
+            browserBaseURL: process.env.API_APP_URL,
+        },
+        WS_APP_URL: process.env.WS_APP_URL,
     },
 
     // Build Configuration: https://go.nuxtjs.dev/config-build

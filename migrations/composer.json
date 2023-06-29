@@ -1,0 +1,19 @@
+{
+    "name": "todo-skill-up/migrations",
+    "description": "Приложение применения миграций",
+    "license": "MIT",
+    "minimum-stability": "stable",
+    "authors": [
+        {
+            "name": "Andrey Bogachevskiy",
+            "email": "bogachevskes@yandex.ru"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "robmorgan/phinx": "^0.13.4"
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^6.3"
+    }
+}

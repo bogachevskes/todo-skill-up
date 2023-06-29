@@ -43,7 +43,7 @@
                     </div>
                     <div class="field">
                         <label class="label">Дата выполнения</label>
-                        <b-datepicker v-model="plannedComplitionAt" inline />
+                        <b-datepicker v-model="plannedCompletionAt" inline />
                     </div>
                     <div class="columns">
                         <div class="column is-12">
@@ -115,7 +115,7 @@ export default {
     data () {
         return {
             formData: {},
-            plannedComplitionAt: null,
+            plannedCompletionAt: null,
             action: null,
             isModalActive: 0,
             lengthRules: {
@@ -141,9 +141,9 @@ export default {
             this.action = action;
             this.formData = { ...card };
 
-            if (typeof this.formData.plannedComplitionAt === 'string') {
-                this.plannedComplitionAt = new Date(
-                    this.formData.plannedComplitionAt
+            if (typeof this.formData.plannedCompletionAt === 'string') {
+                this.plannedCompletionAt = new Date(
+                    this.formData.plannedCompletionAt
                 );
             }
 
@@ -164,8 +164,8 @@ export default {
             }
         },
         executeCreation () {
-            this.formData.plannedComplitionAt = DateHelper.format(
-                this.plannedComplitionAt,
+            this.formData.plannedCompletionAt = DateHelper.format(
+                this.plannedCompletionAt,
                 'YYYY-MM-DD HH:mm:ss'
             );
 
@@ -174,8 +174,8 @@ export default {
                 .then((res) => this.onCardProcessingComplete());
         },
         executeUpdating () {
-            this.formData.plannedComplitionAt = DateHelper.format(
-                this.plannedComplitionAt,
+            this.formData.plannedCompletionAt = DateHelper.format(
+                this.plannedCompletionAt,
                 'YYYY-MM-DD HH:mm:ss'
             );
 

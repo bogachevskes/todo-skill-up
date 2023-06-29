@@ -16,7 +16,7 @@ export default class ChannelMessageHandler
      * @param  { string } key 
      * @return { string }
      */
-    private buildAccessGroupRoomKey(key: string): string
+    private buildGroupRoomKey(key: string): string
     {
         return `access-group-room-${key}`;
     }
@@ -33,11 +33,11 @@ export default class ChannelMessageHandler
                 return;
             }
 
-            if (model.todoAccessGroupId === undefined) {
+            if (model.todoGroupId === undefined) {
                 return;
             }
 
-            const roomName = this.buildAccessGroupRoomKey(model.todoAccessGroupId);
+            const roomName = this.buildGroupRoomKey(model.todoGroupId);
 
             this.server.to(roomName).emit('todo-created', model);
             console.log('todo-created triggered to client room #' + roomName);
@@ -50,11 +50,11 @@ export default class ChannelMessageHandler
                 return;
             }
 
-            if (model.todoAccessGroupId === undefined) {
+            if (model.todoGroupId === undefined) {
                 return;
             }
 
-            const roomName = this.buildAccessGroupRoomKey(model.todoAccessGroupId);
+            const roomName = this.buildGroupRoomKey(model.todoGroupId);
 
             this.server.to(roomName).emit('todo-state-changed', model);
             console.log('todo-state-changed triggered to client');
@@ -68,11 +68,11 @@ export default class ChannelMessageHandler
                 return;
             }
 
-            if (model.todoAccessGroupId === undefined) {
+            if (model.todoGroupId === undefined) {
                 return;
             }
 
-            const roomName = this.buildAccessGroupRoomKey(model.todoAccessGroupId);
+            const roomName = this.buildGroupRoomKey(model.todoGroupId);
 
             this.server.to(roomName).emit('todo-deleted', model);
             console.log('todo-deleted triggered to client room #' + roomName);

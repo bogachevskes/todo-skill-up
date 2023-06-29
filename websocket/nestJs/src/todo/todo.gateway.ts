@@ -62,7 +62,7 @@ export class TodoGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
      * @param  { string } key 
      * @return { string }
      */
-    private buildAccessGroupRoomKey(key: string): string
+    private buildGroupRoomKey(key: string): string
     {
         return `access-group-room-${key}`;
     }
@@ -97,14 +97,14 @@ export class TodoGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     }
 
     @SubscribeMessage('join_access_group')
-    handleAccessGroupJoin(client: Socket, payload: object): void
+    handleGroupJoin(client: Socket, payload: object): void
     {
         if (payload['group'] === undefined) {
             
             return;
         }
 
-        const roomName = this.buildAccessGroupRoomKey(payload['group']);
+        const roomName = this.buildGroupRoomKey(payload['group']);
 
         client.join(roomName);
 
@@ -112,14 +112,14 @@ export class TodoGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     }
 
     @SubscribeMessage('leave_access_group')
-    handleAccessGroupLeave(client: Socket, payload: object): void
+    handleGroupLeave(client: Socket, payload: object): void
     {
         if (payload['group'] === undefined) {
             
             return;
         }
 
-        const roomName = this.buildAccessGroupRoomKey(payload['group']);
+        const roomName = this.buildGroupRoomKey(payload['group']);
 
         client.leave(roomName);
 

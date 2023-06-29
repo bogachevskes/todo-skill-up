@@ -3,7 +3,7 @@ export const state = () => ({
     userId: null,
     groups: [],
     permissions: [],
-    todoAccessGroups: [],
+    todoGroups: [],
 });
 
 export const getters = {
@@ -20,10 +20,10 @@ export const getters = {
         return state.permissions.includes(permissionName);
     },
     canManageUsers (state) {
-        return state.permissions.includes('canManageUsers');
+        return state.permissions.includes('/admin/users');
     },
     canManageUsersTodo (state) {
-        return state.permissions.includes('canManageUsersTodo');
+        return state.permissions.includes('/admin/users/todo');
     },
 };
 
@@ -38,8 +38,8 @@ export const mutations = {
     setUserPermissions (state, permissions) {
         state.permissions = permissions;
     },
-    setUserTodoAccessGroups (state, groups) {
-        state.todoAccessGroups = groups;
+    setUserTodoGroups (state, groups) {
+        state.todoGroups = groups;
     },
 };
 
@@ -63,9 +63,9 @@ export const actions = {
             .loadPermissions()
             .then((permissions) => commit('setUserPermissions', permissions));
     },
-    updateTodoAccessGroups ({ commit }, userComponent) {
+    updateTodoGroups ({ commit }, userComponent) {
         userComponent
-            .loadTodoAccessGroups()
-            .then((groups) => commit('setUserTodoAccessGroups', groups));
+            .loadTodoGroups()
+            .then((groups) => commit('setUserTodoGroups', groups));
     },
 };

@@ -2,19 +2,20 @@ import { io } from "socket.io-client";
 
 
 export default function (ctx, inject) {
+
     const socketClient = {
         connections: {},
         io: io,
         create: function (options = {}, namespace = '') {
 
-            return this.io(`${process.env.WS_APP_URL}${namespace}`, options);
+            return this.io(`${ctx.$config.WS_APP_URL}${namespace}`, options);
         },
         getConnection(key) {
 
             return this.connections[key];
         },
         hasConnection(key) {
-            
+
             return this.connections[key] !== undefined;
         },
         addConnection(key, socket) {

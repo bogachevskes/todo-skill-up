@@ -1,38 +1,17 @@
 import { Request } from 'express';
 import CrudController from '../../../Framework/Http/Controller/CrudController';
-import BadRequest from '../../../Framework/Exceptions/BadRequest';
-import User from '../../Entity/User';
-import UserRepository from '../../../app/Repository/UserRepository';
+import AuthManager from "../../Components/AuthManager";
 
 export default class UserPermissionsController extends CrudController
 {
-    protected userRepo: UserRepository;
-
-    /**
-     * Определение репозитория пользователя.
-     * 
-     * @param  Request req
-     * @return void
-     */
-    protected defineUserRepo(req: Request): void
-    {
-        if ((req['user'] instanceof User) === false) {
-            throw new BadRequest('Пользователь не определен');
-        }
-
-        this.userRepo = new UserRepository(req['user']);
-    }
-
     /**
      * @see CrudController
      */
     protected async list(req: Request): Promise<string[]>
     {
-        this.defineUserRepo(req);
+        const authManager: AuthManager = new AuthManager();
 
-        const permissions = await this.userRepo.getPermissionNames();
-
-        return new Promise(resolve => resolve(permissions));
+        return await authManager.getUserPermissions(req['user'].id);
     }
 
     /**
@@ -52,8 +31,6 @@ export default class UserPermissionsController extends CrudController
      */
     protected async update(id: number, req: Request): Promise<object>
     {
-        this.defineUserRepo(req);
-        
         // Not implemented
 
         return new Promise(function(resolve, reject) {

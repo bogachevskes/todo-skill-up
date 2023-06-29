@@ -107,7 +107,7 @@ export default class TodoItemRepository
      * задания пользователя по статусам.
      * 
      * @param  number userId 
-     * @param  number accessGroupId
+     * @param  number groupId
      * @return Promise<TodoStatusGroup[]>
      */
     public static async getTodoGroupedByStatuses(userId: number): Promise<TodoStatusGroup[]>
@@ -127,17 +127,17 @@ export default class TodoItemRepository
     /**
      * 
      * @param  { number } userId 
-     * @param  { number } accessGroupId 
+     * @param  { number } groupId
      * @returns { Promise<TodoStatusGroup[]> }
      */
-    public static async getTodoGroupedByStatusesOfAccessGroup(userId: number, accessGroupId: number): Promise<TodoStatusGroup[]>
+    public static async getTodoGroupedByStatusesOfGroup(userId: number, groupId: number): Promise<TodoStatusGroup[]>
     {
         const statusGroups: TodoStatusGroup[] = [];
 
         const statuses = await TodoStatus.find();
 
         for (const status of statuses) {
-            const statusGroup: TodoStatusGroup = await TodoStatusGroupRepository.createGroupOfAccessGroup(status, userId, accessGroupId);
+            const statusGroup: TodoStatusGroup = await TodoStatusGroupRepository.createGroupOfGroup(status, userId, groupId);
             statusGroups.push(statusGroup);
         }
 

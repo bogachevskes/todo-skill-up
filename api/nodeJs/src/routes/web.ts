@@ -2,15 +2,15 @@ import RoutesCollection from '../Framework/Http/Router/RoutesCollection';
 import RoutesResource from '../Framework/Http/Router/RoutesResource';
 import Route from '../Framework/Http/Router/Route';
 import AuthOnlyMiddleware from '../app/Http/Middleware/AuthOnlyMiddleware';
-import HasAccessToTodoAccessGroupMiddleware from '../app/Http/Middleware/HasAccessToTodoAccessGroupMiddleware';
+import HasAccessToTodoGroupMiddleware from '../app/Http/Middleware/HasAccessToTodoGroupMiddleware';
 
 import AuthController from '../app/Http/Controllers/AuthController';
 import AdminUserController from '../app/Http/Controllers/Admin/AdminUserController';
 import UserPermissionsController from '../app/Http/Controllers/UserPermissionsController';
 import TodoController from '../app/Http/Controllers/TodoController';
-import TodoAccessGroupController from '../app/Http/Controllers/TodoAccessGroupController';
-import TodoAccessGroupTodoController from '../app/Http/Controllers/TodoAccessGroupTodoController';
-import TodoAccessUserGroupController from '../app/Http/Controllers/TodoAccessUserGroupController';
+import TodoGroupController from '../app/Http/Controllers/TodoGroupController';
+import TodoGroupTodoController from '../app/Http/Controllers/TodoGroupTodoController';
+import TodoUsersGroupsController from '../app/Http/Controllers/TodoUsersGroupsController';
 import UserController from '../app/Http/Controllers/UserController';
 
 RoutesCollection.add(
@@ -121,17 +121,17 @@ RoutesCollection.addResource(
 
 RoutesCollection.addResource(
     new RoutesResource(
-        'todo-access-group',
-        TodoAccessGroupController,
+        'todo-group',
+        TodoGroupController,
         [
             AuthOnlyMiddleware,
         ],
         {
             'PUT': {
-                'middleware': [HasAccessToTodoAccessGroupMiddleware],
+                'middleware': [HasAccessToTodoGroupMiddleware],
             },
             'DELETE': {
-                'middleware': [HasAccessToTodoAccessGroupMiddleware],
+                'middleware': [HasAccessToTodoGroupMiddleware],
             },
         },
     )
@@ -140,23 +140,23 @@ RoutesCollection.addResource(
 RoutesCollection.add(
     new Route(
         'GET',
-        '/todo-access-group/get-group/:id',
-        TodoAccessGroupController,
+        '/todo-group/get-group/:id',
+        TodoGroupController,
         'actionGetGroup',
         [
             AuthOnlyMiddleware,
-            HasAccessToTodoAccessGroupMiddleware,
+            HasAccessToTodoGroupMiddleware,
         ]
     ),
 );
 
 RoutesCollection.addResource(
     new RoutesResource(
-        'todo-access-group/todo',
-        TodoAccessGroupTodoController,
+        'todo-group/todo',
+        TodoGroupTodoController,
         [
             AuthOnlyMiddleware,
-            HasAccessToTodoAccessGroupMiddleware,
+            HasAccessToTodoGroupMiddleware,
         ],
         {
             'GET': {
@@ -178,23 +178,23 @@ RoutesCollection.addResource(
 RoutesCollection.add(
     new Route(
         'PUT',
-        '/todo-access-group/todo/:id/set-status/:todoId',
-        TodoAccessGroupTodoController,
+        '/todo-group/todo/:id/set-status/:todoId',
+        TodoGroupTodoController,
         'actionSetStatus',
         [
             AuthOnlyMiddleware,
-            HasAccessToTodoAccessGroupMiddleware,
+            HasAccessToTodoGroupMiddleware,
         ]
     ),
 );
 
 RoutesCollection.addResource(
     new RoutesResource(
-        'todo-access-user-group',
-        TodoAccessUserGroupController,
+        'todo-user-group',
+        TodoUsersGroupsController,
         [
             AuthOnlyMiddleware,
-            HasAccessToTodoAccessGroupMiddleware,
+            HasAccessToTodoGroupMiddleware,
         ],
         {
             'GET': {

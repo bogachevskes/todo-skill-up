@@ -7,9 +7,9 @@ module.exports = {
     "port": process.env.DB_PORT,
     "username": process.env.DB_USER,
     "password": process.env.DB_PASSWORD,
-    "database": process.env.DB_DATABASE,
+    "database": process.env.DB_NAME,
     "logging": process.env.DB_LOGGING,
-    "synchronize": process.env.DB_SYNC,
+    "synchronize": false,
     "entities": ["dist/**/*.entity{.ts,.js}"],
     "namingStrategy": new SnakeNamingStrategy(),
 }
