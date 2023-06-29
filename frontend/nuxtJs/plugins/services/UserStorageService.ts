@@ -276,13 +276,13 @@ export default class UserStorageLoader {
     /**
      * @return any
      */
-    public loadTodoAccessGroups(): any {
+    public loadTodoGroups(): any {
         return this.getAxios()
-            .$get('todo-access-group/list')
+            .$get('todo-group/list')
             .then((result) => {
-                this.identity.set('todoAccessGroups', result.items);
+                this.identity.set('todoGroups', result.items);
 
-                return Promise.resolve(this.identity.get('todoAccessGroups'));
+                return Promise.resolve(this.identity.get('todoGroups'));
             });
     }
 

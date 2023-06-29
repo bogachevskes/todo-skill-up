@@ -5,7 +5,7 @@
   "description": "Nest TypeScript starter repository",
   "license": "MIT",
   "scripts": {
-    "prebuild": "rimraf dist",
+    "prebuild": "./node_modules/rimraf/bin.js dist",
     "build": "./node_modules/@nestjs/cli/bin/nest.js build",
     "start": "./node_modules/@nestjs/cli/bin/nest.js start",
     "start:dev": "./node_modules/@nestjs/cli/bin/nest.js start --watch",

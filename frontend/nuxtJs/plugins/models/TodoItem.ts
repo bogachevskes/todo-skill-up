@@ -10,7 +10,7 @@ export default class TodoItem extends Configurable {
 
     public description: string | undefined;
 
-    public plannedComplitionAt: string | undefined;
+    public plannedCompletionAt: string | undefined;
 
     public createdAt: string | undefined;
 
@@ -20,12 +20,12 @@ export default class TodoItem extends Configurable {
      * @return string
      */
     public printPlannedCompilationAt(): string | null {
-        if (this.plannedComplitionAt === undefined) {
+        if (this.plannedCompletionAt === undefined) {
             return null;
         }
 
         return DateHelper.printFormatted(
-            this.plannedComplitionAt,
+            this.plannedCompletionAt,
             'DD.MM.YYYY'
         );
     }

@@ -1,14 +1,6 @@
-import { Column, Entity, BaseEntity, PrimaryGeneratedColumn, Index, OneToMany, JoinTable } from 'typeorm';
-import UserRole from './UserRole';
-import TodoAccessUserGroup from './TodoAccessUserGroup';
+import { Column, Entity, BaseEntity, PrimaryGeneratedColumn, Index, OneToMany } from 'typeorm';
+import TodoUsersGroups from './TodoUsersGroups';
 
-@Index('idx-users_name', ['name'])
-@Index('udx-users_email', ['email'], { unique: true })
-@Index('idx-users_password', ['password'])
-@Index('idx-users_status', ['status'])
-@Index('idx-users_created_at', ['createdAt'])
-@Index('idx-users_updated_at', ['updatedAt'])
-@Index('idx-users_deleted_at', ['deletedAt'])
 @Entity('users')
 export default class User extends BaseEntity
 {
@@ -66,9 +58,6 @@ export default class User extends BaseEntity
     })
     public deletedAt: Date | null;
 
-    @OneToMany(() => TodoAccessUserGroup, todoAccessUserGroup => todoAccessUserGroup.user)
-    public todoAccessGroupsGroups: TodoAccessUserGroup[];
-
-    @OneToMany(() => UserRole, userRole => userRole.user)
-    public userRoles: UserRole[];
+    @OneToMany(() => TodoUsersGroups, todoUsersGroups => todoUsersGroups.user)
+    public todoGroupsGroups: TodoUsersGroups[];
 }

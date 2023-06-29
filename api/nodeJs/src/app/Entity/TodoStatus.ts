@@ -1,9 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn, Index, BaseEntity } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
 
-@Index('idx-todo_status_name', ['name'])
-@Index('udx-users_email', ['initialDefault'], { unique: true })
-@Index('idx-todo_status_created_at', ['createdAt'])
-@Index('idx-todo_status_updated_at', ['updatedAt'])
 @Entity('todo_status')
 export default class TodoStatus extends BaseEntity
 {

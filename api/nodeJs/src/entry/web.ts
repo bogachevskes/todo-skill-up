@@ -8,13 +8,6 @@ import Middleware from '../config/middleware';
 import ErrorMiddleware from '../config/errorMiddleware';
 import ConfigService from '../Framework/Utils/ConfigService';
 
-const result = require('dotenv').config({path: `${process.env.INIT_CWD}/dist/.env`});
-
-if (Boolean(result.error) === true) {
-    
-    throw result.error;
-}
-
 const router = new Router();
 
 router.configureRoutes(
