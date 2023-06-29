@@ -1,20 +1,16 @@
 import { SelectQueryBuilder } from 'typeorm';
 import RuntimeError from '../../Framework/Exceptions/RuntimeError';
 import User from '../Entity/User';
-import Role from '../Entity/Role';
 import TodoItem from '../Entity/TodoItem';
-import UserRole from '../Entity/UserRole';
-import TodoAccessGroup from '../Entity/TodoAccessGroup';
-import TodoAccessUserGroup from '../Entity/TodoAccessUserGroup';
+import TodoGroup from '../Entity/TodoGroup';
+import TodoUsersGroups from '../Entity/TodoUsersGroups';
 import TodoStatus from '../Entity/TodoStatus';
 import TodoStatusGroup from '../Entity/TodoStatusGroup';
-import UsersRoleRepository from './UsersRoleRepository';
 import TodoItemRepository from './TodoItemRepository';
-import RolePermissionsRepository from './RolePermissionsRepository';
-import TodoAccessGroupRepository from './TodoAccessGroupRepository';
-import TodoAccessUserGroupRepository from './TodoAccessUserGroupRepository';
+import TodoGroupRepository from './TodoGroupRepository';
+import TodoUserGroupRepository from './TodoUserGroupRepository';
 import TodoItemCreateRequest from '../FormRequest/TodoItem/TodoItemCreateRequest';
-import TodoAccessGroupCreateRequest from '../FormRequest/TodoAccessGroup/TodoAccessGroupCreateRequest';
+import TodoGroupCreateRequest from '../FormRequest/TodoGroup/TodoGroupCreateRequest';
 
 export default class UserRepository
 {
@@ -207,72 +203,6 @@ export default class UserRepository
     }
 
     /**
-     * Есть роли?
-     * 
-     * @return Promise<boolean>
-     */
-    public async hasRoles(): Promise<boolean>
-    {
-        const result = await
-            Role.createQueryBuilder('role')
-            .leftJoinAndSelect('role.userRoles', 'user')
-            .where("user.id = :userId", { userId: this.user.id })
-            .getCount();
-
-        return Boolean(result);
-    }
-
-    /**
-     * Добавить роль.
-     * 
-     * @param  Role role 
-     * @return Promise<void>
-     */
-    public async assignRole(role: Role): Promise<void>
-    {
-        const model = new UserRole;
-
-        model.userId = this.user.id;
-        model.roleId = role.id;
-        
-        await model.save();
-    }
-
-    /**
-     * Добавить роль, если ее нет.
-     * 
-     * @param  Role role 
-     * @return Promise<boolean>
-     */
-    public async assignRoleIfNotExists(role: Role): Promise<boolean>
-    {
-        if (await UsersRoleRepository.hasRole(this.user.id, role.id)) {
-            return false;
-        }
-
-        await this.assignRole(role);
-
-        return true;
-    }
-
-    /**
-     * Удалить роль если назначена.
-     * 
-     * @param  Role role
-     * @return Promise<boolean>
-     */
-    public async unsetRoleIfExists(role: Role): Promise<boolean>
-    {
-        if (await UsersRoleRepository.hasNoRole(this.user.id, role.id)) {
-            return false;
-        }
-
-        await UsersRoleRepository.unsetRole(this.user, role);
-
-        return true;
-    }
-
-    /**
      * Возвращает задания пользователя.
      * 
      * @return Promise<TodoItem[]>
@@ -294,12 +224,12 @@ export default class UserRepository
     }
 
     /**
-     * @param accessGroupId number
+     * @param groupId number
      * @returns Promise<TodoStatusGroup[]>
      */
-    public async getTodoByStatusGroupsByAccessGroup(accessGroupId: number): Promise<TodoStatusGroup[]>
+    public async getTodoByStatusGroupsByGroup(groupId: number): Promise<TodoStatusGroup[]>
     {
-        return await TodoItemRepository.getTodoGroupedByStatusesOfAccessGroup(this.user.id, accessGroupId);
+        return await TodoItemRepository.getTodoGroupedByStatusesOfGroup(this.user.id, groupId);
     }
 
     /**
@@ -313,23 +243,6 @@ export default class UserRepository
         data.userId = this.user.id;
         
         return TodoItemRepository.createNew(data);
-    }
-
-    /**
-     * Возвращает имена
-     * разрешений пользователя.
-     * 
-     * @return Promise<string[]>
-     */
-    public async getPermissionNames(): Promise<string[]>
-    {
-        if (! await this.hasRoles()) {
-            return new Promise(resolve => resolve([]));
-        }
-        
-        const rolesNames = await UsersRoleRepository.getUserRolesNames(this.user.id);
-        
-        return RolePermissionsRepository.listRolePermissionNames(rolesNames);
     }
 
     /**
@@ -373,51 +286,51 @@ export default class UserRepository
 
     /**
      * @param  id: number
-     * @return Promise<TodoAccessGroup | undefined>
+     * @return Promise<TodoGroup | undefined>
      */
-    public async findTodoAccessGroupById(id: number): Promise<TodoAccessGroup | undefined>
+    public async findTodoGroupById(id: number): Promise<TodoGroup | undefined>
     {
-        return await TodoAccessGroupRepository.findOneByUserId(this.user.id, id);
+        return await TodoGroupRepository.findOneByUserId(this.user.id, id);
     }
 
     /**
-     * @return Promise<TodoAccessGroup[]>
+     * @return Promise<TodoGroup[]>
      */
-    public async getTodoAccessGroups(): Promise<TodoAccessGroup[]>
+    public async getTodoGroups(): Promise<TodoGroup[]>
     {
-        return await TodoAccessGroupRepository.findByUserId(this.user.id);
+        return await TodoGroupRepository.findByUserId(this.user.id);
     }
 
     /**
-     * @param  data TodoAccessGroupCreateRequest
-     * @return Promise<TodoAccessGroup | undefined>
+     * @param  data TodoGroupCreateRequest
+     * @return Promise<TodoGroup | undefined>
      */
-    public async addTodoAccessGroup(data: TodoAccessGroupCreateRequest): Promise<TodoAccessGroup | undefined>
+    public async addTodoGroup(data: TodoGroupCreateRequest): Promise<TodoGroup | undefined>
     {
         data.userId = this.user.id;
         
-        return await TodoAccessGroupRepository.createNew(data);
+        return await TodoGroupRepository.createNew(data);
     }
 
     /**
      * @param  id number
-     * @return Promise<TodoAccessUserGroup | undefined>
+     * @return Promise<TodoUsersGroups | undefined>
      */
-    public async findTodoAccessUserGroupById(id: number): Promise<TodoAccessUserGroup | undefined>
+    public async findTodoAccessUserGroupById(id: number): Promise<TodoUsersGroups | undefined>
     {
-        return await TodoAccessUserGroupRepository.findOneByUserId(this.user.id, id);
+        return await TodoUserGroupRepository.findOneByUserId(this.user.id, id);
     }
 
     /**
      * @param  groupId number
      * @param  userId number
-     * @return Promise<TodoAccessUserGroup>
+     * @return Promise<TodoUsersGroups>
      */
-    public async addTodoAccessUserGroup(groupId: number, userId: number): Promise<TodoAccessUserGroup>
+    public async addTodoAccessUserGroup(groupId: number, userId: number): Promise<TodoUsersGroups>
     {
-        const model = new TodoAccessUserGroup;
+        const model = new TodoUsersGroups;
 
-        model.todoAccessGroupId = groupId;
+        model.todoGroupId = groupId;
         model.userId = userId;
 
         return await model.save();
@@ -431,8 +344,8 @@ export default class UserRepository
     {
         const query = UserRepository.getQueryBuilder()
             .select(['user.id, user.name, user.email, taug.id as group_id'])
-            .leftJoin('user.todoAccessGroupsGroups', 'taug')
-            .leftJoin('taug.todoAccessGroup', 'tag')
+            .leftJoin('user.todoGroupsGroups', 'taug')
+            .leftJoin('taug.todoGroup', 'tag')
             .where('tag.userId = :userId AND tag.id = :groupId', {userId: this.user.id, groupId});
 
         return await query.getRawMany();

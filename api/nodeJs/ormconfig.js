@@ -9,7 +9,7 @@ module.exports = {
     "password": process.env.DB_PASSWORD,
     "database": process.env.DB_NAME,
     "logging": process.env.DB_LOGGING,
-    "synchronize": process.env.DB_SYNC,
+    "synchronize": false,
     "entities": [
         "dist/server/app/Entity/**/*.js",
     ],

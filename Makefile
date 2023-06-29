@@ -3,6 +3,16 @@ include .env
 install:
 	@$(MAKE) -s down
 	@$(MAKE) -s docker-build
+	@$(MAKE) -s frontend-install
+	@$(MAKE) -s api-install
+	@$(MAKE) -s api-build
+	@$(MAKE) -s ws-install
+	@$(MAKE) -s migration-install
+	@docker-compose -p ${PROJECT} up -d mariadb
+	@$(MAKE) -s waitdb
+	@$(MAKE) -s migrate
+	@$(MAKE) -s up
+
 
 up: docker-up
 
@@ -19,11 +29,16 @@ restart:
 	@$(MAKE) -s up
 ps:
 	@docker-compose -p ${PROJECT} ps
+
+logs:
+	@docker-compose logs -f
+
 docker-build: \
 	docker-build-frontend \
 	docker-build-api \
 	docker-build-api-cli \
-	docker-build-ws
+	docker-build-ws \
+	docker-build-migrations
 
 docker-build-frontend:
 	@docker build --target=frontend \
@@ -41,5 +56,40 @@ docker-build-ws:
 	@docker build --target=ws \
 	-t ${REGISTRY}/${WS_IMAGE}:${IMAGE_TAG} -f ./docker/Dockerfile .
 
+docker-build-migrations:
+	@docker build --target=migrations \
+	-t ${REGISTRY}/${MIGRATIONS_IMAGE}:${IMAGE_TAG} -f ./docker/Dockerfile .
+
+frontend-install:
+	@docker-compose -p ${PROJECT} run --rm frontend yarn install --no-bin-links
+
+api-install:
+	@docker-compose -p ${PROJECT} run --rm api-cli yarn install --no-bin-links
+
+# не работает, исправить
+api-build:
+	@docker-compose -p ${PROJECT} run --rm api-cli yarn run build
+
 api-node-exec:
 	@docker-compose -p ${PROJECT} run --rm api-cli $(cmd)
+
+ws-install:
+	@docker-compose -p ${PROJECT} run --rm ws yarn install --no-bin-links
+
+migration-install:
+	@docker-compose -p ${PROJECT} run --rm migrations composer install
+
+migrate:
+	@docker-compose -p ${PROJECT} run --rm migrations vendor/bin/phinx migrate
+
+seed:
+	@docker-compose -p ${PROJECT} run --rm migrations vendor/bin/phinx seed:run
+
+create-migration:
+	@docker-compose -p ${PROJECT} run --rm migrations vendor/bin/phinx create $(name)
+
+create-seed:
+	@docker-compose -p ${PROJECT} run --rm migrations vendor/bin/phinx seed:create $(name)
+
+waitdb:
+	@docker-compose -p ${PROJECT} run --rm migrations wait-for mariadb:${DB_PORT} -t 0

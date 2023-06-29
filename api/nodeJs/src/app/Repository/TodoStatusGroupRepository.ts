@@ -1,8 +1,8 @@
 import TodoStatus from '../Entity/TodoStatus';
 import TodoItem from '../Entity/TodoItem';
 import TodoStatusGroup from '../Entity/TodoStatusGroup';
-import TodoAccessGroup from '../Entity/TodoAccessGroup';
-import TodoAccessUserGroup from '../Entity/TodoAccessUserGroup';
+import TodoGroup from '../Entity/TodoGroup';
+import TodoUsersGroups from '../Entity/TodoUsersGroups';
 
 export default class TodoStatusGroupRepository
 {
@@ -26,18 +26,18 @@ export default class TodoStatusGroupRepository
     /**
      * @param  { TodoStatus } status
      * @param  { number } userId
-     * @param  { number } accessGroupId
+     * @param  { number } groupId
      * @return { Promise<TodoStatusGroup> }
      */
-     public static async createGroupOfAccessGroup(status: TodoStatus, userId: number, accessGroupId: number): Promise<TodoStatusGroup>
+     public static async createGroupOfGroup(status: TodoStatus, userId: number, groupId: number): Promise<TodoStatusGroup>
      {
         const query = TodoItem.createQueryBuilder('ti')
-            .leftJoin(TodoAccessGroup, 'tag','ti.todo_access_group_id = tag.id')
-            .leftJoin(TodoAccessUserGroup, 'taug', 'ti.todo_access_group_id = taug.todo_access_group_id')
+            .leftJoin(TodoGroup, 'tag','ti.todo_group_id = tag.id')
+            .leftJoin(TodoUsersGroups, 'taug', 'ti.todo_group_id = taug.todo_group_id')
             .where(`
                 ti.statusId = :statusId
                 AND
-                ti.todoAccessGroupId = :todoAccessGroupId
+                ti.todoGroupId = :todoGroupId
                 AND
                 (
                     ti.userId = :userId
@@ -48,7 +48,7 @@ export default class TodoStatusGroupRepository
                 )`,
                 {
                     statusId: status.id,
-                    todoAccessGroupId: accessGroupId,
+                    todoGroupId: groupId,
                     userId,
                 }
             )

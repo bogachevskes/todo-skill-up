@@ -22,13 +22,13 @@
             <li>
                 <button
                     class="button is-success mt-1 has-text-left"
-                    @click="modals.addTodoAccessGroup.isActive = true"
+                    @click="modals.addTodoGroup.isActive = true"
                 >
                     Создать доску
                 </button>
                 <ul>
                     <li
-                        v-for="(data, index) in todoAccessGroups"
+                        v-for="(data, index) in todoGroups"
                         :key="index"
                         class="mt-1"
                     >
@@ -46,14 +46,14 @@
                 </ul>
             </li>
         </ul>
-        <AccessGroupsActionsModal :modal="modals.addTodoAccessGroup" />
+        <GroupsActionsModal :modal="modals.addTodoGroup" />
     </aside>
 </template>
 
 <script>
 
 import { mapGetters, mapState } from 'vuex';
-import AccessGroupsActionsModal from './left-side-bar/AccessGroupsActionsModal';
+import GroupsActionsModal from './left-side-bar/GroupsActionsModal';
 import {
     ROUTE_TODO_LIST,
     ROUTE_USERS,
@@ -65,14 +65,14 @@ export default {
     data () {
         return {
             modals: {
-                addTodoAccessGroup: {
+                addTodoGroup: {
                     isActive: false,
                 },
             },
         };
     },
     computed: {
-        ...mapState('todo', ['todoAccessGroups']),
+        ...mapState('todo', ['todoGroups']),
         ...mapGetters('todo', [
             'isLogged',
             'canManageUsers',
@@ -84,7 +84,7 @@ export default {
             ROUTE_USER_SHOW_TODO_ACCESS_GROUP,
     },
     components: {
-        AccessGroupsActionsModal,
+        GroupsActionsModal,
     },
 };
 </script>

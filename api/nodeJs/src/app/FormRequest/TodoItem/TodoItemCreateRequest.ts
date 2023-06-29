@@ -3,11 +3,11 @@ import { ToString, ToInt } from "validator.ts/decorator/Sanitization";
 import { MESSAGE_MIN_LENGTH } from '../../../Framework/FormRequest/Base/Messages';
 import { USER_NAME_MIN_LENGTH } from '../../../Framework/FormRequest/Base/ValidationConstants';
 import ValidationRequest from '../../../Framework/FormRequest/Base/ValidationRequest';
-import TodoAccessGroupRepository from '../../Repository/TodoAccessGroupRepository';
+import TodoGroupRepository from '../../Repository/TodoGroupRepository';
 
 export default class TodoItemCreateRequest extends ValidationRequest
 {
-    todoAccessGroupId: number | null;
+    todoGroupId: number | null;
     
     @ToInt()
     userId: number;
@@ -30,12 +30,12 @@ export default class TodoItemCreateRequest extends ValidationRequest
      {
         return [
             async () => {
-                if (Boolean(this.todoAccessGroupId) === false) {
+                if (Boolean(this.todoGroupId) === false) {
                     
                     return;
                 }
 
-                const condition = await TodoAccessGroupRepository.isGroupExists(Number(this.todoAccessGroupId));
+                const condition = await TodoGroupRepository.isGroupExists(Number(this.todoGroupId));
 
                 return this.validateManual(condition, 'Группа доступа отсутствует', 'group_not_exists');
             },

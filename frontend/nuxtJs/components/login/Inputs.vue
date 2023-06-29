@@ -143,7 +143,7 @@ export default {
                         this.$userStorage
                     );
                     this.$store.dispatch(
-                        'todo/updateTodoAccessGroups',
+                        'todo/updateTodoGroups',
                         this.$userStorage
                     );
 
