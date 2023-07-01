@@ -109,7 +109,10 @@
             "schema": {
               "type": "object",
               "properties": {
-
+                "item": {
+                  "type": "object",
+                  "$ref": "#/definitions/TodoItem"
+                }
               }
             }
           }
@@ -155,7 +158,28 @@
         ],
         "responses": {
           "200": {
-            "description": "удачная операция"
+            "description": "удачная операция",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "item": {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "$ref": "#/definitions/TodoItem"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "statusId": {
+                          "example": 2
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       }
@@ -215,7 +239,31 @@
         ],
         "responses": {
           "200": {
-            "description": "удачная операция"
+            "description": "удачная операция",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "formData": {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "$ref": "#/definitions/TodoItem"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "example": "Измененное имя"
+                        },
+                        "description": {
+                          "example": "Измененное описание"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       }
@@ -242,7 +290,16 @@
         ],
         "responses": {
           "200": {
-            "description": "удачная операция"
+            "description": "удачная операция",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
           }
         }
       }
@@ -307,7 +364,33 @@
         ],
         "responses": {
           "200": {
-            "description": "удачная операция"
+            "description": "удачная операция",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "formData": {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "$ref": "#/definitions/TogoGroupFormData"
+                    },
+                    {
+                      "$ref": "#/definitions/TodoGroup"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2023-07-01T20:46:08.000Z"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       }
@@ -364,7 +447,41 @@
         ],
         "responses": {
           "200": {
-            "description": "удачная операция"
+            "description": "удачная операция",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "formData": {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "$ref": "#/definitions/TogoGroupFormData"
+                    },
+                    {
+                      "$ref": "#/definitions/TodoGroup"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2023-07-01T20:46:08.000Z"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "description": {
+                          "example": "новое описание группы"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       }
@@ -391,7 +508,16 @@
         ],
         "responses": {
           "200": {
-            "description": "удачная операция"
+            "description": "удачная операция",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
           }
         }
       }
@@ -509,7 +635,29 @@
         ],
         "responses": {
           "200": {
-            "description": "удачная операция"
+            "description": "удачная операция",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "item": {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "$ref": "#/definitions/TodoItem"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "todoGroupId": {
+                          "type": "integer",
+                          "example": 1
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       }
@@ -581,7 +729,35 @@
         ],
         "responses": {
           "200": {
-            "description": "удачная операция"
+            "description": "удачная операция",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "item": {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "$ref": "#/definitions/TodoItem"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "example": "Измененное имя"
+                        },
+                        "description": {
+                          "example": "Измененное описание"
+                        },
+                        "todoGroupId": {
+                          "type": "integer",
+                          "example": 1
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       }
@@ -633,7 +809,28 @@
         ],
         "responses": {
           "200": {
-            "description": "удачная операция"
+            "description": "удачная операция",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "item": {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "$ref": "#/definitions/TodoItem"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "statusId": {
+                          "example": 2
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       }
@@ -668,7 +865,16 @@
         ],
         "responses": {
           "200": {
-            "description": "удачная операция"
+            "description": "удачная операция",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
           }
         }
       }
@@ -737,6 +943,104 @@
         }
       }
     },
+    "/todo-group/{id}/users/create": {
+      "post": {
+        "tags": [
+          "todo-group"
+        ],
+        "summary": "добавить пользователей в группу",
+        "operationId": "addUsersToGroup",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "идентификатор группы",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "body",
+            "name": "пользователи",
+            "description": "пользователи",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "formData": {
+                  "type": "object",
+                  "properties": {
+                    "user_emails": {
+                      "type": "array",
+                      "description": "почты пользователей",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": [
+                        "guest2@guest.com",
+                        "guest3@guest.com",
+                        "guest4@guest.com"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "удачная операция",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "item": {
+                  "type": "object",
+                  "properties": {
+                    "created": {
+                      "type": "array",
+                      "description": "добавленные пользователи",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": [
+                        "guest2@guest.com"
+                      ]
+                    },
+                    "existing": {
+                      "type": "array",
+                      "description": "существующие пользователи",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": [
+                        "guest3@guest.com"
+                      ]
+                    },
+                    "not_existing": {
+                      "type": "array",
+                      "description": "несуществующие пользователи",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": [
+                        "guest4@guest.com"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/todo-group/{id}/users/{relation_id}/delete": {
       "delete": {
         "tags": [
@@ -767,7 +1071,16 @@
         ],
         "responses": {
           "200": {
-            "description": "удачная операция"
+            "description": "удачная операция",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
           }
         }
       }
@@ -863,7 +1176,31 @@
         ],
         "responses": {
           "200": {
-            "description": "удачная операция"
+            "description": "удачная операция",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "item": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "имя пользователя",
+                      "example": "guest2"
+                    },
+                    "email": {
+                      "type": "object",
+                      "description": "почта пользователя",
+                      "example": "guest2@guest.com"
+                    }
+                  }
+                },
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
           }
         }
       }
@@ -951,7 +1288,31 @@
         ],
         "responses": {
           "200": {
-            "description": "удачная операция"
+            "description": "удачная операция",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "item": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "имя пользователя",
+                      "example": "guest2"
+                    },
+                    "email": {
+                      "type": "object",
+                      "description": "почта пользователя",
+                      "example": "guest2@guest.com"
+                    }
+                  }
+                },
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
           }
         }
       }
@@ -997,7 +1358,11 @@
         ],
         "responses": {
           "200": {
-            "description": "удачная операция"
+            "description": "удачная операция",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/User"
+            }
           }
         }
       }
@@ -1024,7 +1389,16 @@
         ],
         "responses": {
           "200": {
-            "description": "удачная операция"
+            "description": "удачная операция",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
           }
         }
       }
