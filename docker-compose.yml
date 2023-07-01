@@ -74,6 +74,15 @@ services:
       - mariadb
       - redis
 
+  swagger:
+    image: swaggerapi/swagger-ui:latest
+    environment:
+      - SWAGGER_JSON=/schema/swagger.json
+    ports:
+      - 8000:8080
+    volumes:
+      - ./swagger:/schema
+
   migrations:
     image: ${REGISTRY}/${MIGRATIONS_IMAGE}:${IMAGE_TAG}
     environment:

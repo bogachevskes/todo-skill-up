@@ -148,7 +148,7 @@ export default {
         removeUser (user) {
             this.$axios
                 .$delete(
-                    `/todo-user-group/${this.$route.params.id}/delete/${user.group_id}`
+                    `/todo-group/${this.$route.params.id}/users/${user.group_id}/delete`
                 )
                 .then((res) => {
                     this.loadUsers();
@@ -159,7 +159,7 @@ export default {
 
             this.$axios
                 .$post(
-                    `/todo-user-group/${this.$route.params.id}/create`,
+                    `/todo-group/${this.$route.params.id}/users/create`,
                     { formData: this.formData }
                 )
                 .then((res) => {

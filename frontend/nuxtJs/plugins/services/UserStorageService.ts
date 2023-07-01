@@ -265,7 +265,7 @@ export default class UserStorageLoader {
      */
     public loadPermissions(): any {
         return this.getAxios()
-            .$get('user-permissions/list')
+            .$get('user/permissions/list')
             .then((result) => {
                 this.identity.set('permissions', result.items);
 
