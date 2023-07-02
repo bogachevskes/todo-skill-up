@@ -87,3 +87,10 @@ WORKDIR /app
 
 RUN rm -rf /app/vendor \
     && composer --no-ansi --no-interaction install --no-progress
+
+# SWAGGER
+FROM swaggerapi/swagger-ui as swagger
+
+ENV SWAGGER_JSON=/schema/swagger.json
+
+COPY ./swagger /schema

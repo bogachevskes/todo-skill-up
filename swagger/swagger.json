@@ -1408,7 +1408,7 @@
         "tags": [
           "admin"
         ],
-        "summary": "список задач пользователя сгруппированных по статусам ",
+        "summary": "список задач пользователя сгруппированных по статусам",
         "operationId": "todoOfUser",
         "produces": [
           "application/json"
