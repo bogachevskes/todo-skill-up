@@ -161,7 +161,7 @@ export default {
         },
         loadUsers () {
             this.$axios
-                .$get(`/todo-user-group/${this.$route.params.id}/list`)
+                .$get(`/todo-group/${this.$route.params.id}/users/list`)
                 .then((result) => {
                     this.users = result.items;
                 });
