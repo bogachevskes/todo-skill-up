@@ -17,7 +17,7 @@ install:
 up: docker-up
 
 docker-up:
-	@docker-compose -p ${PROJECT} up -d
+	@docker-compose -p ${PROJECT} up -d --scale api-cli=0 --scale migrations=0
 
 down: docker-down
 
@@ -38,7 +38,14 @@ docker-build: \
 	docker-build-api \
 	docker-build-api-cli \
 	docker-build-ws \
-	docker-build-migrations
+	docker-build-migrations \
+	docker-build-swagger \
+	docker-build-nginx
+
+docker-build-nginx:
+	@docker build --target=nginx \
+	--build-arg NGINX_PORT=${NGINX_PORT} \
+	-t ${REGISTRY}/todo-skill-up-nginx:${IMAGE_TAG} -f ./docker/Dockerfile .
 
 docker-build-frontend:
 	@docker build --target=frontend \
@@ -59,6 +66,10 @@ docker-build-ws:
 docker-build-migrations:
 	@docker build --target=migrations \
 	-t ${REGISTRY}/${MIGRATIONS_IMAGE}:${IMAGE_TAG} -f ./docker/Dockerfile .
+
+docker-build-swagger:
+	@docker build --target=swagger \
+	-t ${REGISTRY}/todo-skill-up-swagger:${IMAGE_TAG} -f ./docker/Dockerfile .
 
 frontend-install:
 	@docker-compose -p ${PROJECT} run --rm frontend yarn install --no-bin-links

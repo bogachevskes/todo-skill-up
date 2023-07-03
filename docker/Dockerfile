@@ -87,3 +87,23 @@ WORKDIR /app
 
 RUN rm -rf /app/vendor \
     && composer --no-ansi --no-interaction install --no-progress
+
+# SWAGGER
+FROM swaggerapi/swagger-ui as swagger
+
+ENV SWAGGER_JSON=/schema/swagger.json
+
+COPY ./swagger /schema
+
+# NGINX
+FROM nginx:1.20.2-alpine as nginx
+
+COPY docker/nginx/conf.d/* /etc/nginx/conf.d
+
+ARG NGINX_PORT
+
+RUN sed -i "s/NGINX_PORT/${NGINX_PORT}/g" /etc/nginx/conf.d/default.conf;
+
+RUN apk update && apk upgrade && apk add --no-cache bash
+
+EXPOSE 80

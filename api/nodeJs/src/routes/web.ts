@@ -66,7 +66,7 @@ RoutesCollection.add(
 RoutesCollection.add(
     new Route(
         'GET',
-        '/user-permissions/list',
+        '/user/permissions/list',
         UserPermissionsController,
         'actionList',
         [AuthOnlyMiddleware]
@@ -190,7 +190,7 @@ RoutesCollection.add(
 
 RoutesCollection.addResource(
     new RoutesResource(
-        'todo-user-group',
+        'todo-group',
         TodoUsersGroupsController,
         [
             AuthOnlyMiddleware,
@@ -198,13 +198,13 @@ RoutesCollection.addResource(
         ],
         {
             'GET': {
-                'path': ':id/list'
+                'path': ':id/users/list'
             },
             'POST': {
-                'path': ':id/create'
+                'path': ':id/users/create'
             },
             'DELETE': {
-                'path': ':id/delete/:groupId'
+                'path': ':id/users/:groupId/delete'
             },
         },
         {
