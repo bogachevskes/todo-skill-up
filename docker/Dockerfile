@@ -63,7 +63,7 @@ EXPOSE 80
 
 CMD [ "node", "dist/main.js" ]
 
-# PHP CLI
+# PHP MIGRATIONS
 FROM php:8.2-cli-alpine3.17 as migrations
 
 COPY ./docker/php/cli/conf.d/* $PHP_INI_DIR/conf.d
@@ -103,7 +103,5 @@ COPY docker/nginx/conf.d/* /etc/nginx/conf.d
 ARG NGINX_PORT
 
 RUN sed -i "s/NGINX_PORT/${NGINX_PORT}/g" /etc/nginx/conf.d/default.conf;
-
-RUN apk update && apk upgrade && apk add --no-cache bash
 
 EXPOSE 80

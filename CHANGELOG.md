@@ -5,6 +5,13 @@
 Формат основан на [стандарте формата CHANGELOG](https://keepachangelog.com/en/1.0.0/),
 и придерживается [правил версионирования](https://semver.org/spec/v2.0.0.html).
 
+## [ [2.8.1](https://github.com/bogachevskes/todo-skill-up/releases/tag/2.8.1) ] - 05.07.2023
+
+- Исправлено:
+  - Исправлена документация API
+  - Внесены доработки в Dockerfile
+  - Исправлены опечатки
+
 ## [ [2.8.0](https://github.com/bogachevskes/todo-skill-up/releases/tag/2.8.0) ] - 03.06.2023
 
 - Реализовано:
