@@ -77,7 +77,6 @@ frontend-install:
 api-install:
 	@docker-compose -p ${PROJECT} run --rm --no-deps api-cli yarn install --no-bin-links
 
-# не работает, исправить
 api-build:
 	@docker-compose -p ${PROJECT} run --rm --no-deps api-cli yarn run build
 

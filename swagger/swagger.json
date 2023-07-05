@@ -49,22 +49,25 @@
         ],
         "responses": {
           "200": {
-            "description": "успешный ответ",
+            "description": "Успешный ответ",
             "schema": {
               "type": "object",
               "properties": {
                 "items": {
-                  "type": "object",
-                  "properties": {
-                    "todo": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/definitions/TodoItem"
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "todo": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/definitions/TodoItem"
+                        }
+                      },
+                      "status": {
+                        "type": "object",
+                        "$ref": "#/definitions/Status"
                       }
-                    },
-                    "status": {
-                      "type": "object",
-                      "$ref": "#/definitions/Status"
                     }
                   }
                 }
@@ -94,12 +97,12 @@
             "description": "объект задачи",
             "required": true,
             "schema": {
-                "type": "object",
-                "properties": {
-                  "form": {
-                    "$ref": "#/definitions/TodoItemForm"
-                  }
+              "type": "object",
+              "properties": {
+                "form": {
+                  "$ref": "#/definitions/TodoItemForm"
                 }
+              }
             }
           }
         ],
@@ -243,7 +246,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "formData": {
+                "item": {
                   "type": "object",
                   "allOf": [
                     {
@@ -368,7 +371,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "formData": {
+                "item": {
                   "type": "object",
                   "allOf": [
                     {
@@ -451,7 +454,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "formData": {
+                "item": {
                   "type": "object",
                   "allOf": [
                     {
@@ -549,30 +552,33 @@
               "type": "object",
               "properties": {
                 "items": {
-                  "type": "object",
-                  "properties": {
-                    "todo": {
-                      "type": "array",
-                      "items": {
-                        "allOf": [
-                          {
-                            "$ref": "#/definitions/TodoItem"
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "todoGroupId": {
-                                "type": "integer",
-                                "example": 1
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "todo": {
+                        "type": "array",
+                        "items": {
+                          "allOf": [
+                            {
+                              "$ref": "#/definitions/TodoItem"
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "todoGroupId": {
+                                  "type": "integer",
+                                  "example": 1
+                                }
                               }
                             }
-                          }
-                        ]
+                          ]
+                        }
+                      },
+                      "status": {
+                        "type": "object",
+                        "$ref": "#/definitions/Status"
                       }
-                    },
-                    "status": {
-                      "type": "object",
-                      "$ref": "#/definitions/Status"
                     }
                   }
                 }
@@ -1430,17 +1436,20 @@
               "type": "object",
               "properties": {
                 "items": {
-                  "type": "object",
-                  "properties": {
-                    "todo": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/definitions/TodoItem"
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "todo": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/definitions/TodoItem"
+                        }
+                      },
+                      "status": {
+                        "type": "object",
+                        "$ref": "#/definitions/Status"
                       }
-                    },
-                    "status": {
-                      "type": "object",
-                      "$ref": "#/definitions/Status"
                     }
                   }
                 }
