@@ -1,107 +1,118 @@
+# COMMON TOOLS
+FROM alpine:3.18.4 as common-tools
+
+COPY ./docker/common/wait-for /usr/local/bin/wait-for
+RUN apk --no-cache add bash && chmod +x /usr/local/bin/wait-for
+
 # FRONTEND
 FROM node:14.19-alpine as frontend
 
-RUN mkdir -p /app
+ARG USER='node'
+ARG GROUP='node'
+
+USER ${USER}
+
 WORKDIR /app
 
-RUN apk update && apk upgrade
-RUN apk add git
+COPY --chown=${USER}:${GROUP} ./frontend/nuxtJs/ /app
 
-COPY ./frontend/nuxtJs/ /app
+RUN yarn install --no-bin-links
 
-RUN yarn install
 RUN yarn run build
 
 EXPOSE 80
-
-ENV NUXT_HOST=0.0.0.0
-ENV NUXT_PORT=80
-
-CMD [ "yarn", "start" ]
-
-# API CLI
-FROM node:14.19-alpine as api-cli
-
-RUN mkdir -p /app
-WORKDIR /app
-
-RUN apk update && apk upgrade
-RUN apk add git
-
-COPY ./api/nodeJs/ /app/
-
-RUN yarn install
-RUN yarn run build
 
 # API
 FROM node:14.19-alpine as api
 
-RUN mkdir -p /app
+ARG USER='node'
+ARG GROUP='node'
+
+USER ${USER}
+
 WORKDIR /app
 
-COPY --from=api-cli /app /app/
+COPY --chown=${USER}:${GROUP} ./api/nodeJs/ /app
 
-EXPOSE 80
+RUN yarn install --no-bin-links
 
-CMD [ "yarn", "start" ]
-
-# WS
-FROM node:14.19-alpine as ws
-
-RUN mkdir -p /app
-WORKDIR /app
-
-RUN apk update && apk upgrade
-RUN apk add git
-
-COPY ./websocket/nestJs/ /app/
-
-RUN yarn install
 RUN yarn run build
 
 EXPOSE 80
 
-CMD [ "node", "dist/main.js" ]
+# WS
+FROM node:14.19-alpine as ws
+
+ARG USER='node'
+ARG GROUP='node'
+
+USER ${USER}
+
+WORKDIR /app
+
+COPY --chown=${USER}:${GROUP} ./websocket/nestJs/ /app
+
+RUN yarn install --no-bin-links
+
+RUN yarn run build
+
+EXPOSE 80
+
+# PHP-Builder
+FROM php:8.2-cli-alpine3.17 as php-builder
+
+ARG USER='www-data'
+ARG GROUP='www-data'
+
+ENV COMPOSER_MEMORY_LIMIT -1
+
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+
+RUN pear update-channels && pecl update-channels \
+    && install-php-extensions @composer-2 opcache pdo_mysql
+
+COPY ./docker/php/cli/conf.d/* $PHP_INI_DIR/conf.d
+COPY ./docker/php/php.ini-production $PHP_INI_DIR/php.ini
+
+USER ${USER}
+
+WORKDIR /app
+
+COPY --chown=${USER}:${GROUP} ./migrations/composer.json ./migrations/composer.lock /app/
+
+RUN composer --no-ansi --no-interaction install --no-progress
 
 # PHP MIGRATIONS
 FROM php:8.2-cli-alpine3.17 as migrations
 
-COPY ./docker/php/cli/conf.d/* $PHP_INI_DIR/conf.d
-COPY ./docker/php/php.ini $PHP_INI_DIR/php.ini
+ARG USER='www-data'
+ARG GROUP='www-data'
 
-COPY ./docker/common/wait-for /usr/local/bin/wait-for
-RUN chmod +x /usr/local/bin/wait-for
+COPY ./docker/php/cli/conf.d/* $PHP_INI_DIR/conf.d
+COPY ./docker/php/php.ini-production $PHP_INI_DIR/php.ini
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 
-RUN install-php-extensions @composer-2 opcache pdo_mysql
+RUN pear update-channels && pecl update-channels \
+    && install-php-extensions opcache pdo_mysql
 
-ENV COMPOSER_ALLOW_SUPERUSER 1
-ENV COMPOSER_MEMORY_LIMIT -1
+USER ${USER}
 
-COPY ./migrations /app
-
-RUN apk --no-cache add bash
+COPY --chown=${USER}:${GROUP} ./migrations /app
+COPY --from=php-builder --chown=${USER}:${GROUP} /app /app
 
 WORKDIR /app
-
-RUN rm -rf /app/vendor \
-    && composer --no-ansi --no-interaction install --no-progress
-
-# SWAGGER
-FROM swaggerapi/swagger-ui as swagger
-
-ENV SWAGGER_JSON=/schema/swagger.json
-
-COPY ./swagger /schema
 
 # NGINX
 FROM nginx:1.20.2-alpine as nginx
 
-COPY docker/nginx/conf.d/* /etc/nginx/conf.d
-
-ARG NGINX_PORT
-
-RUN sed -i "s/NGINX_PORT/${NGINX_PORT}/g" /etc/nginx/conf.d/default.conf;
+COPY ./docker/nginx/templates /etc/nginx/templates
 
 EXPOSE 80
+
+# SWAGGER
+FROM swaggerapi/swagger-ui:v5.9.2 as swagger
+
+ENV URL=/swagger-ui/spec.json
+
+COPY ./swagger/* /usr/share/nginx/html
