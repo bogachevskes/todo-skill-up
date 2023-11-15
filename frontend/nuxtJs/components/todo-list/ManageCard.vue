@@ -170,7 +170,7 @@ export default {
             );
 
             this.$axios
-                .$post('todo/create', { form: this.formData })
+                .$post('/todo/create', { form: this.formData })
                 .then((res) => this.onCardProcessingComplete());
         },
         executeUpdating () {
@@ -180,7 +180,7 @@ export default {
             );
 
             this.$axios
-                .$put(`todo/update/${this.formData.id}`, {
+                .$put(`/todo/update/${this.formData.id}`, {
                     formData: this.formData,
                 })
                 .then((res) => this.onCardProcessingComplete());

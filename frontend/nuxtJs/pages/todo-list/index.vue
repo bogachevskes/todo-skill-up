@@ -57,7 +57,7 @@ export default {
         },
         moveToGroup (cardId, statusId) {
             this.$axios
-                .$put(`todo/set-status/${cardId}`, { statusId })
+                .$put(`/todo/set-status/${cardId}`, { statusId })
                 .then(() => {
                     this.$store.dispatch(
                         'todo/updateGroupsList',
@@ -79,7 +79,9 @@ export default {
             this.moveToGroup(cardId, group.status.id);
         },
         deleteCard (id) {
-            this.$axios.$delete(`todo/delete/${id}`).then(() => {
+            this.$axios
+                .$delete(`/todo/delete/${id}`)
+                .then(() => {
                 this.$store.dispatch(
                     'todo/updateGroupsList',
                     this.$userStorage

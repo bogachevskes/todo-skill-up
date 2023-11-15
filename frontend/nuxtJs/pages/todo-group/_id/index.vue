@@ -251,7 +251,7 @@ export default {
                 const socket = this.$socketClient
                     .create({
                         transports: ['websocket'],
-                        path: '/todo',
+                        path: '/ws-todo',
                         query: {
                             token: this.$store.getters['todo/getToken'],
                         },
@@ -329,7 +329,7 @@ export default {
         moveToGroup (cardId, statusId) {
             this.$axios
                 .$put(
-                    `todo-group/todo/${this.$route.params.id}/set-status/${cardId}`,
+                    `/todo-group/todo/${this.$route.params.id}/set-status/${cardId}`,
                     { statusId }
                 )
                 .then(() => {

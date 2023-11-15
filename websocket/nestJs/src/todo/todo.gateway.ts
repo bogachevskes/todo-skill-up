@@ -9,11 +9,11 @@ import ErrorHandler from './exceptions/error.handler';
 import ChannelMessageHandler from './use_cases/channel_message.handler';
 
 @WebSocketGateway({
-    path: '/todo',
+    path: '/ws-todo',
     namespace: '/todo',
     transports: ['websocket'],
     cors: {
-        origin: process.env.ORIGIN_URL,
+        origin: false,
     },
 })
 export class TodoGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect

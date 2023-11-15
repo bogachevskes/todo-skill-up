@@ -212,7 +212,7 @@ export default {
             this.isLoading = true;
 
             this.$axios
-                .$put('auth/signup', this.formData)
+                .$put('/auth/signup', this.formData)
                 .then((result) => {
                     this.isLoading = false;
 

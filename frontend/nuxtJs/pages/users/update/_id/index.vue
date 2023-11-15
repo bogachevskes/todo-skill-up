@@ -47,7 +47,7 @@ export default {
         },
         loadUserData () {
             this.$axios
-                .$get(`admin/users/get-user-data/${this.userId}`)
+                .$get(`/admin/users/get-user-data/${this.userId}`)
                 .then((result) => {
                     this.formData = {
                         ...this.formData,
@@ -57,7 +57,7 @@ export default {
         },
         handleUpdating (formData) {
             this.$axios
-                .$put(`admin/users/update/${this.userId}`, { formData })
+                .$put(`/admin/users/update/${this.userId}`, { formData })
                 .then((result) => {
                     const resultItem = result.item;
 

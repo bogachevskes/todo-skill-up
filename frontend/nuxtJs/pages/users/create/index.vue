@@ -23,7 +23,7 @@ export default {
     methods: {
         handleCreating (formData) {
             this.$axios
-                .$post(`admin/users/create`, { formData })
+                .$post(`/admin/users/create`, { formData })
                 .then((result) => {
                     const resultItem = result.item;
 

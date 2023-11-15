@@ -34,7 +34,9 @@ export default {
     },
     methods: {
         loadUserTodo (userId) {
-            this.$axios.$get(`admin/users/todo/${userId}`).then((result) => {
+            this.$axios
+                .$get(`/admin/users/todo/${userId}`)
+                .then((result) => {
                 this.groups = TodoGroupsService.createGroups(result.items);
             });
         },

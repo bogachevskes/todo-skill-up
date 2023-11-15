@@ -126,7 +126,9 @@ export default {
                 .then((x) => this.loadUsersList());
         },
         loadUsersList () {
-            this.$axios.$get('/admin/users/list').then((result) => {
+            this.$axios
+                .$get('/admin/users/list')
+                .then((result) => {
                 this.users = result.items || [];
             });
         },
