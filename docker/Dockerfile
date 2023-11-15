@@ -99,7 +99,7 @@ RUN pear update-channels && pecl update-channels \
 USER ${USER}
 
 COPY --chown=${USER}:${GROUP} ./migrations /app
-COPY --from=php-builder --chown=${USER}:${GROUP} /app /app
+COPY --from=php-builder --chown=${USER}:${GROUP} /app/vendor /app/vendor
 
 WORKDIR /app
 
@@ -115,4 +115,9 @@ FROM swaggerapi/swagger-ui:v5.9.2 as swagger
 
 ENV URL=/swagger-ui/spec.json
 
-COPY ./swagger/* /usr/share/nginx/html
+ARG USER='nginx'
+ARG GROUP='nginx'
+
+USER ${USER}
+
+COPY --chown=${USER}:${GROUP} ./swagger/* /usr/share/nginx/html

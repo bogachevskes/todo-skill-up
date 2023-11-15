@@ -3,25 +3,25 @@ include .env
 install:
 	@$(MAKE) -s down
 	@$(MAKE) -s docker-build
-	@docker-compose -p ${PROJECT} up -d mariadb
+	@docker-compose -p ${DOCKER_PROJECT} up -d mariadb
 	@$(MAKE) -s migrate
 	@$(MAKE) -s up
 
 up: docker-up
 
 docker-up:
-	@docker-compose -p ${PROJECT} up -d
+	@docker-compose -p ${DOCKER_PROJECT} up -d
 
 down: docker-down
 
 docker-down:
-	@docker-compose -p ${PROJECT} down --remove-orphans
+	@docker-compose -p ${DOCKER_PROJECT} down --remove-orphans
 
 restart:
 	@$(MAKE) -s down
 	@$(MAKE) -s up
 ps:
-	@docker-compose -p ${PROJECT} ps
+	@docker-compose -p ${DOCKER_PROJECT} ps
 
 logs:
 	@docker-compose logs -f
