@@ -1,5 +1,17 @@
 include .env
 
+ENV_MODE=${ENV}
+
+MIGRATOR_EXTRA_ARGS=# не применимо в окружении production
+DOCKER_UP_ARGS=# не применимо в окружении production
+
+ifeq ($(ENV_MODE), development)
+
+MIGRATOR_EXTRA_ARGS=-v $(PWD)/migrations/db:/app/db
+DOCKER_UP_ARGS=-f docker-compose.yml -f docker-compose.local.override.yml
+
+endif
+
 install:
 	@$(MAKE) -s down
 	@$(MAKE) -s docker-build
@@ -7,14 +19,11 @@ install:
 	@$(MAKE) -s migrate
 	@$(MAKE) -s up
 
-up: docker-up
+up:
+	@docker-compose -p ${DOCKER_PROJECT} \
+	${DOCKER_UP_ARGS} up -d
 
-docker-up:
-	@docker-compose -p ${DOCKER_PROJECT} up -d
-
-down: docker-down
-
-docker-down:
+down:
 	@docker-compose -p ${DOCKER_PROJECT} down --remove-orphans
 
 restart:
@@ -64,18 +73,8 @@ docker-build-swagger:
 	-t ${DOCKER_REGISTRY}/${DOCKER_SWAGGER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION} -f ./docker/Dockerfile .
 
 api-cli-exec:
-	@$(MAKE) -s wait-db
-	@$(MAKE) -s wait-redis
-	@docker run --network=todo-skill-up_default \
-		-e "DB_HOST=${DB_HOST}" \
-		-e "DB_PORT=${DB_PORT}" \
-		-e "DB_USER=${DB_USER}" \
-		-e "DB_PASSWORD=${DB_PASSWORD}" \
-		-e "DB_NAME=${DB_NAME}" \
-		-e "DB_LOGGING: ${TYPEORM_DB_LOGGING}" \
-		-e "REDIS_HOST: ${REDIS_HOST}" \
-		-e "REDIS_PORT: ${REDIS_PORT}" \
-		--rm ${DOCKER_REGISTRY}/${DOCKER_API_IMAGE_NAME}:${DOCKER_IMAGE_VERSION} yarn run console $(cmd)
+	@docker-compose -p ${DOCKER_PROJECT} \
+		 -f docker-compose.yml -f docker-compose.local.override.yml run --rm api yarn run console $(cmd)
 
 migrator:
 	@$(MAKE) -s wait-db
@@ -85,6 +84,7 @@ migrator:
 		-e "DB_USER=${DB_USER}" \
 		-e "DB_PASSWORD=${DB_PASSWORD}" \
 		-e "DB_NAME=${DB_NAME}" \
+		${MIGRATOR_EXTRA_ARGS} \
 		--rm ${DOCKER_REGISTRY}/${DOCKER_MIGRATIONS_IMAGE_NAME}:${DOCKER_IMAGE_VERSION} \
 		vendor/bin/phinx $(cmd)
 
