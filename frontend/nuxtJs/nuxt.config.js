@@ -1,7 +1,10 @@
 export default {
+
+    srcDir: 'src',
+
     server: {
         host: '0',
-        port: process.env.APP_PORT,
+        port: 80,
     },
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {
@@ -48,12 +51,12 @@ export default {
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {
         // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-        baseURL: 'http://api',
+        baseURL: `${process.env.APP_BASE_URL}/api`,
     },
 
     publicRuntimeConfig: {
         axios: {
-            browserBaseURL: process.env.API_APP_URL,
+            browserBaseURL: `${process.env.APP_BASE_URL}/api`,
         },
         WS_APP_URL: process.env.WS_APP_URL,
     },
@@ -67,4 +70,4 @@ export default {
             poll: 1000,
         },
     },
-};
+}

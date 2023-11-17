@@ -1,0 +1,23 @@
+version: '3.7'
+services:
+
+  frontend:
+    command: ["yarn", "run", "dev"]
+    volumes:
+      - ./frontend/nuxtJs/src:/app/src
+
+  api:
+    volumes:
+      - ./api/nodeJs/src:/app/src
+      - ./api/nodeJs/runtime:/app/runtime
+      - ./api/nodeJs/package.json:/app/package.json
+      - ./api/nodeJs/yarn.lock:/app/src/yarn.lock
+
+  ws:
+    command: ["yarn", "run", "start:dev"]
+    volumes:
+      - ./websocket/nestJs/src:/app/src
+
+  swagger:
+    volumes:
+      - ./swagger/spec.json:/usr/share/nginx/html/spec.json
