@@ -33,7 +33,7 @@ ps:
 	@docker-compose -p ${DOCKER_PROJECT} ps
 
 logs:
-	@docker-compose logs -f
+	@docker-compose logs -f $(service)
 
 docker-build: \
 	docker-build-common-tools \
