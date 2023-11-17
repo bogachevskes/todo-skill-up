@@ -1,7 +1,7 @@
 import UserStorageService from './services/UserStorageService';
 
 export default function (ctx, inject) {
-    const userStorage = UserStorageService.getInstance();
+    const userStorage = new UserStorageService();
 
     userStorage.axios = ctx.$axios;
 

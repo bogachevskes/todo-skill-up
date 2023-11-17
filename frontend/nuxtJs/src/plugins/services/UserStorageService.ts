@@ -313,17 +313,4 @@ export default class UserStorageLoader {
 
         return pairs;
     }
-
-    /**
-     * Возвращает экземпляр класса.
-     *
-     * @return UserStorageLoader
-     */
-    public static getInstance(): UserStorageLoader {
-        if (!(this.instance instanceof this)) {
-            this.instance = new this();
-        }
-
-        return this.instance;
-    }
 }
