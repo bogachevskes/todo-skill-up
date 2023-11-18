@@ -5,7 +5,12 @@
 Формат основан на [стандарте формата CHANGELOG](https://keepachangelog.com/en/1.0.0/),
 и придерживается [правил версионирования](https://semver.org/spec/v2.0.0.html).
 
-## [ [3.0.0](https://github.com/bogachevskes/todo-skill-up/releases/tag/2.8.1) ] - 05.07.2023
+## [ [3.1.0](https://github.com/bogachevskes/todo-skill-up/releases/tag/3.1.0) ] - 18.11.2023
+
+- Изменено:
+  - Swagger спецификация приведена в соответствие с версией OpenApi 3.0.3
+
+## [ [3.0.0](https://github.com/bogachevskes/todo-skill-up/releases/tag/3.0.0) ] - 17.11.2023
 
 - Реализовано:
   - Конфигурация Docker-окружения приведена в готовность для продуктивного исполнения

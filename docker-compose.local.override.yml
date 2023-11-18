@@ -20,4 +20,4 @@ services:
 
   swagger:
     volumes:
-      - ./swagger/spec.json:/usr/share/nginx/html/spec.json
+      - ./swagger/spec.yml:/usr/share/nginx/html/spec.yml
