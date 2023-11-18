@@ -113,7 +113,7 @@ EXPOSE 80
 # SWAGGER
 FROM swaggerapi/swagger-ui:v5.9.2 as swagger
 
-ENV URL=/swagger-ui/spec.json
+ENV URL=/swagger-ui/spec.yml
 
 ARG USER='nginx'
 ARG GROUP='nginx'
