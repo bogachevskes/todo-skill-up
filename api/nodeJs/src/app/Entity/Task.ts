@@ -1,10 +1,10 @@
 import { Column, Entity, BaseEntity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import TodoStatus from './TodoStatus';
+import TaskStatus from './TaskStatus';
 import User from './User';
-import TodoGroup from './TodoGroup';
+import Board from './Board';
 
 @Entity('todo_item')
-export default class TodoItem extends BaseEntity
+export default class Task extends BaseEntity
 {
     @PrimaryGeneratedColumn({ unsigned: true })
     public id: number;
@@ -63,11 +63,11 @@ export default class TodoItem extends BaseEntity
     })
     public updatedAt: Date;
 
-    @ManyToOne(_type => TodoGroup)
-    public todoGroup: TodoGroup;
+    @ManyToOne(_type => Board)
+    public todoGroup: Board;
 
-    @ManyToOne(_type => TodoStatus)
-    public status: TodoStatus;
+    @ManyToOne(_type => TaskStatus)
+    public status: TaskStatus;
 
     @ManyToOne(_type => User)
     public user: User;

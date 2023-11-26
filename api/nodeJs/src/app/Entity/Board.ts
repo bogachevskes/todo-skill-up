@@ -2,19 +2,10 @@ import { Column, Entity, BaseEntity, PrimaryGeneratedColumn, ManyToOne } from 't
 import User from './User';
 
 @Entity('todo_group')
-export default class TodoGroup extends BaseEntity
+export default class Board extends BaseEntity
 {
-    @ManyToOne(_type => User)
-    public user: User;
-    
     @PrimaryGeneratedColumn({ unsigned: true })
     public id: number;
-
-    @Column({
-        unsigned: true,
-        comment: 'Пользователь',
-    })
-    public userId: number;
 
     @Column('varchar', {
         name: 'name',

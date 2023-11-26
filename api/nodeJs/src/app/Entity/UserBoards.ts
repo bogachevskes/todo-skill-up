@@ -1,12 +1,12 @@
 import { Column, Entity, BaseEntity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import TodoGroup from './TodoGroup';
+import Board from './Board';
 import User from './User';
 
 @Entity('todo_users_groups')
-export default class TodoUsersGroups extends BaseEntity
+export default class UserBoards extends BaseEntity
 {
-    @ManyToOne(_type => TodoGroup)
-    todoGroup: TodoGroup;
+    @ManyToOne(_type => Board)
+    todoGroup: Board;
 
     @ManyToOne(_type => User)
     user: User;

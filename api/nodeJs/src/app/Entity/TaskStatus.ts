@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
 
 @Entity('todo_status')
-export default class TodoStatus extends BaseEntity
+export default class TaskStatus extends BaseEntity
 {
     @PrimaryGeneratedColumn({ unsigned: true })
     id: number;
@@ -12,15 +12,6 @@ export default class TodoStatus extends BaseEntity
         length: 10,
     })
     name: string;
-
-    @Column('tinyint', {
-        name: 'initial_default',
-        nullable: true,
-        unsigned: true,
-        comment: 'Статус по умолчанию при создании задачи',
-        width: 1,
-      })
-    public initialDefault: number|null;
 
     @Column("timestamp", {
         name: 'created_at',
