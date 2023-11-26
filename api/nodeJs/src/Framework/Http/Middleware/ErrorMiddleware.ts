@@ -1,9 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import ErrorMiddlewareInterface from './ErrorMiddlewareInterface';
 import NotFound from '../../Exceptions/NotFound';
-import HTTPException from '../../Exceptions/base/HTTPException';
-import InternalServerError from '../../Exceptions/InternalServerError';
 import Logger from '../../Utils/Logger';
+import Codes from '../../Exceptions/base/Codes';
+import BadRequest from "../../Exceptions/BadRequest";
+import Unauthorized from "../../Exceptions/Unauthorized";
+import Forbidden from "../../Exceptions/Forbidden";
+import Messages from "../../Exceptions/base/Messages";
 
 export default class ErrorMiddleware implements ErrorMiddlewareInterface
 {
@@ -13,27 +16,36 @@ export default class ErrorMiddleware implements ErrorMiddlewareInterface
     public execute(err: Error, req: Request, res: Response, next: NextFunction): Response
     {
         if (err instanceof NotFound) {
-            res.status(err.status);
+            res.status(Codes.CODE_NOT_FOUND);
             
-            return res.send({"message": err.message});
+            return res.json(err);
         }
-    
-        if (err instanceof HTTPException) {
-            Logger.log('warn', `INNER EXCEPTION => ${err.message}`);
-            
-            return res.status(err.status)
-                .json(err);
+
+        if (err instanceof BadRequest) {
+            res.status(Codes.CODE_BAD_REQUEST);
+
+            return res.json(err);
+        }
+
+        if (err instanceof Unauthorized) {
+            res.status(Codes.CODE_UNAUTHORIZED);
+
+            return res.json(err);
+        }
+
+        if (err instanceof Forbidden) {
+            res.status(Codes.CODE_FORBIDDEN);
+
+            return res.json(err);
         }
     
         Logger.log('error', `Occurred unexpected error => ${err}`);
     
         console.log(err);
-    
-        const error = new InternalServerError;
-    
-        return res.status(error.status)
+
+        return res.status(Codes.CODE_INTERNAL_SERVER_ERROR)
             .json({
-                'message': 'Internal server error'
+                'message': Messages.INTERNAL_SERVER_ERROR,
             });
     }
 }
