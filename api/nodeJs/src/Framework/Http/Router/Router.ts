@@ -2,18 +2,11 @@ import { Router  as BaseRouter } from 'express';
 import asyncHandler from 'express-async-handler';
 import { asyncMiddleware } from 'middleware-async';
 import Route from './Route';
-import ControllerInterface from '../Controller/ControllerInterface';
 
 export default class Router
 {
-    /**
-     * @type BaseRouter
-     */
     protected router;
 
-    /**
-     * @type Route[]
-     */
     protected routes: Route[];
     
     public constructor()
@@ -21,10 +14,6 @@ export default class Router
         this.router = BaseRouter();
     }
 
-    /**
-     * @param  Function[] middlewareClasses
-     * @return Function[]
-     */
     protected resolveMiddlewareMultiple(middlewareClasses: Function[]): Function
     {
         let chainHandler,
@@ -48,21 +37,13 @@ export default class Router
         return asyncMiddleware(chainHandler.execute);
     }
 
-    /**
-     * @param  Function controllerClass
-     * @return Function
-     */
-    protected resolveController(controllerClass: Function, action: string): Function
+    protected resolveController(controllerClass: Function, action: string)
     {
-        const controller: ControllerInterface = eval(`new controllerClass`);
+        const controller: object = eval(`new controllerClass`);
 
-        return asyncHandler(controller[action]);
+        return asyncHandler(controller[action].bind(controller));
     }
 
-    /**
-     * @param  Route[] routes
-     * @return void
-     */
     public configureRoutes(routes: Route[]): void
     {
         this.routes = routes;
@@ -89,9 +70,6 @@ export default class Router
         }
     }
 
-    /**
-     * @return BaseRouter
-     */
     public getRoutes(): BaseRouter
     {
         return this.router;
