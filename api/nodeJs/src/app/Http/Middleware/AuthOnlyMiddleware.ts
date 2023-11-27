@@ -1,22 +1,21 @@
 import { Request } from 'express';
 import jwt from 'jsonwebtoken';
 import Middleware from '../../../Framework/Http/Middleware/Middleware';
-
 import BadRequest from '../../../Framework/Exceptions/BadRequest';
 import NotFound from '../../../Framework/Exceptions/NotFound';
-
 import UserRepository from '../../Repository/UserRepository';
-
 import User from '../../Entity/User';
-
 import ConfigService from '../../../Framework/Utils/ConfigService';
 
-/**
- * Фильтрация доступа только
- * авторизованных пользователей.
- */
 export default class AuthOnlyMiddleware extends Middleware
 {
+    private userRepository: UserRepository;
+
+    public constructor() {
+        super();
+        this.userRepository = new UserRepository;
+    }
+
     /**
      * @see Middleware
      */
@@ -32,13 +31,13 @@ export default class AuthOnlyMiddleware extends Middleware
             throw new BadRequest('Аутентификация не выполнена');
         }
     
-        const user = await UserRepository.findById(decodedToken.userId);
+        const user: User|null = await this.userRepository.findById(decodedToken.userId);
     
-        if (! (user instanceof User)) {
+        if (user === null) {
             throw new NotFound('Пользователь не найден');
         }
     
-        if (UserRepository.isBlocked(user) === true) {
+        if (this.userRepository.isBlocked(user) === true) {
             throw new BadRequest('Пользователь заблокирован');
         }
     
