@@ -48,19 +48,9 @@ export default class BoardsRepository
         await query.execute();
     }
 
-    public async createNew(data: BoardCreateRequest): Promise<Board>
+    public createNew(data: BoardCreateRequest): Board
     {
-        const model = this.loadModel(new Board, data);
-
-        await model.save();
-
-        const board: Board | undefined = await Board.findOne({select: ['id', 'name', 'description', 'createdAt', 'updatedAt'], where: {id: model.id}});
-
-        if (board instanceof Board) {
-            return board;
-        }
-
-        throw new Error('Неожидаемое поведение при записи в базу');
+        return this.loadModel(new Board, data);
     }
 
     public async update(item: Board, attributes: object): Promise<void>
@@ -91,14 +81,14 @@ export default class BoardsRepository
         return await query.getRawMany();
     }
 
-    public async assignUserToBoard(groupId: number, userId: number): Promise<UserBoards>
+    public createUserToBoardAssignment(groupId: number, userId: number): UserBoards
     {
         const model: UserBoards = new UserBoards;
 
         model.todoGroupId = groupId;
         model.userId = userId;
 
-        return await model.save();
+        return model;
     }
 
     public async revokeUserFromBoard(groupId: number, userId: number): Promise<void>
