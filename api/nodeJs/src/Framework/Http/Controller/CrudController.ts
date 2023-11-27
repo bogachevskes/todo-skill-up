@@ -1,98 +1,107 @@
 import { Request, Response } from 'express';
-import Controller from './Controller';
 import AutoBind from '../../Decorators/AutoBind';
-import * as _ from 'lodash';
+import Forbidden from "../../Exceptions/Forbidden";
+import Codes from "../../Exceptions/base/Codes";
 
-export default abstract class CrudController extends Controller
+export default abstract class CrudController
 {
-    /**
-     * @param  Request req
-     * @return Promise<object[]>
-     */
-    protected abstract list(req: Request): Promise<any[]>
+    protected list(req: Request): Promise<any[]>|never
+    {
+        return this.throwDefaultForbidden();
+    }
 
-    /**
-     * @param  Request req
-     * @return Promise<object>
-     */
-    protected abstract create(req: Request): Promise<object>
+    protected listItem(id: number, req: Request): Promise<object|[]>|never
+    {
+        return this.throwDefaultForbidden();
+    }
 
-    /**
-     * @param  number id
-     * @param  Request req
-     * @return Promise<object>
-     */
-    protected abstract update(id: number, req: Request): Promise<object>
+    protected create(req: Request): Promise<void|object>|never
+    {
+        return this.throwDefaultForbidden();
+    }
 
-    /**
-     * @param  number id
-     * @param  Request req
-     * @return Promise<boolean>
-     */
-    protected abstract delete(id: number, req: Request): Promise<boolean>
+    protected update(id: number, req: Request): Promise<void>|never
+    {
+        return this.throwDefaultForbidden();
+    }
 
-    /**
-     * Возвращает сущности.
-     * 
-     * @param  req 
-     * @param  res
-     * @return Response
-     */
+    protected patch(id: number, req: Request): Promise<void>|never
+    {
+        return this.throwDefaultForbidden();
+    }
+
+    protected delete(id: number, req: Request): Promise<void>
+    {
+        return this.throwDefaultForbidden();
+    }
+
+    private throwDefaultForbidden(): never
+    {
+        throw new Forbidden('Доступ запрещен');
+    }
+
     @AutoBind
     public async actionList(req: Request, res: Response): Promise<Response>
     {
-        return res.json({
-            items: await this.list(req),
-        });
+        return res.json(await this.list(req));
     }
 
-    /**
-     * Создает сущность.
-     * 
-     * @param  req 
-     * @param  res
-     * @return Response
-     */
     @AutoBind
-    public async actionCreate(req: Request, res: Response): Promise<Response>
+    public async actionListItem(req: Request, res: Response): Promise<Response>
     {
-        return res.json({
-            item: await this.create(req),
-        });
+        const id: number = parseInt(req.params.id);
+
+        return res.json(await this.listItem(id, req));
     }
 
-    /**
-     * Обновление сущности.
-     * 
-     * @param  req 
-     * @param  res
-     * @return Response
-     */
     @AutoBind
-    public async actionUpdate(req: Request, res: Response): Promise<Response>
+    public async actionCreate(req: Request, res: Response): Promise<void>
     {
-        const id = parseInt(req.params.id);
-        
-        return res.json({
-            item: await this.update(id, req),
-        });
+        const result: void|object = await this.create(req);
+
+        res.status(Codes.CODE_CREATED);
+
+        if (typeof result === 'object') {
+            res.json(result);
+            return;
+        }
+
+        res.send();
     }
 
-    /**
-     * Удаление сущности.
-     * 
-     * @param  req 
-     * @param  res
-     * @return Response
-     */
     @AutoBind
-    public async actionDelete(req: Request, res: Response): Promise<Response>
+    public async actionUpdate(req: Request, res: Response): Promise<void>
     {
-        const id = parseInt(req.params.id);
-        
-        return res.json({
-            success: await this.delete(id, req),
-        });
+        const id: number = parseInt(req.params.id);
+
+        await this.update(id, req);
+
+        res.status(Codes.CODE_OK);
+
+        res.send();
     }
 
+    @AutoBind
+    public async actionPatch(req: Request, res: Response): Promise<void>
+    {
+        const id: number = parseInt(req.params.id);
+
+        await this.patch(id, req);
+
+        res.status(Codes.CODE_OK);
+
+        res.send();
+    }
+
+    @AutoBind
+    public async actionDelete(req: Request, res: Response): Promise<void>
+    {
+        const id: number = parseInt(req.params.id);
+
+        await this.delete(id, req);
+
+        res.status(Codes.CODE_NO_CONTENT);
+
+        res.send();
+    }
 }
