@@ -94,7 +94,7 @@ export default class UserUpdateRequest extends ValidationRequest
                 const
                     user = await (new UserRepository).findByEmail(this.email);
 
-                return this.validateManual(user instanceof User, MESSAGE_EMAIL_EXISTS, 'email_uniq');
+                return this.validateManual(user === null, MESSAGE_EMAIL_EXISTS, 'email_uniq');
             },
             async () => {
 
