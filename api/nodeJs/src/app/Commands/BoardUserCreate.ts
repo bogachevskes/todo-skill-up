@@ -44,7 +44,8 @@ export default class BoardUserCreate extends BaseCommand
                 continue;
             }
 
-            await this.boardsRepository.assignUserToBoard(this.context.get('todo_group_id'), user.id);
+            await this.boardsRepository.createUserToBoardAssignment(this.context.get('todo_group_id'), user.id)
+                .save();
         }
 
         this.context.set('warnings', warnings);
