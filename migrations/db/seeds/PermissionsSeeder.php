@@ -14,11 +14,6 @@ class PermissionsSeeder extends AbstractSeed
                 'type' => 2,
                 'description' => 'Управление пользователями',
             ],
-            [
-                'name' => '/admin/users/todo',
-                'type' => 2,
-                'description' => 'Управление списком задач пользователей',
-            ],
         ];
 
         $table = $this->table('auth_item');
