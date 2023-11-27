@@ -4,21 +4,23 @@ import NotFound from '../../../Framework/Exceptions/NotFound';
 import BadRequest from '../../../Framework/Exceptions/BadRequest';
 import Task from '../../Entity/Task';
 import TaskRepository from '../../Repository/TaskRepository';
-import RedisConnection from '../../Services/RedisConnection';
 import TaskStatusRepository from "../../Repository/TaskStatusRepository";
 import TaskStatus from "../../Entity/TaskStatus";
 import TaskCreateRequest from "../FormRequest/Task/TaskCreateRequest";
 import TaskUpdateRequest from "../FormRequest/Task/TaskUpdateRequest";
+import RedisProducer from "../../../Framework/Producers/RedisProducer";
 
 export default class BoardsTasksController extends CrudController
 {
     protected statusRepository: TaskStatusRepository;
     protected taskRepository: TaskRepository;
+    protected producer: RedisProducer;
 
     public constructor() {
         super();
         this.statusRepository = new TaskStatusRepository();
         this.taskRepository = new TaskRepository();
+        this.producer = new RedisProducer();
     }
 
     /**
@@ -61,12 +63,7 @@ export default class BoardsTasksController extends CrudController
 
         const task: Task = await this.taskRepository.createNew(form);
 
-        const msg: string = JSON.stringify(task);
-
-        // вынести в сервис
-
-        RedisConnection.getClient()
-            .publish('todo-created', msg);
+        this.producer.send('todo-created', task);
     }
 
     /**
@@ -89,14 +86,9 @@ export default class BoardsTasksController extends CrudController
             throw new BadRequest(form.getFirstError());
         }
 
-        await this.taskRepository.update(task, form);
+        const updatedTask: Task = await this.taskRepository.update(task, form);
 
-        const msg = JSON.stringify(task);
-
-        // TODO: вынести в сервис
-
-        RedisConnection.getClient()
-            .publish('todo-state-changed', msg);
+        this.producer.send('todo-state-changed', updatedTask);
     }
 
     protected async patch(id: number, req: Request): Promise<void>|never
@@ -113,12 +105,7 @@ export default class BoardsTasksController extends CrudController
 
         await this.taskRepository.deleteById(id);
 
-        const msg = JSON.stringify(task);
-
-        // TODO: вынести в сервис
-
-        RedisConnection.getClient()
-            .publish('todo-deleted', msg);
+        this.producer.send('todo-deleted', task);
     }
 
     protected async findModel(id: number): Promise<Task | never>
