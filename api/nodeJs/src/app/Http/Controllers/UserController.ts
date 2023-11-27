@@ -1,31 +1,38 @@
 import { Request, Response } from 'express';
-import Controller from '../../../Framework/Http/Controller/Controller';
+import CrudController from '../../../Framework/Http/Controller/CrudController';
+import UserRepository from '../../Repository/UserRepository';
 import AutoBind from '../../../Framework/Decorators/AutoBind';
 import BadRequest from '../../../Framework/Exceptions/BadRequest';
-import UserRepository from '../../../app/Repository/UserRepository';
-import MatchUsersByEmailRequest from '../../../app/FormRequest/User/MatchUsersByEmailRequest';
+import UsersMatchRequest from "../FormRequest/User/UsersMatchRequest";
 
-export default class UserController extends Controller
+export default class UserController extends CrudController
 {
-    /**
-     * @param  req Request
-     * @param  res Response
-     * @return Response
-     */
+    private userRepository: UserRepository;
+
+    public constructor() {
+        super();
+        this.userRepository = new UserRepository;
+    }
+
     @AutoBind
-    public async actionMatchUsersByEmail(req: Request, res: Response): Promise<Response>
+    public async actionMatch(req: Request, res: Response): Promise<void>
     {
-        const formRequest = new MatchUsersByEmailRequest(req.params);
+        console.log(req.query);
 
-        await formRequest.validate();
+        const form = new UsersMatchRequest(req.query);
 
-        if (formRequest.isNotValid()) {
-            
-            throw new BadRequest(formRequest.getFirstError());
+        await form.validate();
+
+        if (form.isNotValid()) {
+
+            throw new BadRequest(form.getFirstError());
         }
-        
-        return res.json({
-            items: await UserRepository.getUsersByEmailEntry(formRequest.email, 20),
+
+        const items: object[] = await this.userRepository.getUsersByCondition(form, 20);
+
+        res.json({
+            items,
         });
     }
+
 }
