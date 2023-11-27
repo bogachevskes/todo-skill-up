@@ -6,6 +6,8 @@ export default class RoutesCollection
 
     protected routes: Route[] = [];
 
+    protected groupStack: string[] = [];
+
     protected constructor() {};
 
     protected static getInstance(): RoutesCollection
@@ -24,16 +26,23 @@ export default class RoutesCollection
             return;
         }
 
-        const instance = this.getInstance();
+        const instance: RoutesCollection = this.getInstance();
+
+        if (instance.groupStack.length > 0) {
+            resource.path = `/${instance.groupStack.join('/')}${resource.path}`;
+        }
 
         instance.routes.push(resource);
     }
 
-    public static all(): Route[]
+    public static addGroup(name: string, set: Function)
     {
         const instance = this.getInstance();
+        instance.groupStack.push(name);
 
-        return instance.routes;
+        set(instance);
+
+        instance.groupStack.pop();
     }
 
     private static addResource(resource: RoutesResource): void
@@ -101,5 +110,12 @@ export default class RoutesCollection
                 )
             );
         });
+    }
+
+    public static all(): Route[]
+    {
+        const instance = this.getInstance();
+
+        return instance.routes;
     }
 }

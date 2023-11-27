@@ -41,7 +41,6 @@ export default class BoardUserCreate extends BaseCommand
             }
 
             if (await this.boardsRepository.isUserExistsInGroup(this.context.get('todo_group_id'), user.id) === true) {
-                console.log(user.id, 'не долшло');
                 continue;
             }
 

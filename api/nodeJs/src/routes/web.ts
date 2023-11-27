@@ -11,97 +11,99 @@ import BoardsTasksController from '../app/Http/Controllers/BoardsTasksController
 import BoardsUsersController from '../app/Http/Controllers/BoardsUsersController';
 import UserBoardsController from "../app/Http/Controllers/UserBoardsController";
 
-RoutesCollection.add(
-    new Route(
-        'POST',
-        '/auth/login',
-        AuthController,
-        'actionLogin'
-    ),
-);
+RoutesCollection.addGroup('v1', function () {
+    RoutesCollection.add(
+        new Route(
+            'POST',
+            '/auth/login',
+            AuthController,
+            'actionLogin'
+        ),
+    );
 
-RoutesCollection.add(
-    new Route(
-        'PUT',
-        '/auth/signup',
-        AuthController,
-        'actionSignup'
-    ),
-);
+    RoutesCollection.add(
+        new Route(
+            'PUT',
+            '/auth/signup',
+            AuthController,
+            'actionSignup'
+        ),
+    );
 
-RoutesCollection.add(
-    new Route(
-        'GET',
-        '/users/match',
-        UserController,
-        'actionMatch',
-        [
-            AuthOnlyMiddleware
-        ]
-    ),
-);
+    RoutesCollection.add(
+        new Route(
+            'GET',
+            '/users/match',
+            UserController,
+            'actionMatch',
+            [
+                AuthOnlyMiddleware
+            ]
+        ),
+    );
 
-RoutesCollection.add(
-    new RoutesResource(
-        '/user/:id/permissions',
-        UserPermissionsController,
-        [
-            AuthOnlyMiddleware,
-            // TODO: добавить мидлвеер проверки текущего пользователя использовать AuthManager
-        ],
-    ),
-);
+    RoutesCollection.add(
+        new RoutesResource(
+            '/user/:id/permissions',
+            UserPermissionsController,
+            [
+                AuthOnlyMiddleware,
+                // TODO: добавить мидлвеер проверки текущего пользователя использовать AuthManager
+            ],
+        ),
+    );
 
-RoutesCollection.add(
-    new RoutesResource(
-        '/admin/users',
-        AdminUserController,
-        [
-            AuthOnlyMiddleware,
-        ],
-    )
-);
+    RoutesCollection.add(
+        new RoutesResource(
+            '/admin/users',
+            AdminUserController,
+            [
+                AuthOnlyMiddleware,
+            ],
+        )
+    );
 
-RoutesCollection.add(
-    new RoutesResource(
-        '/user/boards',
-        UserBoardsController,
-        [
-            AuthOnlyMiddleware,
-        ],
-        [
-            {
-                method: 'PUT',
-                middleware: [UserHasAccessToBoardMiddleware],
-            },
-            {
-                method: 'DELETE',
-                middleware: [UserHasAccessToBoardMiddleware],
-            },
-        ],
-    )
-);
+    RoutesCollection.add(
+        new RoutesResource(
+            '/user/boards',
+            UserBoardsController,
+            [
+                AuthOnlyMiddleware,
+            ],
+            [
+                {
+                    method: 'PUT',
+                    middleware: [UserHasAccessToBoardMiddleware],
+                },
+                {
+                    method: 'DELETE',
+                    middleware: [UserHasAccessToBoardMiddleware],
+                },
+            ],
+        )
+    );
 
-RoutesCollection.add(
-    new RoutesResource(
-        '/boards/:board_id/tasks',
-        BoardsTasksController,
-        [
-            AuthOnlyMiddleware,
-            UserHasAccessToBoardMiddleware,
-        ]
-    )
-);
+    RoutesCollection.add(
+        new RoutesResource(
+            '/boards/:board_id/tasks',
+            BoardsTasksController,
+            [
+                AuthOnlyMiddleware,
+                UserHasAccessToBoardMiddleware,
+            ]
+        )
+    );
 
-RoutesCollection.add(
-    new RoutesResource(
-        '/boards/:board_id/users',
-        BoardsUsersController,
-        [
-            AuthOnlyMiddleware,
-            UserHasAccessToBoardMiddleware,
-        ],
-    )
-);
+    RoutesCollection.add(
+        new RoutesResource(
+            '/boards/:board_id/users',
+            BoardsUsersController,
+            [
+                AuthOnlyMiddleware,
+                UserHasAccessToBoardMiddleware,
+            ],
+        )
+    );
+});
 
 export default RoutesCollection;

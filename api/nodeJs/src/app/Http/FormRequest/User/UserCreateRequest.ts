@@ -61,8 +61,6 @@ export default class UserCreateRequest extends ValidationRequest
                     user = await (new UserRepository).findByEmail(this.email),
                     condition = ! (user instanceof User);
 
-                console.log(condition);
-
                 return this.validateManual(condition, MESSAGE_EMAIL_EXISTS, 'email_uniq');
             },
         ];
