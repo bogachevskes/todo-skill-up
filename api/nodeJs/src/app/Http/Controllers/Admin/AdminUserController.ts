@@ -1,108 +1,19 @@
-import { Request, Response } from 'express';
-import ValidationError from '../../../../Framework/Exceptions/ValidationError';
-import User from '../../../Entity/User';
+import { Request } from 'express';
 import CrudController from '../../../../Framework/Http/Controller/CrudController';
 import UserRepository from '../../../Repository/UserRepository';
-import AutoBind from '../../../../Framework/Decorators/AutoBind';
-import NotFound from '../../../../Framework/Exceptions/NotFound';
-import CommandContext from '../../../../Framework/Base/CommandContext';
-import UserCreate from '../../../Console/Commands/UserCreate';
-import UserUpdate from '../../../Console/Commands/UserUpdate';
+import BadRequest from '../../../../Framework/Exceptions/BadRequest';
+import NotFound from "../../../../Framework/Exceptions/NotFound";
+import User from "../../../Entity/User";
+import UserUpdateRequest from "../../FormRequest/User/UserUpdateRequest";
+import UserCreateRequest from "../../FormRequest/User/UserCreateRequest";
 
 export default class AdminUserController extends CrudController
 {
-    /**
-     * @var UserRepository
-     */
-    protected userRepo: UserRepository;
+    protected userRepository: UserRepository;
 
-    /**
-     * Определение репозитория пользователя.
-     * 
-     * @param  number userId
-     * @return Promise<void>|never
-     */
-    protected async defineUserRepo(userId: number): Promise<void>|never
-    {
-        const user = await UserRepository.findById(userId);
-
-        if (user instanceof User) {
-            this.userRepo = new UserRepository(user);
-            return;
-        }
-
-        throw new NotFound('Пользователь не найден');
-    }
-
-    /**
-     * Возвращает список задач пользователя.
-     * 
-     * @param  req Request
-     * @param  res Response
-     * @return Promise<Response>
-     */
-    @AutoBind
-    public async actionTodo(req: Request, res: Response): Promise<Response>
-    {
-        const userId = Number(req.params.id);
-        
-        await this.defineUserRepo(userId);
-        
-        return res.json({
-            items: await this.userRepo.getTodoByStatusGroups(),
-        });
-    }
-
-    /**
-     * Возвращает
-     * данные пользователя.
-     * 
-     * @param  req Request
-     * @param  res Response
-     * @return Promise<Response>
-     */
-    @AutoBind
-    public async actionGetUserData(req: Request, res: Response): Promise<Response>
-    {
-        const userId = Number(req.params.id);
-        
-        await this.defineUserRepo(userId);
-
-        const model = this.userRepo.getUserModel();
-
-        return res.json({
-            item: {
-                id: model.id,
-                name: model.name,
-                email: model.email,
-                hasPassword: Boolean(model.password),
-            }
-        });
-    }
-
-    /**
-     * Изменяет статус
-     * активности пользователя.
-     * 
-     * @param  req Request
-     * @param  res Response
-     * @return Promise<Response>
-     */
-    @AutoBind
-    public async actionSetActiveState(req: Request, res: Response): Promise<Response>
-    {
-        const
-            userId = Number(req.params.id),
-            active = parseInt(req.body.active);
-        
-        await this.defineUserRepo(userId);
-
-        return res.json({
-            items: await UserRepository.setActiveState(
-                    this.userRepo.getUserModel(),
-                    active
-                ),
-        });
+    public constructor() {
+        super();
+        this.userRepository = new UserRepository;
     }
     
     /**
@@ -110,83 +21,68 @@ export default class AdminUserController extends CrudController
      */
     protected async list(): Promise<object[]>
     {
-        return await UserRepository.allExisting();
+        return await this.userRepository.allExisting();
     }
 
     /**
      * @see CrudController
      */
-    protected async create(req: Request): Promise<object>
+    protected async create(req: Request): Promise<void>
     {
-        const
-            context = new CommandContext,
-            cmd = new UserCreate;
+        const form: UserCreateRequest = new UserCreateRequest(req.body.formData);
 
-        context.walk(req.body.formData);
+        await form.validate();
 
-        try {
-
-            await cmd.execute(context);
-
-        } catch (error) {
-            if (error instanceof ValidationError) {
-                return {
-                    success: false,
-                    error: error.message,
-                };
-            }
-
-            throw new Error(error.message);
+        if (form.isNotValid()) {
+            throw new BadRequest(form.getFirstError());
         }
-        
-        return {
-            success: true,
-            item: context.get('user'),
-        };
+
+        await this.userRepository.createNew(form.getAttributes());
     }
 
     /**
      * @see CrudController
      */
-    protected async update(_id: number, req: Request): Promise<object>
+    protected async update(id: number, req: Request, patch: boolean = false): Promise<void>
     {
-        const
-            context = new CommandContext,
-            cmd = new UserUpdate;
+        const user: User = await this.findModel(id);
 
-        context.walk(req.body.formData);
+        const form: UserUpdateRequest = new UserUpdateRequest(req.body.formData);
 
-        try {
+        form.skipMissingProperties = patch;
 
-            await cmd.execute(context);
+        await form.validate();
 
-        } catch (error) {
-            if (error instanceof ValidationError) {
-                return {
-                    success: false,
-                    error: error.message,
-                };
-            }
-
-            throw new Error(error.message);
+        if (form.isNotValid()) {
+            throw new BadRequest(form.getFirstError());
         }
-        
-        return {
-            success: true,
-            item: context.get('user'),
-        };
+
+        await this.userRepository.update(user, form.getFilledAttributes());
+    }
+
+    protected async patch(id: number, req: Request): Promise<void>|never
+    {
+        await this.update(id, req, true);
     }
 
     /**
      * @see CrudController
      */
-    protected async delete(id: number, req: Request): Promise<boolean>
+    protected async delete(id: number, req: Request): Promise<void>
     {
-        await this.defineUserRepo(id);
-        
-        return await UserRepository.delete(
-            this.userRepo.getUserModel()
-        );
+        const user: User = await this.findModel(id);
+
+        await this.userRepository.delete(user);
     }
 
+    protected async findModel(id: number): Promise<User | never>
+    {
+        const model: User | null = await this.userRepository.findById(id);
+
+        if (model instanceof User) {
+            return model;
+        }
+
+        throw new NotFound('Пользователь не найден');
+    }
 }
