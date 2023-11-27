@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken';
 import BaseCommand from '../../Framework/Base/BaseCommand';
-import UserRepository from '../Repository/UserRepository';
 import User from '../Entity/User';
 import ConfigService from '../../Framework/Utils/ConfigService';
 

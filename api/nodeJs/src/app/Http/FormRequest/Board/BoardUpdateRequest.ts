@@ -1,5 +1,5 @@
 import { IsLength } from "validator.ts/decorator/Validation";
-import { ToString, ToInt } from "validator.ts/decorator/Sanitization";
+import { ToString } from "validator.ts/decorator/Sanitization";
 import { MESSAGE_MIN_LENGTH } from '../../../../Framework/FormRequest/Base/Messages';
 import { USER_NAME_MIN_LENGTH } from '../../../../Framework/FormRequest/Base/ValidationConstants';
 import ValidationRequest from '../../../../Framework/FormRequest/Base/ValidationRequest';

@@ -5,7 +5,6 @@ import { USER_NAME_MIN_LENGTH, USER_NAME_MAX_LENGTH, USER_PASSWORD_MIN_LENGTH, U
 import {IsEmail, IsAlphanumeric, IsLength, NotEmpty} from "validator.ts/decorator/Validation";
 import { ToString, ToInt } from "validator.ts/decorator/Sanitization";
 import UserRepository from '../../../Repository/UserRepository';
-import User from '../../../Entity/User';
 
 export default class UserUpdateRequest extends ValidationRequest
 {

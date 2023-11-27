@@ -1,5 +1,4 @@
 import { Column, Entity, BaseEntity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import User from './User';
 
 @Entity('todo_group')
 export default class Board extends BaseEntity
