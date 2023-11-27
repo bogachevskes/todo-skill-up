@@ -10,6 +10,7 @@ import UserPermissionsController from '../app/Http/Controllers/UserPermissionsCo
 import BoardsTasksController from '../app/Http/Controllers/BoardsTasksController';
 import BoardsUsersController from '../app/Http/Controllers/BoardsUsersController';
 import UserBoardsController from "../app/Http/Controllers/UserBoardsController";
+import IsCurrentUserMiddleware from "../app/Http/Middleware/IsCurrentUserMiddleware";
 
 RoutesCollection.addGroup('v1', function () {
     RoutesCollection.add(
@@ -48,7 +49,7 @@ RoutesCollection.addGroup('v1', function () {
             UserPermissionsController,
             [
                 AuthOnlyMiddleware,
-                // TODO: добавить мидлвеер проверки текущего пользователя использовать AuthManager
+                IsCurrentUserMiddleware,
             ],
         ),
     );
