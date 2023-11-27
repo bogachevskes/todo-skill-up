@@ -5,10 +5,6 @@ import BoardsRepository from '../../Repository/BoardsRepository';
 import User from '../../Entity/User';
 import Forbidden from "../../../Framework/Exceptions/Forbidden";
 
-/**
- * Фильтрация доступа только
- * авторизованных пользователей.
- */
 export default class UserHasAccessToBoardMiddleware extends Middleware
 {
     /**
