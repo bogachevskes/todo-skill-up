@@ -1,4 +1,4 @@
-import { Column, Entity, BaseEntity, PrimaryGeneratedColumn, Index, OneToMany } from 'typeorm';
+import { Column, Entity, BaseEntity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import UserBoards from './UserBoards';
 
 @Entity('users')
