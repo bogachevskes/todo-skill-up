@@ -9,45 +9,6 @@ export default class UserPermissionsController extends CrudController
      */
     protected async list(req: Request): Promise<string[]>
     {
-        const authManager: AuthManager = new AuthManager();
-
-        return await authManager.getUserPermissions(req['user'].id);
+        return await (new AuthManager()).getUserPermissions(Number(req.params.id));
     }
-
-    /**
-     * @see CrudController
-     */
-    protected async create(req: Request): Promise<object>
-    {
-        // Not implemented
-
-        return new Promise(function(resolve, reject) {
-            return resolve({});
-        });
-    }
-
-    /**
-     * @see CrudController
-     */
-    protected async update(id: number, req: Request): Promise<object>
-    {
-        // Not implemented
-
-        return new Promise(function(resolve, reject) {
-            return resolve({});
-        });
-    }
-
-    /**
-     * @see CrudController
-     */
-    protected async delete(id: number, req: Request): Promise<boolean>
-    {
-        // Not implemented
-
-        return new Promise(function(resolve, reject) {
-            return resolve(true);
-        });
-    }
-
 }
