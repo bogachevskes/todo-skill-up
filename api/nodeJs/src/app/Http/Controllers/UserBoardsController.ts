@@ -1,4 +1,4 @@
-import { getManager } from 'typeorm';
+import { getConnection } from 'typeorm';
 import { Request } from "express";
 import CrudController from "../../../Framework/Http/Controller/CrudController";
 import BadRequest from "../../../Framework/Exceptions/BadRequest";
@@ -7,6 +7,7 @@ import NotFound from "../../../Framework/Exceptions/NotFound";
 import BoardsRepository from "../../Repository/BoardsRepository";
 import BoardCreateRequest from "../FormRequest/Board/BoardCreateRequest";
 import BoardUpdateRequest from "../FormRequest/Board/BoardUpdateRequest";
+import UserBoards from "../../Entity/UserBoards";
 
 export default class UserBoardsController extends CrudController
 {
@@ -35,13 +36,23 @@ export default class UserBoardsController extends CrudController
             throw new BadRequest(form.getFirstError());
         }
 
-        const userId = Number(req['user'].id);
+        const userId: number = Number(req['user'].id);
 
-        // TODO: обернуть в транзакцию
+        try {
+            await getConnection().transaction(async transactionalEntityManager => {
 
-        const board: Board = await this.boardsRepository.createNew(form);
+                const board: Board = this.boardsRepository.createNew(form);
 
-        await this.boardsRepository.assignUserToBoard(board.id, userId);
+                const createdBoard: Board = await transactionalEntityManager.save(board);
+
+                const assignment: UserBoards = this.boardsRepository.createUserToBoardAssignment(createdBoard.id, userId);
+
+                await transactionalEntityManager.save(assignment);
+            });
+        } catch (err) {
+            console.log(`Ошибка при создании доски: ${err}`, form);
+            throw err;
+        }
     }
 
     /**
