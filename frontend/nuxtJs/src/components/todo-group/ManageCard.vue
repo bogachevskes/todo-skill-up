@@ -170,7 +170,7 @@ export default {
             }
         },
         executeCreation () {
-            this.formData.todoGroupId = this.$route.params.id;
+            this.formData.boardId = this.$route.params.id;
 
             this.formData.plannedCompletionAt = DateHelper.format(
                 this.plannedCompletionAt,

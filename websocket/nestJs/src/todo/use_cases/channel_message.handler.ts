@@ -33,11 +33,11 @@ export default class ChannelMessageHandler
                 return;
             }
 
-            if (model.todoGroupId === undefined) {
+            if (model.boardId === undefined) {
                 return;
             }
 
-            const roomName = this.buildGroupRoomKey(model.todoGroupId);
+            const roomName = this.buildGroupRoomKey(model.boardId);
 
             this.server.to(roomName).emit('todo-created', model);
             console.log('todo-created triggered to client room #' + roomName);
@@ -50,11 +50,11 @@ export default class ChannelMessageHandler
                 return;
             }
 
-            if (model.todoGroupId === undefined) {
+            if (model.boardId === undefined) {
                 return;
             }
 
-            const roomName = this.buildGroupRoomKey(model.todoGroupId);
+            const roomName = this.buildGroupRoomKey(model.boardId);
 
             this.server.to(roomName).emit('todo-state-changed', model);
             console.log('todo-state-changed triggered to client');
@@ -68,11 +68,11 @@ export default class ChannelMessageHandler
                 return;
             }
 
-            if (model.todoGroupId === undefined) {
+            if (model.boardId === undefined) {
                 return;
             }
 
-            const roomName = this.buildGroupRoomKey(model.todoGroupId);
+            const roomName = this.buildGroupRoomKey(model.boardId);
 
             this.server.to(roomName).emit('todo-deleted', model);
             console.log('todo-deleted triggered to client room #' + roomName);
