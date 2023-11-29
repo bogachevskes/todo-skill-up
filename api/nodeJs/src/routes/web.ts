@@ -11,6 +11,9 @@ import BoardsTasksController from '../app/Http/Controllers/BoardsTasksController
 import BoardsUsersController from '../app/Http/Controllers/BoardsUsersController';
 import UserBoardsController from "../app/Http/Controllers/UserBoardsController";
 import IsCurrentUserMiddleware from "../app/Http/Middleware/IsCurrentUserMiddleware";
+import BoardsTasksStatusesController from "../app/Http/Controllers/BoardsTasksStatusesController";
+import TaskStatus from "../app/Entity/TaskStatus";
+import TaskStatusExistInGroupMiddleware from "../app/Http/Middleware/TaskStatusExistInGroupMiddleware";
 
 RoutesCollection.addGroup('v1', function () {
     RoutesCollection.add(
@@ -86,12 +89,37 @@ RoutesCollection.addGroup('v1', function () {
 
     RoutesCollection.add(
         new RoutesResource(
+            '/boards/:board_id/statuses',
+            BoardsTasksStatusesController,
+            [
+                AuthOnlyMiddleware,
+                UserHasAccessToBoardMiddleware,
+            ],
+        )
+    );
+
+    RoutesCollection.add(
+        new RoutesResource(
             '/boards/:board_id/tasks',
             BoardsTasksController,
             [
                 AuthOnlyMiddleware,
                 UserHasAccessToBoardMiddleware,
-            ]
+            ],
+            [
+                {
+                    method: 'POST',
+                    middleware: [TaskStatusExistInGroupMiddleware],
+                },
+                {
+                    method: 'PUT',
+                    middleware: [TaskStatusExistInGroupMiddleware],
+                },
+                {
+                    method: 'PATCH',
+                    middleware: [TaskStatusExistInGroupMiddleware],
+                },
+            ],
         )
     );
 
