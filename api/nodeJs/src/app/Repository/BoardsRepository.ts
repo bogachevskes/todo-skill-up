@@ -1,7 +1,7 @@
 import { SelectQueryBuilder } from 'typeorm';
 import Board from '../Entity/Board';
-import UserBoards from '../Entity/UserBoards';
-import BoardCreateRequest from "../Http/FormRequest/Board/BoardCreateRequest";
+import BoardUser from '../Entity/BoardUser';
+import BoardRequest from "../Http/FormRequest/Board/BoardRequest";
 
 export default class BoardsRepository
 {
@@ -26,14 +26,14 @@ export default class BoardsRepository
             .where('b.id = :id', { id })
             .getRawOne();
 
-        return Boolean(result.exist);
+        return Boolean(Number(result['exist']));
     }
 
     public async findByUserId(userId: number): Promise<Board[]>
     {
         const query = this.getQueryBuilder()
             .select(['b.id', 'b.name', 'b.description', 'b.createdAt'])
-            .leftJoin(UserBoards, 'ub', 'b.id = ub.todoGroupId')
+            .leftJoin(BoardUser, 'ub', 'b.id = ub.boardId')
             .where('ub.userId = :userId', { userId });
 
         return query.getMany();
@@ -48,7 +48,7 @@ export default class BoardsRepository
         await query.execute();
     }
 
-    public createNew(data: BoardCreateRequest): Board
+    public createNew(data: BoardRequest): Board
     {
         return this.loadModel(new Board, data);
     }
@@ -60,41 +60,41 @@ export default class BoardsRepository
         await model.save();
     }
 
-    public async isUserExistsInGroup(groupId: number, userId: number): Promise<boolean>
+    public async isUserExistsInGroup(boardId: number, userId: number): Promise<boolean>
     {
-        const query = UserBoards.createQueryBuilder('ub')
+        const query = BoardUser.createQueryBuilder('ub')
             .select('COUNT(ub.id) as exist')
-            .where(`ub.todo_group_id = :groupId and ub.user_id = :userId`, {groupId, userId});
+            .where(`ub.board_id = :boardId and ub.user_id = :userId`, {boardId, userId});
 
         const result = await query.getRawOne();
 
         return Boolean(Number(result['exist']));
     }
 
-    public async getBoardUsers(groupId: number): Promise<object[]>
+    public async getBoardUsers(boardId: number): Promise<object[]>
     {
-        const query = UserBoards.createQueryBuilder('ub')
+        const query = BoardUser.createQueryBuilder('ub')
             .select(['ubs.id, ubs.name, ubs.email'])
             .leftJoin('ub.user', 'ubs')
-            .where('ub.todo_group_id = :groupId', {groupId});
+            .where('ub.board_id = :boardId', {boardId});
 
         return await query.getRawMany();
     }
 
-    public createUserToBoardAssignment(groupId: number, userId: number): UserBoards
+    public createUserToBoardAssignment(boardId: number, userId: number): BoardUser
     {
-        const model: UserBoards = new UserBoards;
+        const model: BoardUser = new BoardUser;
 
-        model.todoGroupId = groupId;
+        model.boardId = boardId;
         model.userId = userId;
 
         return model;
     }
 
-    public async revokeUserFromBoard(groupId: number, userId: number): Promise<void>
+    public async revokeUserFromBoard(boardId: number, userId: number): Promise<void>
     {
-        const query = UserBoards.createQueryBuilder('ub')
-            .where('todo_group_id = :groupId and user_id = :userId', { groupId, userId }
+        const query = BoardUser.createQueryBuilder('ub')
+            .where('board_id = :boardId and user_id = :userId', { boardId, userId }
             )
             .delete();
 

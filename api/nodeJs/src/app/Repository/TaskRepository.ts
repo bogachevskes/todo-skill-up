@@ -1,6 +1,6 @@
 import { SelectQueryBuilder } from 'typeorm';
 import Task from '../Entity/Task';
-import TaskCreateRequest from "../Http/FormRequest/Task/TaskCreateRequest";
+import TaskRequest from "../Http/FormRequest/Task/TaskRequest";
 
 export default class TaskRepository
 {
@@ -15,13 +15,13 @@ export default class TaskRepository
             .select([
                 't.id as id',
                 't.status_id as status_id',
-                't.user_id as user_id',
+                't.board_id as board_id',
                 't.name as name',
                 't.description as description',
                 't.planned_completion_at as planned_completion_at',
                 't.created_at as created_at'
             ])
-            .where({'todoGroupId': boardId, statusId});
+            .where({boardId, statusId});
 
         return query.getRawMany();
     }
@@ -35,7 +35,7 @@ export default class TaskRepository
         return model;
     }
 
-    public async createNew(data: TaskCreateRequest): Promise<Task>
+    public async createNew(data: TaskRequest): Promise<Task>
     {
         const model = this.loadModel(new Task, data);
 
