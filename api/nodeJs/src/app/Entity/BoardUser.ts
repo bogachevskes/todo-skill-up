@@ -2,14 +2,14 @@ import { Column, Entity, BaseEntity, PrimaryGeneratedColumn, ManyToOne } from 't
 import Board from './Board';
 import User from './User';
 
-@Entity('todo_users_groups')
-export default class UserBoards extends BaseEntity
+@Entity('boards_users')
+export default class BoardUser extends BaseEntity
 {
     @ManyToOne(_type => Board)
-    todoGroup: Board;
+    public board: Board;
 
     @ManyToOne(_type => User)
-    user: User;
+    public user: User;
     
     @PrimaryGeneratedColumn({ unsigned: true })
     public id: number;
@@ -18,7 +18,7 @@ export default class UserBoards extends BaseEntity
         unsigned: true,
         comment: 'Группа доступа',
     })
-    public todoGroupId: number;
+    public boardId: number;
 
     @Column({
         unsigned: true,

@@ -3,7 +3,7 @@ import TaskStatus from './TaskStatus';
 import User from './User';
 import Board from './Board';
 
-@Entity('todo_item')
+@Entity('tasks')
 export default class Task extends BaseEntity
 {
     @PrimaryGeneratedColumn({ unsigned: true })
@@ -14,13 +14,7 @@ export default class Task extends BaseEntity
         comment: 'Группа доступа',
         nullable: true,
     })
-    public todoGroupId: number | null;
-
-    @Column({
-        unsigned: true,
-        comment: 'Пользователь',
-    })
-    public userId: number;
+    public boardId: number | null;
 
     @Column({
         unsigned: true,
@@ -64,11 +58,8 @@ export default class Task extends BaseEntity
     public updatedAt: Date;
 
     @ManyToOne(_type => Board)
-    public todoGroup: Board;
+    public board: Board;
 
     @ManyToOne(_type => TaskStatus)
     public status: TaskStatus;
-
-    @ManyToOne(_type => User)
-    public user: User;
 }

@@ -1,17 +1,24 @@
-import { Column, Entity, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
+import {Column, Entity, PrimaryGeneratedColumn, BaseEntity, ManyToOne} from 'typeorm';
+import Board from "./Board";
 
-@Entity('todo_status')
+@Entity('task_statuses')
 export default class TaskStatus extends BaseEntity
 {
     @PrimaryGeneratedColumn({ unsigned: true })
-    id: number;
+    public id: number;
+
+    @Column({
+        unsigned: true,
+        comment: 'Группа доступа',
+    })
+    public boardId: number;
 
     @Column('varchar', {
         name: 'name',
         comment: 'Имя',
         length: 10,
     })
-    name: string;
+    public name: string;
 
     @Column("timestamp", {
         name: 'created_at',
@@ -26,5 +33,8 @@ export default class TaskStatus extends BaseEntity
         onUpdate: "CURRENT_TIMESTAMP()"
     })
     public updatedAt: Date;
+
+    @ManyToOne(_type => Board)
+    public board: Board;
 
 }

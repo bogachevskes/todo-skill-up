@@ -1,6 +1,6 @@
 import { Column, Entity, BaseEntity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
-@Entity('todo_group')
+@Entity('boards')
 export default class Board extends BaseEntity
 {
     @PrimaryGeneratedColumn({ unsigned: true })

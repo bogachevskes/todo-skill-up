@@ -1,5 +1,5 @@
 import { Column, Entity, BaseEntity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import UserBoards from './UserBoards';
+import BoardUser from './BoardUser';
 
 @Entity('users')
 export default class User extends BaseEntity
@@ -58,6 +58,6 @@ export default class User extends BaseEntity
     })
     public deletedAt: Date | null;
 
-    @OneToMany(() => UserBoards, todoUsersGroups => todoUsersGroups.user)
-    public boards: UserBoards[];
+    @OneToMany(() => BoardUser, todoUsersGroups => todoUsersGroups.user)
+    public boards: BoardUser[];
 }
