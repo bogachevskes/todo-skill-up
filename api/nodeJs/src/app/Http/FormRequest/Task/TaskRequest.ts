@@ -5,15 +5,11 @@ import { USER_NAME_MIN_LENGTH } from '../../../../Framework/FormRequest/Base/Val
 import ValidationRequest from '../../../../Framework/FormRequest/Base/ValidationRequest';
 import BoardsRepository from '../../../Repository/BoardsRepository';
 
-export default class TaskCreateRequest extends ValidationRequest
+export default class TaskRequest extends ValidationRequest
 {
     @ToInt()
     @NotEmpty({message: 'Не задана доска задачи'})
-    todoGroupId: number;
-    
-    @ToInt()
-    @NotEmpty({message: 'Не задан автор задачи'})
-    userId: number;
+    boardId: number;
 
     @ToInt()
     @NotEmpty({message: 'Не задан статус задачи'})
@@ -38,7 +34,7 @@ export default class TaskCreateRequest extends ValidationRequest
      {
         return [
             async () => {
-                const condition = await (new BoardsRepository).isGroupExists(Number(this.todoGroupId));
+                const condition = await (new BoardsRepository).isGroupExists(Number(this.boardId));
 
                 return this.validateManual(condition, 'Группа доступа отсутствует', 'group_not_exists');
             },

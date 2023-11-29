@@ -40,11 +40,11 @@ export default class BoardUserCreate extends BaseCommand
                 continue;
             }
 
-            if (await this.boardsRepository.isUserExistsInGroup(this.context.get('todo_group_id'), user.id) === true) {
+            if (await this.boardsRepository.isUserExistsInGroup(this.context.get('board_id'), user.id) === true) {
                 continue;
             }
 
-            await this.boardsRepository.createUserToBoardAssignment(this.context.get('todo_group_id'), user.id)
+            await this.boardsRepository.createUserToBoardAssignment(this.context.get('board_id'), user.id)
                 .save();
         }
 
