@@ -4,7 +4,7 @@ import BadRequest from '../../../Framework/Exceptions/BadRequest';
 import CommandContext from '../../../Framework/Base/CommandContext';
 import BoardUserCreate from '../../Commands/BoardUserCreate';
 import UserRepository from "../../Repository/UserRepository";
-import BoardUsersCreateRequest from "../FormRequest/BoardUsers/BoardUsersCreateRequest";
+import BoardUsersRequest from "../FormRequest/BoardUsers/BoardUsersRequest";
 import BoardsRepository from "../../Repository/BoardsRepository";
 import NotFound from "../../../Framework/Exceptions/NotFound";
 
@@ -32,9 +32,9 @@ export default class BoardsUsersController extends CrudController
      */
     protected async create(req: Request): Promise<void>
     {
-        const form: BoardUsersCreateRequest = new BoardUsersCreateRequest(req.body.formData);
+        const form: BoardUsersRequest = new BoardUsersRequest(req.body.formData);
 
-        form.todo_group_id = Number(req.params.board_id);
+        form.board_id = Number(req.params.board_id);
 
         await form.validate();
 
@@ -42,7 +42,7 @@ export default class BoardsUsersController extends CrudController
             throw new BadRequest(form.getFirstError());
         }
 
-        if (await this.boardRepository.isGroupExists(form.todo_group_id) === false) {
+        if (await this.boardRepository.isGroupExists(form.board_id) === false) {
             throw new NotFound('Группа не существует');
         }
 
@@ -54,7 +54,7 @@ export default class BoardsUsersController extends CrudController
             );
 
         context.walk(req.body.formData);
-        context.set('todo_group_id', form.todo_group_id);
+        context.set('board_id', form.board_id);
 
         await cmd.execute(context);
 

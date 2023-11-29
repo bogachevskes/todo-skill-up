@@ -6,8 +6,7 @@ import Task from '../../Entity/Task';
 import TaskRepository from '../../Repository/TaskRepository';
 import TaskStatusRepository from "../../Repository/TaskStatusRepository";
 import TaskStatus from "../../Entity/TaskStatus";
-import TaskCreateRequest from "../FormRequest/Task/TaskCreateRequest";
-import TaskUpdateRequest from "../FormRequest/Task/TaskUpdateRequest";
+import TaskRequest from "../FormRequest/Task/TaskRequest";
 import RedisProducer from "../../../Framework/Producers/RedisProducer";
 
 export default class BoardsTasksController extends CrudController
@@ -28,7 +27,7 @@ export default class BoardsTasksController extends CrudController
      */
     protected async list(req: Request): Promise<object[]>
     {
-        const statuses: TaskStatus[] = await this.statusRepository.getBoardStatuses();
+        const statuses: TaskStatus[] = await this.statusRepository.getBoardStatuses(Number(req.params.board_id));
 
         const result: object[] = [];
 
@@ -50,10 +49,9 @@ export default class BoardsTasksController extends CrudController
      */
     protected async create(req: Request): Promise<void>
     {
-        const form: TaskCreateRequest = new TaskCreateRequest(req.body.formData);
+        const form: TaskRequest = new TaskRequest(req.body.formData);
 
-        form.userId = Number(req['user'].id);
-        form.todoGroupId = Number(req.params.board_id);
+        form.boardId = Number(req.params.board_id);
 
         await form.validate();
 
@@ -73,10 +71,9 @@ export default class BoardsTasksController extends CrudController
     {
         const task: Task = await this.findModel(id);
 
-        const form: TaskUpdateRequest = new TaskUpdateRequest(req.body.formData);
+        const form: TaskRequest = new TaskRequest(req.body.formData);
 
-        form.userId = Number(req['user'].id);
-        form.todoGroupId = Number(req.params.board_id);
+        form.boardId = Number(req.params.board_id);
 
         form.skipMissingProperties = patch;
 

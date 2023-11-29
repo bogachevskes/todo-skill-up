@@ -5,9 +5,8 @@ import BadRequest from "../../../Framework/Exceptions/BadRequest";
 import Board from "../../Entity/Board";
 import NotFound from "../../../Framework/Exceptions/NotFound";
 import BoardsRepository from "../../Repository/BoardsRepository";
-import BoardCreateRequest from "../FormRequest/Board/BoardCreateRequest";
-import BoardUpdateRequest from "../FormRequest/Board/BoardUpdateRequest";
-import UserBoards from "../../Entity/UserBoards";
+import BoardRequest from "../FormRequest/Board/BoardRequest";
+import BoardUser from "../../Entity/BoardUser";
 
 export default class UserBoardsController extends CrudController
 {
@@ -28,7 +27,7 @@ export default class UserBoardsController extends CrudController
      */
     protected async create(req: Request): Promise<void>
     {
-        const form: BoardCreateRequest = new BoardCreateRequest(req.body.formData);
+        const form: BoardRequest = new BoardRequest(req.body.formData);
 
         await form.validate();
 
@@ -45,7 +44,7 @@ export default class UserBoardsController extends CrudController
 
                 const createdBoard: Board = await transactionalEntityManager.save(board);
 
-                const assignment: UserBoards = this.boardsRepository.createUserToBoardAssignment(createdBoard.id, userId);
+                const assignment: BoardUser = this.boardsRepository.createUserToBoardAssignment(createdBoard.id, userId);
 
                 await transactionalEntityManager.save(assignment);
             });
@@ -62,7 +61,7 @@ export default class UserBoardsController extends CrudController
     {
         const board: Board = await this.findModel(id);
 
-        const form: BoardUpdateRequest = new BoardUpdateRequest(req.body.formData);
+        const form: BoardRequest = new BoardRequest(req.body.formData);
 
         form.skipMissingProperties = patch;
 
