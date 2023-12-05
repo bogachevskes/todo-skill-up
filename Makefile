@@ -72,6 +72,16 @@ docker-build-swagger:
 	@docker build --target=swagger \
 	-t ${DOCKER_REGISTRY}/${DOCKER_SWAGGER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION} -f ./docker/Dockerfile .
 
+frontend-publish-dev-dependencies:
+	@docker run -d --name frontend_dep_extractor ${DOCKER_REGISTRY}/${DOCKER_FRONTEND_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
+	@docker cp frontend_dep_extractor:/app/node_modules $(PWD)/frontend/nuxtJs/node_modules
+	@docker rm frontend_dep_extractor
+
+ws-publish-dev-dependencies:
+	@docker run -d --name ws_dep_extractor ${DOCKER_REGISTRY}/${DOCKER_WS_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
+	@docker cp ws_dep_extractor:/app/node_modules $(PWD)/websocket/nestJs/node_modules
+	@docker rm ws_dep_extractor
+
 api-cli-exec:
 	@docker-compose -p ${DOCKER_PROJECT} \
 		 -f docker-compose.yml -f docker-compose.local.override.yml run --rm api $(cmd)
