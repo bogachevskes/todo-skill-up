@@ -42,7 +42,7 @@ export default class BoardsUsersController extends CrudController
             throw new BadRequest(form.getFirstError());
         }
 
-        if (await this.boardRepository.isGroupExists(form.board_id) === false) {
+        if (await this.boardRepository.isBoardExists(form.board_id) === false) {
             throw new NotFound('Группа не существует');
         }
 
