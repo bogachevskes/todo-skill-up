@@ -10,10 +10,9 @@ import UserPermissionsController from '../app/Http/Controllers/UserPermissionsCo
 import BoardsTasksController from '../app/Http/Controllers/BoardsTasksController';
 import BoardsUsersController from '../app/Http/Controllers/BoardsUsersController';
 import UserBoardsController from "../app/Http/Controllers/UserBoardsController";
-import IsCurrentUserMiddleware from "../app/Http/Middleware/IsCurrentUserMiddleware";
+import CurrentUserOnlyMiddleware from "../app/Http/Middleware/CurrentUserOnlyMiddleware";
 import BoardsTasksStatusesController from "../app/Http/Controllers/BoardsTasksStatusesController";
-import TaskStatus from "../app/Entity/TaskStatus";
-import TaskStatusExistInGroupMiddleware from "../app/Http/Middleware/TaskStatusExistInGroupMiddleware";
+import TaskStatusExistInBoardMiddleware from "../app/Http/Middleware/TaskStatusExistInBoardMiddleware";
 
 RoutesCollection.addGroup('v1', function () {
     RoutesCollection.add(
@@ -38,6 +37,7 @@ RoutesCollection.addGroup('v1', function () {
         new Route(
             'GET',
             '/users/match',
+            // TODO: доделать поиск всех юзеров по пробелам
             UserController,
             'actionMatch',
             [
@@ -48,11 +48,11 @@ RoutesCollection.addGroup('v1', function () {
 
     RoutesCollection.add(
         new RoutesResource(
-            '/user/:id/permissions',
+            '/user/:user_id/permissions',
             UserPermissionsController,
             [
                 AuthOnlyMiddleware,
-                IsCurrentUserMiddleware,
+                CurrentUserOnlyMiddleware,
             ],
         ),
     );
@@ -62,6 +62,7 @@ RoutesCollection.addGroup('v1', function () {
             '/admin/users',
             AdminUserController,
             [
+                // TODO: добавить мидлвеер проверки разрешения
                 AuthOnlyMiddleware,
             ],
         )
@@ -69,10 +70,11 @@ RoutesCollection.addGroup('v1', function () {
 
     RoutesCollection.add(
         new RoutesResource(
-            '/user/boards',
+            '/user/:user_id/boards',
             UserBoardsController,
             [
                 AuthOnlyMiddleware,
+                CurrentUserOnlyMiddleware,
             ],
             [
                 {
@@ -109,16 +111,17 @@ RoutesCollection.addGroup('v1', function () {
             [
                 {
                     method: 'POST',
-                    middleware: [TaskStatusExistInGroupMiddleware],
+                    middleware: [TaskStatusExistInBoardMiddleware],
                 },
                 {
                     method: 'PUT',
-                    middleware: [TaskStatusExistInGroupMiddleware],
+                    middleware: [TaskStatusExistInBoardMiddleware],
                 },
                 {
                     method: 'PATCH',
-                    middleware: [TaskStatusExistInGroupMiddleware],
+                    middleware: [TaskStatusExistInBoardMiddleware],
                 },
+                // TODO: DELETE
             ],
         )
     );
