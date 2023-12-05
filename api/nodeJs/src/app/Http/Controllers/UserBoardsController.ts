@@ -19,7 +19,12 @@ export default class UserBoardsController extends CrudController
 
     protected async list(req: Request): Promise<any[]>
     {
-        return await this.boardsRepository.findByUserId(req['user'].id);
+        return await this.boardsRepository.findByUserId(Number(req.params.user_id));
+    }
+
+    protected async listItem(id: number, req: Request): Promise<object|[]>|never
+    {
+        return await this.findModel(id);
     }
 
     /**
@@ -35,7 +40,7 @@ export default class UserBoardsController extends CrudController
             throw new BadRequest(form.getFirstError());
         }
 
-        const userId: number = Number(req['user'].id);
+        const userId: number = Number(req.params.user_id);
 
         try {
             await getConnection().transaction(async transactionalEntityManager => {
