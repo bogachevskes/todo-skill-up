@@ -24,6 +24,13 @@ export default class AdminUserController extends CrudController
         return await this.userRepository.allExisting();
     }
 
+    protected async listItem(id: number, req: Request): Promise<object>
+    {
+        const user: User = await this.findModel(id);
+
+        return Object.assign({}, user);
+    }
+
     /**
      * @see CrudController
      */
