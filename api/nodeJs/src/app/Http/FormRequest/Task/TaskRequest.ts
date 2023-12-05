@@ -34,9 +34,9 @@ export default class TaskRequest extends ValidationRequest
      {
         return [
             async () => {
-                const condition = await (new BoardsRepository).isGroupExists(Number(this.boardId));
+                const condition = await (new BoardsRepository).isBoardExists(Number(this.boardId));
 
-                return this.validateManual(condition, 'Группа доступа отсутствует', 'group_not_exists');
+                return this.validateManual(condition, 'Группа доступа отсутствует', 'board_not_exists');
             },
         ];
     }
