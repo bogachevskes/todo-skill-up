@@ -1,6 +1,6 @@
 <template>
     <div class="columns">
-        <div class="modal" :class="{ 'is-active': isModalActive }">
+        <div class="modal" :class="{ 'is-active': modal.isActive }">
             <div class="modal-background"></div>
             <div class="modal-card">
                 <header class="modal-card-head">
@@ -90,7 +90,7 @@
                     <button
                         class="button is-success"
                         :disabled="$v.$invalid"
-                        @click="handleCardProcessing"
+                        @click="handleTaskProcessing"
                     >
                         Сохранить
                     </button>
@@ -109,11 +109,15 @@ import { inputMethods, validationMixinAsset } from '@/libs/libStack';
 
 import DateHelper from '@/plugins/helpers/DateHelper';
 import events from '@/constants/events';
+import TaskStatus from "@/plugins/models/TaskStatus";
 
 export default {
     mixins: [validationMixinAsset],
     props: {
-        loadTodoGroups: {
+        taskStatus: {
+            type: TaskStatus,
+        },
+        loadTaskStatusGroups: {
             type: Function,
             default: null,
         },
@@ -122,8 +126,10 @@ export default {
         return {
             formData: {},
             plannedCompletionAt: null,
-            action: null,
-            isModalActive: 0,
+            action: 'create',
+            modal: {
+                isActive: false,
+            },
             lengthRules: {
                 name: 5,
                 description: 10,
@@ -132,20 +138,23 @@ export default {
     },
     computed: {
         modalHeadingText () {
-            switch (this.action) {
-                case 'create':
-                    return 'Создать задачу';
-                case 'update':
-                    return 'Редактировать задачу';
+
+            const labels = {
+                'create': 'Создать задачу',
+                'update': 'Редактировать задачу',
+            };
+
+            if (labels.hasOwnProperty(this.action)) {
+                return labels[this.action];
             }
 
-            return 'Не определено';
+            throw new Error('Заголовок модального окна не определен');
         },
     },
     mounted () {
-        this.$eventBus.$on(events.SHOW_CARD_MANAGE_MODAL, (card, action) => {
+        this.$eventBus.$on(events.SHOW_TASK_MANAGE_MODAL, (task, action) => {
             this.action = action;
-            this.formData = { ...card };
+            this.formData = { ...task };
 
             if (typeof this.formData.plannedCompletionAt === 'string') {
                 this.plannedCompletionAt = new Date(
@@ -158,20 +167,18 @@ export default {
     },
     methods: {
         ...inputMethods,
-        activateModal () {
-            this.isModalActive = 1;
+        activateModal() {
+            this.modal.isActive = true;
         },
         deactivateModal () {
-            this.isModalActive = 0;
+            this.modal.isActive = false;
         },
-        flushFormData () {
+        flushFormData() {
             for (const item in this.formData) {
                 this.formData[item] = null;
             }
         },
-        executeCreation () {
-            this.formData.boardId = this.$route.params.id;
-
+        executeCreation() {
             this.formData.plannedCompletionAt = DateHelper.format(
                 this.plannedCompletionAt,
                 'YYYY-MM-DD HH:mm:ss'
@@ -179,12 +186,12 @@ export default {
 
             this.$axios
                 .$post(
-                    `/todo-group/todo/${this.$route.params.id}/create`,
-                    { form: this.formData }
+                    `/boards/${this.$route.params.id}/tasks`,
+                    { formData: this.formData }
                 )
-                .then((res) => this.onCardProcessingComplete());
+                .then((res) => this.onTaskProcessingComplete());
         },
-        executeUpdating () {
+        executeUpdating() {
             this.formData.plannedCompletionAt = DateHelper.format(
                 this.plannedCompletionAt,
                 'YYYY-MM-DD HH:mm:ss'
@@ -192,37 +199,33 @@ export default {
 
             this.$axios
                 .$put(
-                    `/todo-group/todo/${this.$route.params.id}/update/${this.formData.id}`,
+                    `/boards/${this.$route.params.id}/tasks/${this.formData.id}`,
                     { formData: this.formData }
                 )
-                .then((res) => this.onCardProcessingComplete());
+                .then((res) => this.onTaskProcessingComplete());
         },
-        onCardProcessingComplete () {
+        onTaskProcessingComplete() {
             this.deactivateModal();
             this.$v.$reset();
             this.flushFormData();
-            this.loadTodoGroups();
+            this.loadTaskStatusGroups();
         },
-        handleCardProcessing () {
-            switch (this.action) {
-                case 'create':
-                    this.executeCreation();
-                    return;
-                case 'update':
-                    this.executeUpdating();
-                    return;
+        handleTaskProcessing() {
+
+            const actions = {
+                'create': 'executeCreation',
+                'update': 'executeUpdating',
+            };
+
+            if (actions.hasOwnProperty(this.action)) {
+
+                return this[actions[this.action]]();
             }
 
-            throw new Error('Handling is not defined');
-        },
-        setComplitionDate (date) {
-            this.formData.plannedCompletionAt = DateHelper.format(
-                date,
-                'YYYY-MM-DD HH:mm:ss'
-            );
+            throw new Error('Обработчик задания не определен');
         },
     },
-    validations () {
+    validations() {
         return {
             formData: {
                 name: {

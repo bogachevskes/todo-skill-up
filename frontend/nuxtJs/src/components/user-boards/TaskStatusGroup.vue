@@ -7,43 +7,49 @@
             >
                 {{ group.status.name }}
                 <button
-                    v-if="addCard && group.isInitialDefault()"
-                    class="button is-warning is-small ml-4"
-                    @click="addCard"
+                    class="button is-success is-small ml-4"
+                    v-if="canCreateTask === true"
+                    @click="addTask(group.status)"
                 >
                     Добавить задачу
                 </button>
+                <span class="is-pulled-right">
+                    <button class="button is-warning is-small" @click="handleStatusUpdating(group.status)">
+                        <b-icon icon="pencil" />
+                    </button>
+                    <button class="button is-danger is-small" @click="handleTaskStatusDelete(group.status)">
+                        <b-icon icon="delete" />
+                    </button>
+                </span>
             </p>
             <div class="panel-block has-background-light">
                 <div class="container">
                     <div
-                        @drop="moveCard ? moveCard($event, group) : null"
+                        @drop="moveTask ? moveTask($event, group.status) : null"
                         @dragover.prevent
                         @dragenter.prevent
                     >
                         <div v-if="hasCards">
-                            <Card
-                                v-for="(card, index) in group.todo"
+                            <Task
+                                v-for="(task, index) in group.tasks"
                                 :key="index"
                                 :statuses="statuses"
-                                :card="card"
+                                :task="task"
                                 :change-status="changeStatus"
-                                :on-move-card="onMoveCard"
-                                :delete-card="deleteCard"
-                                :edit-card="
-                                    group.isInitialDefault() ? editCard : null
-                                "
+                                :on-move-task="onMoveTask"
+                                :delete-task="deleteTask"
+                                :edit-task="editTask"
                             />
                         </div>
                         <div
-                            v-if="hasNoCards"
+                            v-if="hasCards === false"
                             style="
                                 display: flex;
                                 align-items: center;
                                 min-height: 50px;
                             "
                         >
-                            Список пуст
+                            Нет задач
                         </div>
                     </div>
                 </div>
@@ -53,53 +59,59 @@
 </template>
 
 <script>
-import Card from './Card';
+import Task from './Task';
 
-import TodoGroup from '@/plugins/models/TodoGroup';
+import TaskStatusGroup from '@/plugins/models/TaskStatusGroup';
 
 export default {
     components: {
-        Card,
+        Task,
     },
     props: {
+        handleStatusUpdating: {
+            type: Function,
+        },
+        handleTaskStatusDelete: {
+            type: Function,
+        },
         group: {
-            type: TodoGroup,
+            type: TaskStatusGroup,
         },
         statuses: {
             type: Array,
             default: null,
         },
-        addCard: {
+        addTask: {
             type: Function,
             default: null,
+        },
+        canCreateTask: {
+            type: Boolean,
         },
         changeStatus: {
             type: Function,
             default: null,
         },
-        onMoveCard: {
+        onMoveTask: {
             type: Function,
             default: null,
         },
-        moveCard: {
+        moveTask: {
             type: Function,
             default: null,
         },
-        deleteCard: {
+        deleteTask: {
             type: Function,
             default: null,
         },
-        editCard: {
+        editTask: {
             type: Function,
             default: null,
         },
     },
     computed: {
         hasCards () {
-            return this.group.todo.length > 0;
-        },
-        hasNoCards () {
-            return !this.hasCards;
+            return this.group.tasks.length > 0;
         },
     },
 };
