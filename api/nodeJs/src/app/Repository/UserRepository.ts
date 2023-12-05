@@ -25,7 +25,10 @@ export default class UserRepository
     public async findById(id: number, withTrashed: boolean = false): Promise<User|null>
     {
         const condition = withTrashed ? {} : { deletedAt: null },
-            user = await User.findOne({ where: { id, ...condition } });
+            user = await User.findOne({
+                select: ['id', 'name', 'email', 'status', 'createdAt', 'updatedAt'],
+                where: { id, ...condition }
+            });
 
         if (user instanceof User) {
             return user;
