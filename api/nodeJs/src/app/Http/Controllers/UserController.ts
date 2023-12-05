@@ -17,7 +17,7 @@ export default class UserController extends CrudController
     @AutoBind
     public async actionMatch(req: Request, res: Response): Promise<void>
     {
-        const form = new UsersMatchRequest(req.query);
+        const form: UsersMatchRequest = new UsersMatchRequest(req.query);
 
         await form.validate();
 
