@@ -16,7 +16,7 @@ export default class UserHasAccessToBoardMiddleware extends Middleware
 
         const boardId = req.params.board_id || req.params.id
 
-        if (await (new BoardsRepository).isUserExistsInGroup(Number(boardId), user.id) === false) {
+        if (await (new BoardsRepository).isUserExistsInBoard(Number(boardId), Number(user.id)) === false) {
             
             throw new Forbidden('Доступ к группе запрещен');
         }
