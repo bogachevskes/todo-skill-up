@@ -13,9 +13,9 @@ export default class TaskStatusRepository
         const query = this.getQueryBuilder()
             .select([
                 'ts.id as id',
-                'ts.board_id as board_id',
+                'ts.board_id as boardId',
                 'ts.name as name',
-                'ts.created_at as created_at',
+                'ts.created_at as createdAt',
             ])
             .where('ts.board_id = :boardId', {boardId});
 
@@ -54,7 +54,7 @@ export default class TaskStatusRepository
         await query.execute();
     }
 
-    public async isExistInGroup(statusId: Number, boardId: Number): Promise<boolean>
+    public async isExistInBoard(statusId: Number, boardId: Number): Promise<boolean>
     {
         const query = this.getQueryBuilder()
             .select('COUNT(ts.id) as exist')
