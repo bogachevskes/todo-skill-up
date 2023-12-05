@@ -1,29 +1,32 @@
 <template>
     <div>
-        <div class="card">
-            <div class="card-header">
-                <p class="card-header-title">Участники</p>
-            </div>
-            <div class="card-content" style="padding: 10px">
-                <div class="content">
-                    <button
-                        class="button is-success is-small"
-                        @click="activateModal"
-                    >
-                        Добавить
-                    </button>
-                    <button
-                        v-for="(user, index) in users"
-                        :key="index"
-                        class="button is-small is-warning mr-1"
-                        @click="removeUser(user)"
-                    >
-                        {{ user.email }}
-                    </button>
+        <div class="box mb-0">
+            <div class="card">
+                <div class="card-header">
+                    <p class="card-header-title">Участники</p>
+                </div>
+                <div class="card-content" style="padding: 10px">
+                    <div class="content">
+                        <button
+                            class="button is-success is-small mt-1"
+                            @click="activateModal"
+                        >
+                            Добавить
+                        </button>
+                        <button
+                            v-for="(user, index) in users"
+                            :key="index"
+                            class="button is-small is-warning mr-1 mt-1"
+                            @click="removeUser(user)"
+                            :disabled="Number(user.id) === Number(getUserId)"
+                        >
+                            {{ Number(user.id) === Number(getUserId) ? 'Вы' : user.email }}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="modal" :class="{ 'is-active': isModalActive }">
+        <div class="modal" :class="{ 'is-active': modal.isActive }">
             <div class="modal-background"></div>
             <div class="modal-card">
                 <header class="modal-card-head">
@@ -51,33 +54,33 @@
                         class="button is-light is-small"
                         @click="addUser(user)"
                     >
-                        {{ user.user_email }}
+                        {{ user.email }}
                     </button>
-                    <div v-if="formData.user_emails.length > 0">
-                        <p>Пользователи к добавлению:</p>
+                    <div v-if="usersToAdd.length > 0">
+                        <h4 class="has-text-grey mt-2 mb-1">Пользователи к добавлению:</h4>
                         <button
-                            v-for="(email, index) in formData.user_emails"
+                            v-for="(user, index) in usersToAdd"
                             :key="index"
                             class="button is-warning mr-1"
-                            @click="remove(email)"
+                            @click="remove(user)"
                         >
-                            {{ email }}
+                            {{ user.email }}
                         </button>
                     </div>
                 </section>
                 <footer class="modal-card-foot">
                     <button
-                        v-if="formData.user_emails.length > 0"
+                        v-if="formData.ids.length > 0"
                         class="button is-success"
-                        :class="{ 'is-loading': isLoading }"
+                        :class="{ 'is-loading': modal.isLoading }"
                         :disabled="false"
-                        @click="handleCardProcessing"
+                        @click="handleUserAdding"
                     >
                         Добавить
                     </button>
                     <button
                         class="button is-danger"
-                        :class="{ 'is-hidden': isLoading }"
+                        :class="{ 'is-hidden': modal.isLoading }"
                         @click="deactivateModal"
                     >
                         Отменить
@@ -89,6 +92,8 @@
 </template>
 
 <script>
+import {mapGetters} from "vuex";
+
 export default {
     props: {
         users: {
@@ -103,15 +108,21 @@ export default {
     data () {
         return {
             formData: {
-                user_emails: [],
+                ids: [],
             },
             searchData: {
                 email: null,
             },
-            isModalActive: false,
-            isLoading: false,
+            modal: {
+                isActive: false,
+                isLoading: false,
+            },
             userMatches: [],
+            usersToAdd: [],
         };
+    },
+    computed: {
+        ...mapGetters('user', ['getUserId']),
     },
     watch: {
         'searchData.email' (value) {
@@ -120,50 +131,54 @@ export default {
             }
 
             this.$axios
-                .$get(`/users/match-by-email/${this.searchData.email}`)
+                .$get(`/users/match/?email=${this.searchData.email}`)
                 .then((res) => (this.userMatches = res.items));
         },
     },
     methods: {
-        activateModal () {
-            this.isModalActive = 1;
+        activateModal() {
+            this.modal.isActive = true;
         },
         deactivateModal () {
-            this.isModalActive = 0;
+            this.modal.isActive = 0;
         },
-        addUser (user) {
-            if (this.formData.user_emails.includes(user.user_email)) {
+        addUser(user) {
+            if (this.formData.ids.includes(user.id)) {
                 return;
             }
 
-            this.formData.user_emails.push(user.user_email);
+            this.formData.ids.push(user.id);
+            this.usersToAdd.push(user);
         },
-        remove (email) {
-            const index = this.formData.user_emails.indexOf(email);
+        remove(user) {
+            const index = this.formData.ids.indexOf(user.id);
 
             if (index > -1) {
-                this.formData.user_emails.splice(index, 1);
+                this.formData.ids.splice(index, 1);
+                console.log(this.usersToAdd.filter((addedUser) => addedUser.id === user.id));
+
+                this.usersToAdd = this.usersToAdd.filter((addedUser) => addedUser.id !== user.id);
             }
         },
-        removeUser (user) {
+        removeUser(user) {
             this.$axios
                 .$delete(
-                    `/todo-group/${this.$route.params.id}/users/${user.group_id}/delete`
+                    `/boards/${this.$route.params.id}/users/${user.id}`
                 )
                 .then((res) => {
                     this.loadUsers();
                 });
         },
-        handleCardProcessing () {
-            this.isLoading = true;
+        handleUserAdding() {
+            this.modal.isLoading = true;
 
             this.$axios
                 .$post(
-                    `/todo-group/${this.$route.params.id}/users/create`,
+                    `/boards/${this.$route.params.id}/users`,
                     { formData: this.formData }
                 )
                 .then((res) => {
-                    this.isLoading = false;
+                    this.modal.isLoading = false;
                     this.deactivateModal();
                     this.loadUsers();
                 });
