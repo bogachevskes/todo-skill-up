@@ -7,25 +7,20 @@ import AuthMiddleware from './middleware/auth.middleware';
 import UsersService from './services/users.service';
 import ErrorHandler from './exceptions/error.handler';
 import ChannelMessageHandler from './use_cases/channel_message.handler';
+import BadRequestException from "./exceptions/bad_request.exception";
 
 @WebSocketGateway({
-    path: '/ws-todo',
-    namespace: '/todo',
+    path: '/ws-board',
+    namespace: '/board',
     transports: ['websocket'],
     cors: {
         origin: false,
     },
 })
-export class TodoGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
+export class BoardGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-    /**
-     * @var { Server }
-     */
     @WebSocketServer() server: Server;
 
-    /**
-     * @var { Logger }
-     */
     private logger: Logger = new Logger('AppGateway');
 
     constructor(
@@ -33,21 +28,17 @@ export class TodoGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         private readonly usersService: UsersService,
         private readonly errorHandler: ErrorHandler
     ) {}
-    
-    /**
-     * @param  { Server } server
-     * @return void
-     */
-    async afterInit(server: Server): Promise<void>
+
+    public async afterInit(server: Server): Promise<void>
     {
         this.server.use(await (new AuthMiddleware(this.usersService, this.errorHandler)).handle.bind(this));
 
         this.logger.log(`Initialized on port: ${process.env.APP_PORT}`);
 
         this.redis.subscribe(
-            'todo-created',
-            'todo-state-changed',
-            'todo-deleted'
+            'task-created',
+            'task-state-changed',
+            'task-deleted'
         );
 
         const messageHandler = new ChannelMessageHandler(server);
@@ -58,68 +49,51 @@ export class TodoGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         
     }
 
-    /**
-     * @param  { string } key 
-     * @return { string }
-     */
     private buildGroupRoomKey(key: string): string
     {
-        return `access-group-room-${key}`;
+        return `board-room-${key}`;
     }
 
-    /**
-     * @param  { Socket } client
-     * @return void
-     */
-    handleDisconnect(client: Socket): void
+    public handleDisconnect(client: Socket): void
     {
         this.logger.log(`Client disconnected: ${client.id}`);
     }
 
-    /**
-     * @param  { Socket } client 
-     * @return void
-     */
-    handleConnection(client: Socket): void
+    public handleConnection(client: Socket): void
     {
         this.logger.log(`Client connected: ${client.id}`);
     }
-    
-    /**
-     * @param  { Socket } client 
-     * @param  { object } payload 
-     * @returns void
-     */
+
     @SubscribeMessage('message')
-    handleMessage(_client: Socket, payload: object): void
+    public handleMessage(_client: Socket, payload: object): void
     {
         this.server.emit('check', `got message: ${JSON.stringify(payload)}`);
     }
 
-    @SubscribeMessage('join_access_group')
-    handleGroupJoin(client: Socket, payload: object): void
+    @SubscribeMessage('join_board')
+    public handleGroupJoin(client: Socket, payload: object): void
     {
-        if (payload['group'] === undefined) {
-            
-            return;
+        if (payload['board'] === undefined) {
+
+            throw new BadRequestException('Не указан идентификатор доски задач');
         }
 
-        const roomName = this.buildGroupRoomKey(payload['group']);
+        const roomName = this.buildGroupRoomKey(payload['board']);
 
         client.join(roomName);
 
         console.log(`Client connected to room id: ${roomName}`);
     }
 
-    @SubscribeMessage('leave_access_group')
-    handleGroupLeave(client: Socket, payload: object): void
+    @SubscribeMessage('leave_board')
+    public handleGroupLeave(client: Socket, payload: object): void
     {
-        if (payload['group'] === undefined) {
+        if (payload['board'] === undefined) {
             
             return;
         }
 
-        const roomName = this.buildGroupRoomKey(payload['group']);
+        const roomName = this.buildGroupRoomKey(payload['board']);
 
         client.leave(roomName);
 
