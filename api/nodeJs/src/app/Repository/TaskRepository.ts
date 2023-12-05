@@ -14,12 +14,12 @@ export default class TaskRepository
         const query = this.getQueryBuilder()
             .select([
                 't.id as id',
-                't.status_id as status_id',
-                't.board_id as board_id',
+                't.status_id as statusId',
+                't.board_id as boardId',
                 't.name as name',
                 't.description as description',
-                't.planned_completion_at as planned_completion_at',
-                't.created_at as created_at'
+                't.planned_completion_at as plannedCompletionAt',
+                't.created_at as createdAt'
             ])
             .where({boardId, statusId});
 
