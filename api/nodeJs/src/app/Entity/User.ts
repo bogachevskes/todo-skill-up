@@ -58,6 +58,6 @@ export default class User extends BaseEntity
     })
     public deletedAt: Date | null;
 
-    @OneToMany(() => BoardUser, todoUsersGroups => todoUsersGroups.user)
+    @OneToMany(() => BoardUser, userBoards => userBoards.user)
     public boards: BoardUser[];
 }
