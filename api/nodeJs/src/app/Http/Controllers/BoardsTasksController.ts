@@ -61,7 +61,7 @@ export default class BoardsTasksController extends CrudController
 
         const task: Task = await this.taskRepository.createNew(form);
 
-        this.producer.send('todo-created', task);
+        this.producer.send('task-created', task);
     }
 
     /**
@@ -85,7 +85,7 @@ export default class BoardsTasksController extends CrudController
 
         const updatedTask: Task = await this.taskRepository.update(task, form);
 
-        this.producer.send('todo-state-changed', updatedTask);
+        this.producer.send('task-state-changed', updatedTask);
     }
 
     protected async patch(id: number, req: Request): Promise<void>|never
@@ -102,7 +102,7 @@ export default class BoardsTasksController extends CrudController
 
         await this.taskRepository.deleteById(id);
 
-        this.producer.send('todo-deleted', task);
+        this.producer.send('task-deleted', task);
     }
 
     protected async findModel(id: number): Promise<Task | never>
