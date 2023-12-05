@@ -13,12 +13,7 @@ export default class AuthMiddleware
         private readonly usersService: UsersService,
         private readonly errorHandler: ErrorHandler
     ) { }
-    
-    /**
-     * @param  { Socket } socket 
-     * @param  { NextFunction } next 
-     * @return { Promise<void> }
-     */
+
     public async handle(socket: Socket , next: NextFunction): Promise<void>
     {
         try {
