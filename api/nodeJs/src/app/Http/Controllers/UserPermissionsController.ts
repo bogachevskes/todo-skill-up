@@ -9,6 +9,6 @@ export default class UserPermissionsController extends CrudController
      */
     protected async list(req: Request): Promise<string[]>
     {
-        return await (new AuthManager()).getUserPermissions(Number(req.params.id));
+        return await (new AuthManager()).getUserPermissions(Number(req.params.user_id));
     }
 }
