@@ -7,7 +7,7 @@
                     :action-heading="'Редактировать пользователя'"
                     :action-text="'Сохранить'"
                     :confirm-action="handleUpdating"
-                    :password-strict-required="false"
+                    :emailDisabled="true"
                 />
             </div>
         </div>
@@ -35,7 +35,6 @@ export default {
                 id: null,
                 name: null,
                 email: null,
-                hasPassword: null,
                 password: null,
                 confirm_password: null,
             },
@@ -47,29 +46,24 @@ export default {
         },
         loadUserData () {
             this.$axios
-                .$get(`/admin/users/get-user-data/${this.userId}`)
+                .$get(`/admin/users/${this.userId}`)
                 .then((result) => {
                     this.formData = {
-                        ...this.formData,
-                        ...result.item,
+                        ...result,
                     };
                 });
         },
-        handleUpdating (formData) {
+        handleUpdating (data) {
+
+            const formData = {...data};
+
+            delete formData['email'];
+            delete formData['confirm_password'];
+
             this.$axios
-                .$put(`/admin/users/update/${this.userId}`, { formData })
-                .then((result) => {
-                    const resultItem = result.item;
-
-                    if (resultItem.success) {
-                        this.$router.push('/users');
-                        return;
-                    }
-
-                    this.$eventBus.showError(
-                        'Ошибка при сохранении',
-                        resultItem.error
-                    );
+                .$patch(`/admin/users/${this.userId}`, { formData })
+                .then(() => {
+                    this.$router.push('/admin/users');
                 });
         },
     },

@@ -19,23 +19,12 @@ export default {
     components: {
         Form,
     },
-    layout: 'desk',
     methods: {
         handleCreating (formData) {
             this.$axios
-                .$post(`/admin/users/create`, { formData })
-                .then((result) => {
-                    const resultItem = result.item;
-
-                    if (resultItem.success) {
-                        this.$router.push('/users');
-                        return;
-                    }
-
-                    this.$eventBus.showError(
-                        'Ошибка при создании пользователя',
-                        resultItem.error
-                    );
+                .$post(`/admin/users`, { formData })
+                .then(() => {
+                    this.$router.push('/admin/users');
                 });
         },
     },

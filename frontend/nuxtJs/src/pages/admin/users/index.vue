@@ -3,9 +3,8 @@
         <div class="section has-background-info" style="padding: 20px">
             <div>
                 <NuxtLink
-                    v-if="canManageUsersTodo"
                     class="button is-success mb-2"
-                    :to="ROUTE_USER_CREATE"
+                    :to="'/admin/users/create'"
                 >
                     <b-icon icon="account-plus" />
                     <span class="ml-2">Создать пользователя</span>
@@ -64,19 +63,10 @@
                 <b-table-column label="Действия">
                     <template #default="props">
                         <NuxtLink
-                            v-if="canManageUsersTodo"
-                            class="button is-info is-small"
-                            :to="getManageTodoRoute(props.row)"
-                        >
-                            <b-icon icon="format-list-checks" />
-                            <span class="ml-2">Задачи</span>
-                        </NuxtLink>
-                        <NuxtLink
                             class="button is-warning is-small ml-2"
-                            :to="updateUserRoute(props.row)"
+                            :to="`/admin/users/update/${Number(props.row.id)}`"
                         >
                             <b-icon icon="pencil" />
-                            <span class="ml-2">Изменить</span>
                         </NuxtLink>
                         <button
                             class="button is-danger is-small ml-2"
@@ -84,7 +74,6 @@
                             @click="deleteUser(props.row.id)"
                         >
                             <b-icon icon="delete" />
-                            <span class="ml-2">Удалить</span>
                         </button>
                     </template>
                 </b-table-column>
@@ -96,59 +85,45 @@
 <script>
 import { mapGetters } from 'vuex';
 
-import {
-    ROUTE_TODO_LIST,
-    ROUTE_USER_TODO_LIST,
-    ROUTE_USER_CREATE,
-    ROUTE_USER_UPDATE,
-} from '@/constants/routes';
-
 import DateHelper from '@/plugins/helpers/DateHelper';
 
 export default {
-    layout: 'desk',
+    name: 'ManageUsers',
     data () {
         return {
             users: [],
         };
     },
     methods: {
-        setUserActiveState (val, id) {
+        setUserActiveState(val, id) {
             const active = Number(val);
 
             this.$axios
-                .$put(`/admin/users/set-active-state/${id}`, { active })
+                .$patch(`/admin/users/${id}`, {
+                    formData: {
+                        status: active,
+                    }
+                })
                 .then((x) => this.loadUsersList());
         },
-        deleteUser (userId) {
+        deleteUser(userId) {
             this.$axios
-                .$delete(`/admin/users/delete/${userId}`)
+                .$delete(`/admin/users/${userId}`)
                 .then((x) => this.loadUsersList());
         },
-        loadUsersList () {
+        loadUsersList() {
             this.$axios
-                .$get('/admin/users/list')
-                .then((result) => {
-                this.users = result.items || [];
-            });
+                .$get('/admin/users')
+                .then((users) => {
+                    this.users = users;
+                });
         },
-        isCurrentUser (userId) {
-            return this.$userStorage.getUserId() == userId;
-        },
-        getManageTodoRoute (data) {
-            if (this.isCurrentUser(data.id)) {
-                return ROUTE_TODO_LIST;
-            }
-
-            return `${ROUTE_USER_TODO_LIST}/${parseInt(data.id)}`;
-        },
-        updateUserRoute (data) {
-            return `${ROUTE_USER_UPDATE}/${parseInt(data.id)}`;
+        isCurrentUser(userId) {
+            return Number(this.getUserId) === Number(userId);
         },
     },
     computed: {
-        ...mapGetters('todo', ['canManageUsersTodo']),
-        ROUTE_USER_CREATE: () => ROUTE_USER_CREATE,
+        ...mapGetters('user', ['getUserId']),
         DateHelper: () => DateHelper,
     },
     beforeRouteEnter(to, from, next) {
