@@ -11,7 +11,7 @@ export default class DateHelper {
      */
     public static printFormatted(
         date: string,
-        to: string = 'DD.MM.YYYY HH:mm:ss',
+        to: string = 'DD.MM.YYYY HH:mm',
         from: string = 'YYYY-MM-DD HH:mm:ss'
     ): string {
         return moment(date, from).format(to);
