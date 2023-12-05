@@ -4,7 +4,7 @@ import Middleware from '../../../Framework/Http/Middleware/Middleware';
 import User from '../../Entity/User';
 import Forbidden from "../../../Framework/Exceptions/Forbidden";
 
-export default class IsCurrentUserMiddleware extends Middleware
+export default class CurrentUserOnlyMiddleware extends Middleware
 {
     /**
      * @see Middleware
@@ -13,7 +13,7 @@ export default class IsCurrentUserMiddleware extends Middleware
     {
         const user: User = req['user'];
 
-        if (Number(user.id) !== Number(req.params.id)) {
+        if (Number(user.id) !== Number(req.params.user_id)) {
             throw new Forbidden('Доступ запрещен');
         }
     }
