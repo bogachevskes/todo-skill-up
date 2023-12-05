@@ -40,7 +40,7 @@ export default class BoardUserCreate extends BaseCommand
                 continue;
             }
 
-            if (await this.boardsRepository.isUserExistsInGroup(this.context.get('board_id'), user.id) === true) {
+            if (await this.boardsRepository.isUserExistsInBoard(this.context.get('board_id'), user.id) === true) {
                 continue;
             }
 
