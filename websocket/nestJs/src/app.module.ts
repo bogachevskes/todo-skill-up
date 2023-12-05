@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
-import { TodoGateway } from './todo/todo.gateway';
-import User from './todo/entities/user.entity';
-import UsersService from './todo/services/users.service';
-import ErrorHandler from './todo/exceptions/error.handler';
+import { BoardGateway } from './board/board.gateway';
+import User from './board/entities/user.entity';
+import UsersService from './board/services/users.service';
+import ErrorHandler from './board/exceptions/error.handler';
 
 @Module({
     imports: [
@@ -19,7 +19,7 @@ import ErrorHandler from './todo/exceptions/error.handler';
     controllers: [],
     providers: [
         UsersService,
-        TodoGateway,
+        BoardGateway,
         ErrorHandler,
     ],
 })
