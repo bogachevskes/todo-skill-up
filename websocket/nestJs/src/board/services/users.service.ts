@@ -12,11 +12,7 @@ export default class UsersService
         @InjectRepository(User) private readonly repository: Repository<User>,
         @InjectRedis() private readonly redis: Redis
     ){ }
-    
-    /**
-     * @param id 
-     * @returns 
-     */
+
     public async findEntity(id: Number): Promise<User>
     {
         const key = `ws-user-entity-id-${id}`;
