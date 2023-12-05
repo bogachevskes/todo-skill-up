@@ -19,7 +19,7 @@ export default class BoardsRepository
          return model;
     }
 
-    public async isGroupExists(id: number): Promise<boolean>
+    public async isBoardExists(id: number): Promise<boolean>
     {
         const result = await this.getQueryBuilder()
             .select('COUNT(b.id) as exist')
@@ -32,7 +32,7 @@ export default class BoardsRepository
     public async findByUserId(userId: number): Promise<Board[]>
     {
         const query = this.getQueryBuilder()
-            .select(['b.id', 'b.name', 'b.description', 'b.createdAt'])
+            .select(['b.id', 'b.name', 'b.description', 'b.createdAt', 'b.updatedAt'])
             .leftJoin(BoardUser, 'ub', 'b.id = ub.boardId')
             .where('ub.userId = :userId', { userId });
 
@@ -60,7 +60,7 @@ export default class BoardsRepository
         await model.save();
     }
 
-    public async isUserExistsInGroup(boardId: number, userId: number): Promise<boolean>
+    public async isUserExistsInBoard(boardId: number, userId: number): Promise<boolean>
     {
         const query = BoardUser.createQueryBuilder('ub')
             .select('COUNT(ub.id) as exist')
@@ -76,7 +76,7 @@ export default class BoardsRepository
         const query = BoardUser.createQueryBuilder('ub')
             .select(['ubs.id, ubs.name, ubs.email'])
             .leftJoin('ub.user', 'ubs')
-            .where('ub.board_id = :boardId', {boardId});
+            .where('ub.board_id = :boardId AND ubs.deleted_at IS NULL', {boardId});
 
         return await query.getRawMany();
     }
@@ -94,8 +94,7 @@ export default class BoardsRepository
     public async revokeUserFromBoard(boardId: number, userId: number): Promise<void>
     {
         const query = BoardUser.createQueryBuilder('ub')
-            .where('board_id = :boardId and user_id = :userId', { boardId, userId }
-            )
+            .where('board_id = :boardId and user_id = :userId', { boardId, userId })
             .delete();
 
         await query.execute();
