@@ -15,11 +15,11 @@ export default class TaskRequest extends ValidationRequest
     @NotEmpty({message: 'Не задан статус задачи'})
     statusId: number;
 
-    @IsLength(USER_NAME_MIN_LENGTH, 300, { message: MESSAGE_MIN_LENGTH })
+    @IsLength(USER_NAME_MIN_LENGTH, 300, { message: `${MESSAGE_MIN_LENGTH} поля Имя`})
     @ToString()
     name: string;
 
-    @IsLength(USER_NAME_MIN_LENGTH, 300, { message: MESSAGE_MIN_LENGTH })
+    @IsLength(USER_NAME_MIN_LENGTH, 300, { message: `${MESSAGE_MIN_LENGTH} поля Описание`})
     @ToString()
     description: string;
 
@@ -36,7 +36,7 @@ export default class TaskRequest extends ValidationRequest
             async () => {
                 const condition = await (new BoardsRepository).isBoardExists(Number(this.boardId));
 
-                return this.validateManual(condition, 'Группа доступа отсутствует', 'board_not_exists');
+                return this.validateManual(condition, 'Доска не найдена', 'board_not_exists');
             },
         ];
     }

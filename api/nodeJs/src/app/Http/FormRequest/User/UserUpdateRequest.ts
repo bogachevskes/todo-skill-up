@@ -9,7 +9,7 @@ import UserRepository from '../../../Repository/UserRepository';
 export default class UserUpdateRequest extends ValidationRequest
 {
     @IsAlphanumeric({ message: MESSAGE_ALPHA_NUM })
-    @IsLength(USER_NAME_MIN_LENGTH, USER_NAME_MAX_LENGTH, { message: MESSAGE_MIN_LENGTH })
+    @IsLength(USER_NAME_MIN_LENGTH, USER_NAME_MAX_LENGTH, { message: `${MESSAGE_MIN_LENGTH} поля Имя` })
     @ToString()
     public name: string;
 
@@ -21,7 +21,7 @@ export default class UserUpdateRequest extends ValidationRequest
     @NotEmpty({message: 'Не задан статус'})
     public status: number;
 
-    @IsLength(USER_PASSWORD_MIN_LENGTH, USER_PASSWORD_MAX_LENGTH, { message: MESSAGE_MIN_LENGTH })
+    @IsLength(USER_PASSWORD_MIN_LENGTH, USER_PASSWORD_MAX_LENGTH, { message: `${MESSAGE_MIN_LENGTH} поля Пароль` })
     @ToString()
     public password: string;
 

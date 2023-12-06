@@ -13,7 +13,7 @@ export default class UserLoginRequest extends ValidationRequest
     @ToString()
     public email: string;
 
-    @IsLength(USER_PASSWORD_MIN_LENGTH, USER_PASSWORD_MAX_LENGTH, { message: MESSAGE_MIN_LENGTH })
+    @IsLength(USER_PASSWORD_MIN_LENGTH, USER_PASSWORD_MAX_LENGTH, { message: `${MESSAGE_MIN_LENGTH} поля Имя` })
     @ToString()
     public password: string;
 

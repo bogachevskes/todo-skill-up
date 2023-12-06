@@ -6,11 +6,11 @@ import ValidationRequest from '../../../../Framework/FormRequest/Base/Validation
 
 export default class BoardRequest extends ValidationRequest
 {
-    @IsLength(USER_NAME_MIN_LENGTH, 300, { message: MESSAGE_MIN_LENGTH })
+    @IsLength(USER_NAME_MIN_LENGTH, 300, { message: `${MESSAGE_MIN_LENGTH} поля Имя` })
     @ToString()
     name: string;
 
-    @IsLength(USER_NAME_MIN_LENGTH, 300, { message: MESSAGE_MIN_LENGTH })
+    @IsLength(USER_NAME_MIN_LENGTH, 300, { message: `${MESSAGE_MIN_LENGTH} поля Описание` })
     @ToString()
     description: string;
 }
