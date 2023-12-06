@@ -43,7 +43,7 @@ export default class BoardsUsersController extends CrudController
         }
 
         if (await this.boardRepository.isBoardExists(form.board_id) === false) {
-            throw new NotFound('Группа не существует');
+            throw new NotFound('Доска не найдена');
         }
 
         const

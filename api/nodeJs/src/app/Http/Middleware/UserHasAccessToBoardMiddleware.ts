@@ -18,7 +18,7 @@ export default class UserHasAccessToBoardMiddleware extends Middleware
 
         if (await (new BoardsRepository).isUserExistsInBoard(Number(boardId), Number(user.id)) === false) {
             
-            throw new Forbidden('Доступ к группе запрещен');
+            throw new Forbidden('Доступ к доске запрещен');
         }
     }
 }

@@ -103,6 +103,6 @@ export default class UserBoardsController extends CrudController
             return model;
         }
 
-        throw new NotFound('Группа не найдена');
+        throw new NotFound('Доска не найдена');
     }
 }

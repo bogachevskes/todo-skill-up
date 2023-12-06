@@ -66,6 +66,6 @@ export default class BoardsTasksStatusesController extends CrudController
             return model;
         }
 
-        throw new NotFound('Задание не найдено');
+        throw new NotFound('Статус задания не найден');
     }
 }
