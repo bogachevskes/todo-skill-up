@@ -18,7 +18,7 @@ RoutesCollection.addGroup('v1', function () {
     RoutesCollection.add(
         new Route(
             'POST',
-            '/auth/login',
+            '/auth/signing',
             AuthController,
             'actionLogin'
         ),

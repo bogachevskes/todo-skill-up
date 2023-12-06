@@ -130,7 +130,7 @@ export default {
             this.isLoading = true;
 
             this.$axios
-                .$post('/auth/login', {formData: {...this.formData}})
+                .$post('/auth/signing', {formData: {...this.formData}})
                 .then((result) => {
                     this.$userStorage.fillStorage(result);
                     this.$userStorage.setClientCookies(result);
