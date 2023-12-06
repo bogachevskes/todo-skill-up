@@ -9,7 +9,7 @@ export default class TaskStatus extends BaseEntity
 
     @Column({
         unsigned: true,
-        comment: 'Группа доступа',
+        comment: 'Доска задач',
     })
     public boardId: number;
 

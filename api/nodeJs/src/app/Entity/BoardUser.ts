@@ -16,7 +16,7 @@ export default class BoardUser extends BaseEntity
 
     @Column({
         unsigned: true,
-        comment: 'Группа доступа',
+        comment: 'Доска задач',
     })
     public boardId: number;
 

@@ -11,7 +11,7 @@ export default class Task extends BaseEntity
 
     @Column({
         unsigned: true,
-        comment: 'Группа доступа',
+        comment: 'Доска задач',
         nullable: true,
     })
     public boardId: number | null;
