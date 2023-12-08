@@ -315,26 +315,31 @@
                     clearInterval(interval);
                 });
             },
-            moveCardToGroupTop(task) {
+            moveCardToListBottom(task) {
                 for (const group of this.taskStatusGroups) {
-                    if (Number(task.statusId) !== Number(group.status.id)) {
-                        continue;
-                    }
-
-                    group.tasks = [task].concat(group.tasks);
-
-                    break;
-                }
-            },
-            moveCardToGroupBottom(task) {
-                for (const group of this.taskStatusGroups) {
-                    if (Number(task.statusId) !== Number(task.statusId)) {
+                    if (Number(group.status.id) !== Number(task.statusId)) {
                         continue;
                     }
 
                     group.tasks.push(task);
 
                     break;
+                }
+            },
+            removeTaskFromCurrentList(entity) {
+                for (const group of this.taskStatusGroups) {
+
+                    const task = group.tasks.find((task) => {
+                        return Number(task.id) === Number(entity.id);
+                    });
+
+                    if (task === undefined) {
+                        continue;
+                    }
+
+                    group.tasks = group.tasks.filter((task) => {
+                        return Number(task.id) !== Number(entity.id);
+                    });
                 }
             },
             initWsListeners() {
@@ -364,55 +369,22 @@
 
                         const task = (new TasksFactory).make([entity])[0];
 
-                        this.moveCardToGroupBottom(task);
+                        this.moveCardToListBottom(task);
                     },
                     'task-state-changed': (entity) => {
 
-                        // TODO: упростить
-                        for (const group of this.taskStatusGroups) {
+                        this.removeTaskFromCurrentList(entity);
 
-                            for (let task of group.tasks) {
+                        const newGroup = this.taskStatusGroups.find((group) => {
+                            return Number(group.status.id) === entity.statusId;
+                        });
 
-                                if (Number(task.id) !== Number(entity.id)) {
-                                    continue;
-                                }
+                        const task = (new TasksFactory).make([entity])[0];
 
-                                task = Object.assign(task, entity);
+                        newGroup.tasks = [task].concat(newGroup.tasks);
 
-                                if (Number(task.statusId) !== Number(group.status.id)) {
-
-                                    const index = group.tasks.indexOf(task);
-
-                                    group.tasks.splice(index, 1);
-
-                                    this.moveCardToGroupTop(task);
-
-                                }
-
-                                break;
-                            }
-
-                        }
                     },
-                    'task-deleted': (entity) => {
-                        for (const group of this.taskStatusGroups) {
-
-                            // TODO: упростить
-                            for (const task of group.tasks) {
-
-                                if (Number(task.id) !== Number(entity.id)) {
-                                    continue;
-                                }
-
-                                const index = group.tasks.indexOf(task);
-
-                                group.tasks.splice(index, 1);
-
-                                break;
-                            }
-
-                        }
-                    },
+                    'task-deleted': this.removeTaskFromCurrentList,
                 };
 
                 for (const listener in listeners) {
