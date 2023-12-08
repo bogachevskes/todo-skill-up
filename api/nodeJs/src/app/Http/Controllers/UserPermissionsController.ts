@@ -1,14 +1,21 @@
 import { Request } from 'express';
 import CrudController from '../../../Framework/Http/Controller/CrudController';
-import AuthManager from "../../Components/AuthManager";
+import PermissionsRepository from "../../Repository/PermissionsRepository";
 
 export default class UserPermissionsController extends CrudController
 {
+    private permissionsRepository: PermissionsRepository
+
+    public constructor() {
+        super();
+        this.permissionsRepository = new PermissionsRepository;
+    }
+
     /**
      * @see CrudController
      */
     protected async list(req: Request): Promise<string[]>
     {
-        return await (new AuthManager()).getUserPermissions(Number(req.params.user_id));
+        return this.permissionsRepository.getUserPermissions(Number(req.params.user_id));
     }
 }
