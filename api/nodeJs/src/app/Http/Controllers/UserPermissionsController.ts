@@ -1,53 +1,21 @@
 import { Request } from 'express';
 import CrudController from '../../../Framework/Http/Controller/CrudController';
-import AuthManager from "../../Components/AuthManager";
+import PermissionsRepository from "../../Repository/PermissionsRepository";
 
 export default class UserPermissionsController extends CrudController
 {
+    private permissionsRepository: PermissionsRepository
+
+    public constructor() {
+        super();
+        this.permissionsRepository = new PermissionsRepository;
+    }
+
     /**
      * @see CrudController
      */
     protected async list(req: Request): Promise<string[]>
     {
-        const authManager: AuthManager = new AuthManager();
-
-        return await authManager.getUserPermissions(req['user'].id);
+        return this.permissionsRepository.getUserPermissions(Number(req.params.user_id));
     }
-
-    /**
-     * @see CrudController
-     */
-    protected async create(req: Request): Promise<object>
-    {
-        // Not implemented
-
-        return new Promise(function(resolve, reject) {
-            return resolve({});
-        });
-    }
-
-    /**
-     * @see CrudController
-     */
-    protected async update(id: number, req: Request): Promise<object>
-    {
-        // Not implemented
-
-        return new Promise(function(resolve, reject) {
-            return resolve({});
-        });
-    }
-
-    /**
-     * @see CrudController
-     */
-    protected async delete(id: number, req: Request): Promise<boolean>
-    {
-        // Not implemented
-
-        return new Promise(function(resolve, reject) {
-            return resolve(true);
-        });
-    }
-
 }

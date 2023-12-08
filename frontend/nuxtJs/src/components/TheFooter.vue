@@ -5,7 +5,7 @@
                 <div class="column is-5 is-5-widescreen">
                     <p>
                         <strong>TODO LIST</strong><br />
-                        разработчик Evening Production. Лицензия
+                        разработчик Андрей Богачевский. Лицензия
                         <a href="http://opensource.org/licenses/mit-license.php"
                             >MIT</a
                         >.<br />

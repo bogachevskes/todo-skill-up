@@ -9,56 +9,29 @@ import NotFound from '../Exceptions/NotFound';
 
 export default class Kernel
 {
-    /**
-     * @type express.Express
-     */
     protected app: express.Express;
-    
-    /**
-     * @type Router
-     */
+
     protected router: Router;
 
-    /**
-     * @type MiddlewareInterface[]
-     */
     protected middleware: MiddlewareInterface[] = [];
 
-    /**
-     * @post ErrorMiddlewareInterface[]
-     */
     protected errorMiddleware: ErrorMiddlewareInterface[] = [];
 
-    /**
-     * @param  MiddlewareInterface[] middleware 
-     * @return void
-     */
     public setMiddleware(middleware: MiddlewareInterface[]): void
     {
         this.middleware = middleware;
     }
 
-    /**
-     * @param  ErrorMiddlewareInterface[] middleware 
-     * @return void
-     */
      public setErrorMiddleware(middleware: ErrorMiddlewareInterface[]): void
      {
         this.errorMiddleware = middleware;
      }
-    
-    /**
-     * @param  router 
-     * @return void
-     */
+
     public setRouter(router: Router): void
     {
         this.router = router;
     }
 
-    /**
-     * @return void
-     */
     protected applyMiddleware(): void
     {
         for (const middleware of this.middleware) {
@@ -73,20 +46,13 @@ export default class Kernel
         }
     }
 
-    /**
-     * @return void
-     */
     protected applyErrorMiddleware(): void
     {
         for (const middleware of this.errorMiddleware) {
             this.app.use(middleware.execute);
         }
     }
-    
-    /**
-     * @param  number port 
-     * @return Promise<void>
-     */
+
     public async handle(port: number): Promise<void>
     {
         this.app = await express();

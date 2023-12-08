@@ -1,20 +1,18 @@
 export const actions = {
     nuxtClientInit({ dispatch, getters }, context) {
-        dispatch('todo/setUserData', context.$userStorage.getUserData());
+        dispatch('user/setUserData', context.$userStorage.getUserData());
 
-        if (getters['todo/isLogged'] === true) {
-            dispatch('todo/updateToken');
-            dispatch('todo/updatePermissions', context.$userStorage);
-            dispatch('todo/updateTodoGroups', context.$userStorage);
+        if (getters['user/isLogged'] === true) {
+            dispatch('user/updateToken');
+            dispatch('user/updatePermissions', context.$userStorage);
         }
     },
     nuxtServerInit({ dispatch, getters }, context) {
-        dispatch('todo/setUserData', context.$userStorage.getUserData());
+        dispatch('user/setUserData', context.$userStorage.getUserData());
 
-        if (getters['todo/isLogged'] === true) {
-            dispatch('todo/updateToken');
-            dispatch('todo/updatePermissions', context.$userStorage);
-            dispatch('todo/updateTodoGroups', context.$userStorage);
+        if (getters['user/isLogged'] === true) {
+            dispatch('user/updateToken');
+            dispatch('user/updatePermissions', context.$userStorage);
         }
     },
 };

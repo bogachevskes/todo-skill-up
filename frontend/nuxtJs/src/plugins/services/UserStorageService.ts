@@ -1,45 +1,30 @@
 import { NuxtAxiosInstance } from '@nuxtjs/axios';
 import IndexedInterface from '../base/IndexedInterface';
-import UserIdentity from '../models/UserIdentity';
-import TodoGroup from '../models/TodoGroup';
-import TodoStatus from '../models/TodoStatus';
+import User from '../models/User';
+import TaskStatusGroup from '../models/TaskStatusGroup';
+import TaskStatus from '../models/TaskStatus';
 import CookieStorage from './CookieStorage';
-import TodoGroupsService from './TodoGroupsService';
+import TaskStatusGroupFactory from './TaskStatusGroupFactory';
 
 export default class UserStorageLoader {
-    /**
-     * @var NuxtAxiosInstance
-     */
+
     public axios: NuxtAxiosInstance | undefined;
 
-    /**
-     * @var UserStorageLoader
-     */
     public static instance: UserStorageLoader;
 
-    /**
-     * @var Storage
-     */
     protected storage: Storage | CookieStorage;
 
-    /**
-     * @var UserIdentity
-     */
-    protected identity: UserIdentity;
+    protected identity: User;
 
     protected constructor(
         private wasLoaded: boolean = false,
         private identityKeys: any[] = []
     ) {
         this.storage = process.client ? localStorage : new CookieStorage();
-        this.identity = new UserIdentity();
+        this.identity = new User();
         this.loadIdentityKeys();
     }
 
-    /**
-     * @param  string cookie
-     * @return void
-     */
     public fillCookies(cookies: string): void {
         if (this.storage instanceof CookieStorage === false) {
             throw new TypeError(
@@ -52,10 +37,6 @@ export default class UserStorageLoader {
         this.storage.setItems(parser.parse(cookies));
     }
 
-    /**
-     * @param  cookies
-     * @return void
-     */
     public setClientCookies(cookies: object): void {
         if (Boolean(process.client) === false) {
             throw new Error(
@@ -74,69 +55,30 @@ export default class UserStorageLoader {
         }
     }
 
-    /**
-     * Получение значений сущности пользователя.
-     *
-     * @return void
-     */
     protected loadIdentityKeys(): void {
         this.identityKeys = this.identity.getKeys();
     }
 
-    /**
-     * Присвоение признака о
-     * загрузке сущности пользователя.
-     *
-     * @param  boolean condition
-     * @return void
-     */
     protected setWasLoaded(condition: boolean): void {
         this.wasLoaded = condition;
     }
 
-    /**
-     * Установка признака
-     * о загрузке сущности пользователя.
-     *
-     * @return void
-     */
     protected setStorageLoaded(): void {
         this.setWasLoaded(true);
     }
 
-    /**
-     * Сброс признака
-     * о загрузке сущности пользователя.
-     *
-     * @return void
-     */
     protected setStorageNotLoaded(): void {
         this.setWasLoaded(false);
     }
 
-    /**
-     * Проверка признака
-     * загрузки сущности пользователя.
-     *
-     * @return boolean
-     */
     protected isStorageLoaded(): boolean {
         return this.wasLoaded === true;
     }
 
-    /**
-     * @return boolean
-     */
     protected storageNotLoaded(): boolean {
         return !this.isStorageLoaded();
     }
 
-    /**
-     * Загрузка сущности
-     * пользователя из памяти браузера.
-     *
-     * @return void
-     */
     public fillFomStorage(): void {
         for (const item of this.identityKeys) {
             this.identity.set(item, this.storage.getItem(item));
@@ -145,13 +87,6 @@ export default class UserStorageLoader {
         this.setStorageLoaded();
     }
 
-    /**
-     * Запись данных сущности
-     * пользователя в память браузера.
-     *
-     * @param  IndexedInterface data
-     * @return void
-     */
     public fillStorage(data: IndexedInterface): void {
         const keys = Object.keys(data);
 
@@ -162,12 +97,6 @@ export default class UserStorageLoader {
         this.setStorageNotLoaded();
     }
 
-    /**
-     * Возвращает
-     * сущность пользователя.
-     *
-     * @return object
-     */
     public getUserData(): object {
         if (this.storageNotLoaded()) {
             this.fillFomStorage();
@@ -176,11 +105,6 @@ export default class UserStorageLoader {
         return this.identity.getParams();
     }
 
-    /**
-     * Возвращает идентификатор пользователя.
-     *
-     * @return number|null
-     */
     public getUserId(): number | null {
         const userId = this.identity.get('userId');
 
@@ -191,19 +115,10 @@ export default class UserStorageLoader {
         return null;
     }
 
-    /**
-     * Сброс данных
-     * в памяти браузера.
-     *
-     * @return void
-     */
     protected flushStorage(): void {
         this.storage.clear();
     }
 
-    /**
-     * @return void
-     */
     protected flushClientCookie(): void {
         const Cookie = require('js-cookie');
 
@@ -212,11 +127,6 @@ export default class UserStorageLoader {
         });
     }
 
-    /**
-     * Сброс сущности пользователя.
-     *
-     * @return void
-     */
     public flushData(): void {
         this.flushStorage();
         this.fillFomStorage();
@@ -226,9 +136,6 @@ export default class UserStorageLoader {
         }
     }
 
-    /**
-     * @returns NuxtAxiosInstance | never
-     */
     private getAxios(): NuxtAxiosInstance | never {
         if (this.axios === undefined) {
             throw new Error('Axios должен быть установлен как зависимость');
@@ -237,73 +144,36 @@ export default class UserStorageLoader {
         return this.axios;
     }
 
-    /**
-     * Загрузка туду-заданий пользователя.
-     *
-     * @param  Function|null
-     * @return void
-     */
-    public loadTodoItems(callback: Function | null = null): void {
-        this.getAxios()
-            .$get('todo/list')
-            .then((result) => {
-                const groups = TodoGroupsService.createGroups(result.items);
-
-                this.identity.set('groups', groups);
-
-                if (callback instanceof Function) {
-                    callback();
-                }
-            })
-            .catch((error) => {
-                // TODO: Добавить хендлер
-            });
-    }
-
-    /**
-     * @return any
-     */
     public loadPermissions(): any {
         return this.getAxios()
-            .$get('user/permissions/list')
+            .$get(`user/${this.identity.get('userId')}/permissions`)
             .then((result) => {
-                this.identity.set('permissions', result.items);
+                this.identity.set('permissions', result);
 
                 return Promise.resolve(this.identity.get('permissions'));
             });
     }
 
-    /**
-     * @return any
-     */
-    public loadTodoGroups(): any {
+    public loadBoards(): any {
         return this.getAxios()
-            .$get('todo-group/list')
+            .$get(`/user/${this.identity.get('userId')}/boards`)
             .then((result) => {
-                this.identity.set('todoGroups', result.items);
+                this.identity.set('boards', result.items);
 
-                return Promise.resolve(this.identity.get('todoGroups'));
+                return Promise.resolve(this.identity.get('boards'));
             });
     }
 
-    /**
-     * Возвращает туду-задания пользователя.
-     *
-     * @return TodoGroup[]
-     */
-    public getTodoItems(): TodoGroup[] {
+    public getTasks(): TaskStatusGroup[] {
         return this.identity.get('groups');
     }
 
-    /**
-     * @return object[]
-     */
     public getGroupsPairs(): object[] {
-        const groups = this.getTodoItems();
+        const groups = this.getTasks();
             const pairs: object[] = [];
 
         for (const group of groups) {
-            const status: TodoStatus = group.status || new TodoStatus();
+            const status: TaskStatus = group.status || new TaskStatus();
 
             pairs.push({
                 id: status.id,
