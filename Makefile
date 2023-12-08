@@ -2,13 +2,13 @@ include .env
 
 ENV_MODE=${ENV}
 
-MIGRATOR_EXTRA_ARGS=# не применимо в окружении production
-DOCKER_UP_ARGS=# не применимо в окружении production
+MIGRATOR_ENV_ARGS=# не применимо в окружении production
+DOCKER_UP_ENV_ARGS=# не применимо в окружении production
 
 ifeq ($(ENV_MODE), development)
 
-MIGRATOR_EXTRA_ARGS=-v $(PWD)/migrations/db:/app/db
-DOCKER_UP_ARGS=-f docker-compose.yml -f docker-compose.local.override.yml
+MIGRATOR_ENV_ARGS=-v $(PWD)/migrations/db:/app/db
+DOCKER_UP_ENV_ARGS=-f docker-compose.yml -f docker-compose.local.override.yml
 
 endif
 
@@ -21,7 +21,7 @@ install:
 
 up:
 	@docker-compose -p ${DOCKER_PROJECT} \
-	${DOCKER_UP_ARGS} up -d
+	${DOCKER_UP_ENV_ARGS} up -d
 
 down:
 	@docker-compose -p ${DOCKER_PROJECT} down --remove-orphans
@@ -33,7 +33,7 @@ ps:
 	@docker-compose -p ${DOCKER_PROJECT} ps
 
 logs:
-	@docker-compose logs -f $(service)
+	@docker-compose logs -f $(target)
 
 docker-build: \
 	docker-build-common-tools \
@@ -72,11 +72,29 @@ docker-build-swagger:
 	@docker build --target=swagger \
 	-t ${DOCKER_REGISTRY}/${DOCKER_SWAGGER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION} -f ./docker/Dockerfile .
 
+frontend-publish-dev-dependencies:
+	@docker run -d --name frontend_dep_extractor ${DOCKER_REGISTRY}/${DOCKER_FRONTEND_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
+	@docker cp frontend_dep_extractor:/app/node_modules $(PWD)/frontend/nuxtJs/node_modules
+	@docker rm frontend_dep_extractor
+
+ws-publish-dev-dependencies:
+	@docker run -d --name ws_dep_extractor ${DOCKER_REGISTRY}/${DOCKER_WS_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
+	@docker cp ws_dep_extractor:/app/node_modules $(PWD)/websocket/nestJs/node_modules
+	@docker rm ws_dep_extractor
+
 api-cli-exec:
 	@docker-compose -p ${DOCKER_PROJECT} \
-		 -f docker-compose.yml -f docker-compose.local.override.yml run --rm api yarn run console $(cmd)
+		 -f docker-compose.yml -f docker-compose.local.override.yml run --rm api $(cmd)
 
-migrator:
+api-cli-run-console:
+	@$(MAKE) api-cli-exec cmd="yarn run console $(cmd)"
+
+api-publish-dev-dependencies:
+	@docker run -d --name api_dep_extractor ${DOCKER_REGISTRY}/${DOCKER_API_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
+	@docker cp api_dep_extractor:/app/node_modules $(PWD)/api/nodeJs/node_modules
+	@docker rm api_dep_extractor
+
+migrator-run:
 	@$(MAKE) -s wait-db
 	@docker run --network=todo-skill-up_default \
 		-e "DB_HOST=${DB_HOST}" \
@@ -84,21 +102,26 @@ migrator:
 		-e "DB_USER=${DB_USER}" \
 		-e "DB_PASSWORD=${DB_PASSWORD}" \
 		-e "DB_NAME=${DB_NAME}" \
-		${MIGRATOR_EXTRA_ARGS} \
+		${MIGRATOR_ENV_ARGS} \
 		--rm ${DOCKER_REGISTRY}/${DOCKER_MIGRATIONS_IMAGE_NAME}:${DOCKER_IMAGE_VERSION} \
 		vendor/bin/phinx $(cmd)
 
+migrator-publish-dev-dependencies:
+	@docker run -d --name migrator_dep_extractor ${DOCKER_REGISTRY}/${DOCKER_MIGRATIONS_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
+	@docker cp migrator_dep_extractor:/app/vendor $(PWD)/migrations/vendor
+	@docker rm migrator_dep_extractor
+
 migrate:
-	@$(MAKE) migrator cmd="migrate"
+	@$(MAKE) migrator-run cmd="migrate"
 
 seed:
-	@$(MAKE) migrator cmd="seed:run"
+	@$(MAKE) migrator-run cmd="seed:run"
 
 create-migration:
-	@$(MAKE) migrator cmd="create $(name)"
+	@$(MAKE) migrator-run cmd="create $(name)"
 
 create-seed:
-	@$(MAKE) migrator cmd="seed:create $(name)"
+	@$(MAKE) migrator-run cmd="seed:create $(name)"
 
 wait-db:
 	@docker run --network=todo-skill-up_default \

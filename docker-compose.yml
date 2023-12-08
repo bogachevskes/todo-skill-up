@@ -56,6 +56,7 @@ services:
       DB_LOGGING: ${TYPEORM_DB_LOGGING}
       REDIS_HOST: ${REDIS_HOST}
       REDIS_PORT: ${REDIS_PORT}
+      TOKEN_SECRET_WORD: ${JWT_SECRET_WORD}
     depends_on:
       - mariadb
       - redis

@@ -1,15 +1,15 @@
 <template>
     <section>
         <div class="notices is-top">
-            <b-notification 
+            <b-notification
                 position="is-top-right"
-                auto-close 
-                :progress-bar='progressBar' 
-                :duration="duration" 
-                title="Error!" 
-                :type="type" 
-                has-icon 
-                v-model="isActive" 
+                auto-close
+                :progress-bar='progressBar'
+                :duration="duration"
+                title="Error!"
+                :type="type"
+                has-icon
+                v-model="isActive"
                 aria-close-label="Close notification">
                 {{ text }}
             </b-notification>
@@ -32,10 +32,10 @@
                 isQueueProcessing: false,
             }
         },
-        mounted () {
+        mounted() {
 
             this.$eventBus.$on(events.ON_NEW_NOTIFICATION, (text, type = 'success') => {
-                
+
                 const task = {
                         isActive: true,
                         text,
@@ -56,7 +56,7 @@
         },
         methods: {
             runTask: function (task) {
-                
+
                 for (const prop in task) {
                     this[prop] = task[prop];
                 }
@@ -64,7 +64,7 @@
             },
             touchQueue: function () {
                 if (this.isActive === true) {
-                    
+
                     return;
                 }
 

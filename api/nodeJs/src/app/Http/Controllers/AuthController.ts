@@ -1,77 +1,66 @@
 import { Request, Response } from 'express';
 import CommandContext from '../../../Framework/Base/CommandContext';
-import Controller from '../../../Framework/Http/Controller/Controller';
-import ValidationError from '../../../Framework/Exceptions/ValidationError';
 import BadRequest from '../../../Framework/Exceptions/BadRequest';
+import UserLogin from '../../Commands/UserLogin';
+import UserCreateRequest from "../FormRequest/User/UserCreateRequest";
+import UserRepository from "../../Repository/UserRepository";
+import UserLoginRequest from "../FormRequest/User/UserLoginRequest";
+import User from "../../Entity/User";
+import Codes from "../../../Framework/Exceptions/base/Codes";
 
-import UserLogin from '../../Console/Commands/UserLogin';
-import UserCreate from '../../Console/Commands/UserCreate';
-
-export default class AuthController extends Controller
+export default class AuthController
 {
-    /**
-     * @param  Request req 
-     * @param  Response res 
-     * @return Promise<Response> | never
-     */
+    protected userRepository: UserRepository;
+
+    public constructor() {
+        this.userRepository = new UserRepository;
+    }
+
     public async actionLogin(req: Request, res: Response): Promise<Response> | never
     {
-        const context = new CommandContext;
+        const form: UserLoginRequest =  new UserLoginRequest(req.body.formData);
 
-        for (const key in req.body) {
-            context.set(key, req.body[key]);
+        await form.validate();
+
+        if (form.isNotValid()) {
+            throw new BadRequest(form.getFirstError());
         }
 
-        const cmd = new UserLogin;
+        const user: User|null = await this.userRepository.findByEmail(form.email);
 
-        try {
+        if (user === null) {
+            throw new BadRequest('Пользователь не найден');
+        }
 
-            await cmd.execute(context);
+        if (this.userRepository.isBlocked(user)) {
+            throw new BadRequest('Пользователь заблокирован');
+        }
 
-        } catch (error) {
+        const context = new CommandContext;
 
-            if (error instanceof ValidationError) {
-                
-                throw new BadRequest(error.message);
-            }
+        const cmd = new UserLogin();
 
-            throw error;
-        } 
+        context.set('user', user);
+
+        await cmd.execute(context);
+
+        res.status(Codes.CODE_CREATED);
         
         return res.json(context.get('access'));
     };
 
-    /**
-     * @param  Request req 
-     * @param  Response res 
-     * @return Promise<Response> | never
-     */
-    public async actionSignup(req: Request, res: Response): Promise<Response> | never
+    public async actionSignup(req: Request, res: Response): Promise<void> | never
     {
-        const context = new CommandContext;
+        const form: UserCreateRequest = new UserCreateRequest(req.body.formData);
 
-        for (const key in req.body) {
-            context.set(key, req.body[key]);
+        await form.validate();
+
+        if (form.isNotValid()) {
+            throw new BadRequest(form.getFirstError());
         }
 
-        const cmd = new UserCreate;
+        await this.userRepository.createNew(form.getAttributes());
 
-        try {
-
-            await cmd.execute(context);
-
-        } catch (error) {
-
-            if (error instanceof ValidationError) {
-                
-                throw new BadRequest(error.message);
-            }
-
-            throw error;
-        } 
-        
-        return res.json({
-            message: 'success',
-        });
+        res.send();
     }
 }

@@ -43,6 +43,7 @@
                         v-model="formData.email"
                         class="input"
                         :class="printIsOnWarning($v.formData.email.$error)"
+                        :disabled="emailDisabled"
                         placeholder="example@example.com"
                         @blur="blurField(['formData', 'email'])"
                     />
@@ -186,6 +187,10 @@ export default {
                     confirm_password: null,
                 };
             },
+        },
+        emailDisabled: {
+            type: Boolean,
+            default: false,
         },
         passwordStrictRequired: {
             type: Boolean,

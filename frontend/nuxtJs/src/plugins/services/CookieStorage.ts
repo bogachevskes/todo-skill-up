@@ -1,15 +1,10 @@
 import IndexedInterface from '../base/IndexedInterface';
 
-export default class CookieStorage {
-    /**
-     * @var object
-     */
+export default class CookieStorage
+{
+
     private params: object = {};
 
-    /**
-     * @param  string key
-     * @return any
-     */
     public getItem(key: string): any {
         const params: IndexedInterface = {};
 
@@ -22,26 +17,14 @@ export default class CookieStorage {
         return null;
     }
 
-    /**
-     * @param  key string
-     * @param  value any
-     * @return void
-     */
     public setItem(key: string, value: any): void {
         Object.assign(this.params, { [key]: value });
     }
 
-    /**
-     * @param  object values
-     * @return void
-     */
     public setItems(values: object): void {
         Object.assign(this.params, values);
     }
 
-    /**
-     * @return void
-     */
     public clear(): void {
         this.params = {};
     }

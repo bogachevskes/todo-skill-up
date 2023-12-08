@@ -1,9 +1,9 @@
 import ProvideCorsMiddleware from '../Framework/Http/Middleware/ProvideCorsMiddleware';
 import MiddlewareInterface from '../Framework/Http/Middleware/MiddlewareInterface';
-import DefaultMiddleware from '../app/Http/Middleware/DefaultMiddleware';
+import LogPathMiddleware from '../app/Http/Middleware/LogPathMiddleware';
 
 const middleware: MiddlewareInterface[] = [
-    new DefaultMiddleware,
+    new LogPathMiddleware,
     new ProvideCorsMiddleware,
 ];
 

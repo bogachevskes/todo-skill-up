@@ -8,23 +8,16 @@ export default abstract class BaseCommand implements CommandInterface
 
     protected abstract handle(): Promise<void>
 
-    protected abstract validateData(): void;
+    protected validateData(): void
+    {
+        //
+    }
 
-    /**
-     * @param message
-     * @return never
-     */
     protected throwValidationError(message: string): never
     {
         throw new ValidationError(message);
     }
 
-    /**
-     * Возвращает необходимые
-     * свойства контекста.
-     * 
-     * @return string[]
-     */
     protected getImportantKeys(): string[]
     {
         return [
@@ -32,12 +25,6 @@ export default abstract class BaseCommand implements CommandInterface
         ];
     }
 
-    /**
-     * Проверка существования
-     * необходимых свойств в контексте.
-     * 
-     * @return void
-     */
     protected checkImportantKeys(): void
     {
         const importantKeys = this.getImportantKeys();
@@ -51,21 +38,12 @@ export default abstract class BaseCommand implements CommandInterface
         });
     }
 
-    /**
-     * Валидация контекста.
-     * 
-     * @return Promise<void>
-     */
     protected async validate(): Promise<void>
     {
         this.checkImportantKeys();
         await this.validateData();
     }
-    
-    /**
-     * @param CommandContext context
-     * @return Promise<void>
-     */
+
     public async execute(context: CommandContext): Promise<void>
     {
         this.context = context;

@@ -1,13 +1,16 @@
  
 export default class HTTPException extends Error {
-    public name: string;
+    public type: string;
 
     public data: any[];
+
+    public cause: string;
   
-    constructor(public status: number, public message: string, data: any[] = [], ...rest: any[]) {
-      super(...rest);
-  
-      this.name = this.constructor.name;
+    constructor(message, data: any[] = []) {
+      super(message);
+
+      this.cause = message;
+      this.type = this.constructor.name;
       this.data = data;
     }
 

@@ -5,508 +5,39 @@ info:
   description: |
     *TODO LIST* - система управления списком задач с открытым исходным кодом  
     ### Возможности системы
+      - регистрация новых пользователей
+      - авторизация существующих пользователей
       - управление личным списком задач
       - управление задачами в групповом доступе
-      - регистрация новых пользователй
-      - авторизация существующих пользователей
       - администрирование существующих пользователей
     
     [Лицензионное соглашение](/terms)
     
     Разработчик [Андрей Богачевский](https://github.com/bogachevskes)
 tags:
-  - name: todo
-    description: Управление списком задач
-  - name: todo-group
-    description: Управление списком задач в групповом доступе
+  - name: auth
+    description: Авторизация
   - name: user
-    description: Получение данных о пользователе
-  - name: admin
-    description: Административные действия
+    description: Запрос информации о пользователях
+  - name: admin-users
+    description: Администрирование пользователей
+  - name: user-boards
+    description: Управление досками пользователя
+  - name: board-statuses
+    description: Управление статусами задач доски
+  - name: board-tasks
+    description: Управление задачами доски
+  - name: board-users
+    description: Управление пользователями доски
 paths:
-  /todo/list:
-    get:
-      tags:
-        - todo
-      description: |
-        Возвращает список задач и статусы пользователя
-      operationId: todoList
-      responses:
-        '200':
-          description: Список задач и статусы пользователя
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  items:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        todo:
-                          type: array
-                          items:
-                            $ref: '#/components/schemas/TodoItem'
-                        status:
-                          $ref: '#/components/schemas/Status'
-  /todo/create:
+  /api/v1/auth/signin:
     post:
       tags:
-        - todo
-      description: Создать задачу
-      operationId: todoCreate
+        - auth
+      description: Авторизация пользователя
+      operationId: login
       requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                form:
-                  $ref: '#/components/schemas/TodoItemForm'
-              required: [form]
-      responses:
-        '200':
-          description: Объект задачи
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  item:
-                    $ref: '#/components/schemas/TodoItem'
-  /todo/set-status/{id}:
-    put:
-      tags:
-        - todo
-      description: Изменить статус задачи
-      operationId: todoSetStatus
-      parameters:
-        - $ref: "#/components/parameters/todoId"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                status:
-                  type: integer
-                  example: 2
-              required: [status]
-      responses:
-        '200':
-          description: Объект задачи
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  item:
-                    type: object
-                    allOf:
-                      - $ref: '#/components/schemas/TodoItem'
-                      - type: object
-                        properties:
-                          statusId:
-                            example: 2
-  /todo/update/{id}:
-    put:
-      tags:
-        - todo
-      description: Изменить задачу
-      operationId: todoUpdate
-      parameters:
-        - $ref: "#/components/parameters/todoId"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                formData:
-                  type: object
-                  allOf:
-                    - $ref: '#/components/schemas/TodoItem'
-                    - type: object
-                      properties:
-                        name:
-                          example: Измененное имя
-                        description:
-                          example: Измененное описание
-              required: [statusId, name, description, plannedCompletionAt]
-      responses:
-        '200':
-          description: Объект задачи
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  item:
-                    type: object
-                    allOf:
-                      - $ref: '#/components/schemas/TodoItem'
-                      - type: object
-                        properties:
-                          name:
-                            example: Измененное имя
-                          description:
-                            example: Измененное описание
-  /todo/delete/{id}:
-    delete:
-      tags:
-        - todo
-      description: Удалить задачу
-      operationId: todoDelete
-      parameters:
-        - $ref: "#/components/parameters/todoId"
-      responses:
-        '200':
-          $ref: "#/components/responses/DeleteSucceed"
-  /todo-group/list:
-    get:
-      tags:
-        - todo-group
-      description: Возвращает список групп общего доступа
-      operationId: todoGroupList
-      responses:
-        '200':
-          description: Cписок групп общего доступа
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  items:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/TodoGroup'
-  /todo-group/create:
-    post:
-      tags:
-        - todo-group
-      description: Создать группу общего доступа
-      operationId: todoGroupCreate
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                formData:
-                  $ref: '#/components/schemas/TogoGroupFormData'
-              required: [formData]
-      responses:
-        '200':
-          description: Объект группы общего доступа
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  item:
-                    type: object
-                    allOf:
-                      - $ref: '#/components/schemas/TogoGroupFormData'
-                      - $ref: '#/components/schemas/TodoGroup'
-                      - type: object
-                        properties:
-                          updatedAt:
-                            type: string
-                            format: date-time
-                            example: '2023-07-01T20:46:08.000Z'
-  /todo-group/update/{id}:
-    put:
-      tags:
-        - todo-group
-      description: Изменить группы общего доступа
-      operationId: todoGroupUpdate
-      parameters:
-        - $ref: "#/components/parameters/todoGroupId"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                formData:
-                  type: object
-                  allOf:
-                    - $ref: '#/components/schemas/TogoGroupFormData'
-                    - type: object
-                      properties:
-                        description:
-                          example: Новое описание группы
-      responses:
-        '200':
-          description: Объект группы общего доступа
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  item:
-                    type: object
-                    allOf:
-                      - $ref: '#/components/schemas/TogoGroupFormData'
-                      - $ref: '#/components/schemas/TodoGroup'
-                      - type: object
-                        properties:
-                          updatedAt:
-                            type: string
-                            format: date-time
-                            example: '2023-07-01T20:46:08.000Z'
-                      - type: object
-                        properties:
-                          description:
-                            example: Новое описание группы
-  /todo-group/delete/{id}:
-    delete:
-      tags:
-        - todo-group
-      description: Удалить группу совместного доступа
-      operationId: todoGroupDelete
-      parameters:
-        - $ref: "#/components/parameters/todoGroupId"
-      responses:
-        '200':
-          $ref: "#/components/responses/DeleteSucceed"
-  /todo-group/todo/{id}/list:
-    get:
-      tags:
-        - todo-group
-      description: Возвращает список задач и статусы для группы общего доступа
-      operationId: todoOfGroupList
-      parameters:
-        - $ref: "#/components/parameters/todoGroupId"
-      responses:
-        '200':
-          description: Список задач и статусы для группы общего доступа
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  items:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        todo:
-                          type: array
-                          items:
-                            allOf:
-                              - $ref: '#/components/schemas/TodoItem'
-                              - type: object
-                                properties:
-                                  todoGroupId:
-                                    type: integer
-                                    example: 1
-                        status:
-                          $ref: '#/components/schemas/Status'
-  /todo-group/todo/{id}/create:
-    post:
-      tags:
-        - todo-group
-      description: Создать задачу для группы общего доступа
-      operationId: todoOfGroupCreate
-      parameters:
-        - $ref: "#/components/parameters/todoGroupId"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                form:
-                  allOf:
-                    - $ref: '#/components/schemas/TodoItemForm'
-                    - type: object
-                      properties:
-                        todoGroupId:
-                          type: integer
-                          example: 1
-              required: [form]
-      responses:
-        '200':
-          description: Удачная операция
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  item:
-                    type: object
-                    allOf:
-                      - $ref: '#/components/schemas/TodoItem'
-                      - type: object
-                        properties:
-                          todoGroupId:
-                            type: integer
-                            example: 1
-  /todo-group/todo/{id}/update/{todo_id}:
-    put:
-      tags:
-        - todo-group
-      description: Изменить задачу для группы доступа
-      operationId: todoOfGroupUpdate
-      parameters:
-        - $ref: "#/components/parameters/todoGroupId"
-        - name: todo_id
-          in: path
-          description: Идентификатор задачи
-          required: true
-          example: 4
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                formData:
-                  type: object
-                  allOf:
-                    - $ref: '#/components/schemas/TodoItem'
-                    - type: object
-                      properties:
-                        name:
-                          example: Измененное имя
-                        description:
-                          example: Измененное описание
-                        todoGroupId:
-                          type: integer
-                          example: 1
-              required: [formData]
-      responses:
-        '200':
-          description: Объект задачи
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  item:
-                    type: object
-                    allOf:
-                      - $ref: '#/components/schemas/TodoItem'
-                      - type: object
-                        properties:
-                          name:
-                            example: Измененное имя
-                          description:
-                            example: Измененное описание
-                          todoGroupId:
-                            type: integer
-                            example: 1
-  /todo-group/todo/{id}/set-status/{todo_id}:
-    put:
-      tags:
-        - todo-group
-      description: Изменить статус задачи группы общего доступа
-      operationId: todoOfGroupSetStatus
-      parameters:
-        - $ref: "#/components/parameters/todoGroupId"
-        - name: todo_id
-          in: path
-          description: Идентификатор задачи
-          required: true
-          example: 4
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                status:
-                  type: integer
-                  example: 2
-              required: [status]
-      responses:
-        '200':
-          description: Объект задачи
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  item:
-                    type: object
-                    allOf:
-                      - $ref: '#/components/schemas/TodoItem'
-                      - type: object
-                        properties:
-                          statusId:
-                            example: 2
-  /todo-group/todo/{id}/delete/{todo_id}:
-    delete:
-      tags:
-        - todo-group
-      description: Удалить задачу группы общего доступа
-      operationId: todoOfGroupDelete
-      parameters:
-        - $ref: "#/components/parameters/todoGroupId"
-        - name: todo_id
-          in: path
-          description: Идентификатор задачи
-          required: true
-          example: 4
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          $ref: "#/components/responses/DeleteSucceed"
-  /todo-group/get-group/{id}:
-    get:
-      tags:
-        - todo-group
-      description: Возвращает данные о группе доступа
-      operationId: todoGroupInfo
-      parameters:
-        - $ref: "#/components/parameters/todoGroupId"
-      responses:
-        '200':
-          description: Данные о группе доступа
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  item:
-                    $ref: '#/components/schemas/TodoGroupInfo'
-  /todo-group/{id}/users/list:
-    get:
-      tags:
-        - todo-group
-      description: Возвращает список пользователей группы
-      operationId: usersOfGroup
-      parameters:
-        - $ref: "#/components/parameters/todoGroupId"
-      responses:
-        '200':
-          description: Удачная операция
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  items:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/UserOfGroup'
-  /todo-group/{id}/users/create:
-    post:
-      tags:
-        - todo-group
-      description: добавить пользователей в группу
-      operationId: addUsersToGroup
-      parameters:
-        - $ref: "#/components/parameters/todoGroupId"
-      requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -515,185 +46,38 @@ paths:
                 formData:
                   type: object
                   properties:
-                    user_emails:
-                      type: array
-                      description: почты пользователей
-                      items:
-                        type: string
-                      example:
-                        - guest2@guest.com
-                        - guest3@guest.com
-                        - guest4@guest.com
-              required: [formData]
-      responses:
-        '200':
-          description: Удачная операция
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  item:
-                    type: object
-                    properties:
-                      created:
-                        type: array
-                        description: добавленные пользователи
-                        items:
-                          type: string
-                        example:
-                          - guest2@guest.com
-                      existing:
-                        type: array
-                        description: существующие пользователи
-                        items:
-                          type: string
-                        example:
-                          - guest3@guest.com
-                      not_existing:
-                        type: array
-                        description: несуществующие пользователи
-                        items:
-                          type: string
-                        example:
-                          - guest4@guest.com
-  /todo-group/{id}/users/{relation_id}/delete:
-    delete:
-      tags:
-        - todo-group
-      description: Удалить пользователя группы общего доступа
-      operationId: userOfGroupDelete
-      parameters:
-        - $ref: "#/components/parameters/todoGroupId"
-        - name: relation_id
-          in: path
-          description: Идентификатор связи с объектом
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          $ref: "#/components/responses/DeleteSucceed"
-  /user/permissions/list:
-    get:
-      tags:
-        - user
-      description: Возвращает список разрешений пользователя
-      operationId: userPermissionsList
-      responses:
-        '200':
-          description: Cписок разрешений пользователя
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  items:
-                    type: array
-                    items:
+                    email:
                       type: string
-                    example:
-                      - /admin/users
-                      - /admin/users/todo
-  /admin/users/list:
-    get:
-      tags:
-        - admin
-      description: Возвращает список пользователей
-      operationId: adminUsersList
+                      format: email
+                      example: "guest@guest.com"
+                    password:
+                      type: string
+                      example: secret
       responses:
-        '200':
-          description: Список пользователей
+        '201':
+          description: Успешный вход
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  items:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/User'
-  /admin/users/create:
-    post:
-      tags:
-        - admin
-      description: Создать пользователя
-      operationId: userCreate
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                formData:
-                  $ref: '#/components/schemas/UserCreateForm'
-              required: [formData]
-      responses:
-        '200':
-          description: Объект пользователя
+              example:
+                token: " ... "
+                userId: 1
+        '400':
+          description: Ошибка входа
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  item:
-                    type: object
-                    properties:
-                      item:
-                        type: object
-                        properties:
-                          name:
-                            type: string
-                            description: Имя пользователя
-                            example: guest2
-                          email:
-                            type: object
-                            description: Почта пользователя
-                            example: guest2@guest.com
-                      success:
-                        type: boolean
-                        example: true
-  /admin/users/get-user-data/{user_id}:
-    get:
-      tags:
-        - admin
-      description: Возрвщает информацию о пользователе
-      operationId: getUserData
-      parameters:
-        - name: user_id
-          in: path
-          required: true
-          example: 9
-          schema:
-            description: Идентификатор пользователя
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: Объект пользователя
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  item:
-                    $ref: '#/components/schemas/UserDataForUpdate'
-  /admin/users/update/{user_id}:
+              example:
+                cause: "Неверный логин или пароль"
+                type: "BadRequest"
+                data: [ ]
+
+  /api/v1/auth/signup:
     put:
       tags:
-        - admin
-      description: Изменить пользователя
-      operationId: userUpdate
-      parameters:
-        - name: user_id
-          in: path
-          description: Идентификатор пользователя
-          required: true
-          schema:
-            type: integer
-            format: int64
+        - auth
+      description: Регистрация нового пользователя
+      operationId: signup
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -701,372 +85,891 @@ paths:
               properties:
                 formData:
                   type: object
-                  allOf:
-                    - $ref: '#/components/schemas/UserDataForUpdate'
-                    - type: object
-                      properties:
-                        password:
-                          type: string
-                          example: someNewStrongPassword
-                        confirm_password:
-                          type: string
-                          example: someNewStrongPassword
-              required: [formData]
+                  properties:
+                    name:
+                      type: string
+                      example: guest
+                    email:
+                      type: string
+                      format: email
+                      example: guest@guest.com
+                    password:
+                      type: string
+                      example: secret
+                    confirm_password:
+                      type: string
+                      example: secret
       responses:
         '200':
-          description: Объект пользователя
+          description: Пользователь создан
+        '400':
+          description: Ошибка валидации
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  item:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                        description: Имя пользователя
-                        example: guest2
-                      email:
-                        type: object
-                        description: Почта пользователя
-                        example: guest2@guest.com
-                  success:
-                    type: boolean
-                    example: true
-  /admin/users/set-active-state/{user_id}:
-    put:
+              examples:
+                emailExists:
+                  value:
+                    cause: Почта уже существует
+                    type: BadRequest
+                    data: []
+                otherError:
+                  value:
+                    cause: Не соблюдено минимальное кол-во символов поля Имя
+                    type: BadRequest
+                    data: []
+
+  /api/v1/user/{user_id}/permissions:
+    get:
       tags:
-        - admin
-      description: Изменение статуса пользователя
-      operationId: userStatusUpdate
+        - user
+      description: Получить разрешения пользователя
+      operationId: user_permissions
       parameters:
         - name: user_id
           in: path
-          description: Идентификатор пользователя
           required: true
+          description: Идентификатор пользователя
           schema:
             type: integer
-            format: int64
+      responses:
+        '200':
+          description: Успешный запрос
+          content:
+            application/json:
+              example:
+                - "/admin/users"
+        '403':
+          $ref: "#/components/responses/forbidden"
+
+  /api/v1/users/match:
+    get:
+      tags:
+        - user
+      description: Найти пользователей по электронной почте или имени
+      operationId: users_match
+      parameters:
+        - name: email
+          in: query
+          required: true
+          description: Электронная почта для поиска
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Успешный запрос
+          content:
+            application/json:
+              example:
+                items:
+                  - id: 2
+                    email: "guest2@guest.com"
+                  - id: 3
+                    email: "guest3@guest.com"
+                  - id: 4
+                    email: "guest4@guest.com"
+        '400':
+          description: Ошибка запроса
+          content:
+            application/json:
+              example:
+                cause: "Не заданы параметры поиска"
+                type: "BadRequest"
+                data: [ ]
+
+  /api/v1/admin/users:
+    get:
+      tags:
+        - admin-users
+      description: Получить список пользователей
+      operationId: admin_users_list
+      responses:
+        '200':
+          description: Успешный запрос
+          content:
+            application/json:
+              example:
+                - id: 1
+                  name: "admin"
+                  email: "admin@admin.com"
+                  status: 1
+                  createdAt: "2023-12-04T13:37:58.000Z"
+                  updatedAt: "2023-12-04T13:37:58.000Z"
+                - id: 2
+                  name: "guest2"
+                  email: "guest2@guest.com"
+                  status: 1
+                  createdAt: "2023-12-04T14:57:31.000Z"
+                  updatedAt: "2023-12-04T23:33:21.000Z"
+                - id: 5
+                  name: "guest5"
+                  email: "guest5@guest.com"
+                  status: 1
+                  createdAt: "2023-12-04T23:15:54.000Z"
+                  updatedAt: "2023-12-05T13:59:22.000Z"
+    post:
+      tags:
+        - admin-users
+      description: Создать пользователя
+      operationId: admin_user_create
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               type: object
               properties:
-                status:
-                  type: integer
-                  enum:
-                    - 0
-                    - 1
-                  example: 1
-              required: [status]
+                formData:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: guest
+                    email:
+                      type: string
+                      example: guest@guest.com
+                    password:
+                      type: string
+                      example: secret
+                    confirm_password:
+                      type: string
+                      example: secret
       responses:
-        '200':
-          description: Удачная операция
+        '201':
+          description: Пользователь успешно создан
+        '400':
+          description: Ошибка запроса
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-  /admin/users/delete/{user_id}:
-    delete:
-      tags:
-        - admin
-      description: удалить пользователя
-      operationId: userDelete
-      parameters:
-        - name: user_id
-          in: path
-          description: идентификатор пользователя
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          $ref: "#/components/responses/DeleteSucceed"
-  /admin/users/todo/{user_id}:
+              example:
+                cause: "Почта уже существует"
+                type: "BadRequest"
+                data: [ ]
+
+  /api/v1/admin/users/{id}:
     get:
       tags:
-        - admin
-      description: Возвращает список задач и статусы для пользователя
-      operationId: todoOfUser
+        - admin-users
+      description: Получить информацию о пользователе
+      operationId: admin_user_info
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Идентификатор пользователя
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Успешный запрос
+          content:
+            application/json:
+              example:
+                id: 2
+                name: "guest2"
+                email: "guest2@guest.com"
+                status: 1
+                createdAt: "2023-12-04T14:57:31.000Z"
+                updatedAt: "2023-12-04T23:33:21.000Z"
+        '404':
+          $ref: "#/components/responses/userNotFound"
+    put:
+      tags:
+        - admin-users
+      description: Обновить информацию о пользователе
+      operationId: admin_user_update
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Идентификатор пользователя
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                formData:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: guest
+                    email:
+                      type: string
+                      example: guest@guest.com
+                    status:
+                      type: integer
+                      example: 1
+                    password:
+                      type: string
+                      example: secret
+                    confirm_password:
+                      type: string
+                      example: secret
+      responses:
+        '200':
+          description: Успешное обновление информации о пользователе
+        '400':
+          description: Ошибка запроса
+          content:
+            application/json:
+              example:
+                cause: "Почта уже существует"
+                type: "BadRequest"
+                data: [ ]
+    patch:
+      tags:
+        - admin-users
+      description: Частично обновить информацию о пользователе
+      operationId: admin_user_patch
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Идентификатор пользователя
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                formData:
+                  type: object
+                  properties:
+                    status:
+                      type: integer
+      responses:
+        '200':
+          description: Успешное частичное обновление информации о пользователе
+        '404':
+          $ref: "#/components/responses/userNotFound"
+    delete:
+      tags:
+        - admin-users
+      description: Удалить пользователя
+      operationId: admin_user_delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Идентификатор пользователя
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Пользователь успешно удален
+        '404':
+          $ref: "#/components/responses/userNotFound"
+
+  /api/v1/user/{user_id}/boards:
+    get:
+      tags:
+        - user-boards
+      description: Получить доски пользователя
+      operationId: user_boards_list
       parameters:
         - name: user_id
           in: path
           required: true
-          example: 11
+          description: Идентификатор пользователя
           schema:
-            description: Идентификатор пользователя
             type: integer
-            format: int64
       responses:
         '200':
-          description: Список задач и статусы для пользователя
+          description: Успешный запрос
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  items:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        todo:
-                          type: array
-                          items:
-                            $ref: '#/components/schemas/TodoItem'
-                        status:
-                          $ref: '#/components/schemas/Status'
+              example:
+                - id: 11
+                  name: "Доска проекта ID:12345"
+                  description: "Доска учета задач проекта автоматизации производства"
+                  createdAt: "2023-12-04T13:46:15.000Z"
+                  updatedAt: "2023-12-04T13:46:15.000Z"
+                - id: 15
+                  name: "Доска проекта ID:678890"
+                  description: "Доска учета задач проекта автоматизации документооборота"
+                  createdAt: "2023-12-04T19:44:21.000Z"
+                  updatedAt: "2023-12-04T19:44:21.000Z"
+        '403':
+          $ref: "#/components/responses/forbidden"
+    post:
+      tags:
+        - user-boards
+      description: Создать новую доску для пользователя
+      operationId: user_board_create
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: Идентификатор пользователя
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                formData:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: "Проект ISD:124467"
+                    description:
+                      type: string
+                      example: "Задачи проекта ISD:124467 запроса ISBN:456568"
+      responses:
+        '201':
+          description: Доска успешно создана
+        '400':
+          $ref: "#/components/responses/badRequest"
+
+  /api/v1/user/{user_id}/boards/{id}:
+    get:
+      tags:
+        - user-boards
+      description: Получить информацию о доске пользователя
+      operationId: user_board_item
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: Идентификатор пользователя
+          schema:
+            type: integer
+        - name: id
+          in: path
+          required: true
+          description: Идентификатор доски
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Успешный запрос
+          content:
+            application/json:
+              example:
+                id: 11
+                name: "Доска проекта ID:12345"
+                description: "Доска учета задач проекта автоматизации производства"
+                createdAt: "2023-12-04T13:46:15.000Z"
+                updatedAt: "2023-12-04T13:46:15.000Z"
+        '404':
+          $ref: "#/components/responses/boardNotFound"
+    put:
+      tags:
+        - user-boards
+      description: Редактировать доску пользователя
+      operationId: user_board_update
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: Идентификатор пользователя
+          schema:
+            type: integer
+        - name: id
+          in: path
+          required: true
+          description: Идентификатор доски
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                formData:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: "Проект ISD:124467"
+                    description:
+                      type: string
+                      example: "Задачи проекта ISD:124467 запроса ISBN:456568"
+      responses:
+        '200':
+          description: Доска успешно изменена
+        '400':
+          $ref: "#/components/responses/badRequest"
+    patch:
+      tags:
+        - user-boards
+      description: Изменить название доски пользователя
+      operationId: user_board_part_update
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: Идентификатор пользователя
+          schema:
+            type: integer
+        - name: id
+          in: path
+          required: true
+          description: Идентификатор доски
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                formData:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: Новое имя задачи
+      responses:
+        '200':
+          description: Доска успешно изменена
+        '404':
+          $ref: "#/components/responses/boardNotFound"
+
+    delete:
+      tags:
+        - user-boards
+      description: Удалить доску пользователя
+      operationId: user_board_delete
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: Идентификатор пользователя
+          schema:
+            type: integer
+        - name: id
+          in: path
+          required: true
+          description: Идентификатор доски
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Доска успешно удалена
+        '404':
+          $ref: "#/components/responses/boardNotFound"
+
+  /api/v1/boards/{board_id}/statuses:
+    get:
+      tags:
+        - board-statuses
+      description: Получить статусы задач доски
+      operationId: board_statuses
+      parameters:
+        - $ref: "#/components/parameters/boardIdPathParam"
+      responses:
+        '200':
+          description: Успешный запрос
+          content:
+            application/json:
+              example:
+                - id: 13
+                  boardId: 11
+                  name: "Новое"
+                  createdAt: "2023-12-05T13:57:21.000Z"
+                - id: 14
+                  boardId: 11
+                  name: "В работе"
+                  createdAt: "2023-12-05T13:57:40.000Z"
+        '403':
+          description: Доступ к группе запрещен
+          content:
+            application/json:
+              example:
+                cause: "Доступ к группе запрещен"
+                type: "Forbidden"
+                data: []
+    post:
+      tags:
+        - board-statuses
+      description: Создать новый статус задач для доски
+      operationId: board_statuses_create
+      parameters:
+        - $ref: "#/components/parameters/boardIdPathParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                formData:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: На ревью
+      responses:
+        '201':
+          description: Статус успешно создан
+        '400':
+          $ref: "#/components/responses/badRequest"
+
+  /api/v1/boards/{board_id}/statuses/{id}:
+    put:
+      tags:
+        - board-statuses
+      description: Обновить статус задач доски
+      operationId: board_status_update
+      parameters:
+        - $ref: "#/components/parameters/boardIdPathParam"
+        - name: id
+          in: path
+          required: true
+          description: Идентификатор статуса
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                formData:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: На ревью
+      responses:
+        '200':
+          description: Статус успешно обновлен
+        '400':
+          $ref: "#/components/responses/badRequest"
+
+    delete:
+      tags:
+        - board-statuses
+      description: Удалить статус задач доски
+      operationId: board_status_delete
+      parameters:
+        - $ref: "#/components/parameters/boardIdPathParam"
+        - name: id
+          in: path
+          required: true
+          description: Идентификатор статуса
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Статус успешно удален
+        '404':
+          description: Статус задания не найден
+          content:
+            application/json:
+              example:
+                cause: "Статус задания не найден"
+                type: "NotFound"
+                data: [ ]
+
+  /api/v1/boards/{board_id}/tasks:
+    get:
+      tags:
+        - board-tasks
+      description: Получить задачи доски
+      operationId: board_tasks
+      parameters:
+        - $ref: "#/components/parameters/boardIdPathParam"
+      responses:
+        '200':
+          description: Успешный запрос
+          content:
+            application/json:
+              example:
+                - status:
+                    id: 14
+                    boardId: 11
+                    name: "В работе"
+                    createdAt: "2023-12-05T13:57:40.000Z"
+                  tasks:
+                    - id: 19
+                      statusId: 14
+                      boardId: 11
+                      name: "Реализовать авторизацию"
+                      description: "Реализовать сервис авторизации в соответствии с корп. требованиями"
+                      plannedCompletionAt: "2023-12-12T00:00:00.000Z"
+                      createdAt: "2023-12-05T18:51:16.000Z"
+        '404':
+          $ref: "#/components/responses/boardNotFound"
+    post:
+      tags:
+        - board-tasks
+      description: Создать новую задачу для доски
+      operationId: board_task_create
+      parameters:
+        - $ref: "#/components/parameters/boardIdPathParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                formData:
+                  type: object
+                  properties:
+                    statusId:
+                      type: integer
+                    name:
+                      type: string
+                      example: "Реализовать авторизацию"
+                    description:
+                      type: string
+                      example: "Реализовать сервис авторизации в соответствии с корп. требованиями"
+                    plannedCompletionAt:
+                      type: string
+                      format: date-time
+                      example: "2023-12-12T00:00:00.000Z"
+      responses:
+        '201':
+          description: Задача успешно создана
+        '400':
+          $ref: "#/components/responses/badRequest"
+
+  /api/v1/boards/{board_id}/tasks/{id}:
+    put:
+      tags:
+        - board-tasks
+      description: Обновить задачу на доске
+      operationId: board_task_update
+      parameters:
+        - $ref: "#/components/parameters/boardIdPathParam"
+        - name: id
+          in: path
+          required: true
+          description: Идентификатор задачи
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                formData:
+                  type: object
+                  properties:
+                    statusId:
+                      type: integer
+                    name:
+                      type: string
+                      example: "Реализовать авторизацию"
+                    description:
+                      type: string
+                      example: "Реализовать сервис авторизации в соответствии с корп. требованиями"
+                    plannedCompletionAt:
+                      type: string
+                      format: date-time
+                      example: "2023-12-12T00:00:00.000Z"
+      responses:
+        '200':
+          description: Задача успешно обновлена
+        '400':
+          $ref: "#/components/responses/badRequest"
+        '404':
+          $ref: "#/components/responses/taskNotFound"
+    patch:
+      tags:
+        - board-tasks
+      description: Частичное обновление задачи на доске
+      operationId: board_task_part_update
+      parameters:
+        - $ref: "#/components/parameters/boardIdPathParam"
+        - name: id
+          in: path
+          required: true
+          description: Идентификатор задачи
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                formData:
+                  type: object
+                  properties:
+                    statusId:
+                      type: integer
+      responses:
+        '200':
+          description: Задача успешно обновлена
+        '400':
+          $ref: "#/components/responses/badRequest"
+        '404':
+          $ref: "#/components/responses/taskNotFound"
+    delete:
+      tags:
+        - board-tasks
+      description: Удалить задачу с доски
+      operationId: board_task_delete
+      parameters:
+        - $ref: "#/components/parameters/boardIdPathParam"
+        - name: id
+          in: path
+          required: true
+          description: Идентификатор задачи
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Задача успешно удалена
+        '404':
+          $ref: "#/components/responses/taskNotFound"
+
+  /api/v1/boards/{board_id}/users:
+    get:
+      tags:
+        - board-users
+      description: Получить пользователей доски
+      operationId: user_boards
+      parameters:
+        - $ref: "#/components/parameters/boardIdPathParam"
+      responses:
+        '200':
+          description: Успешный запрос
+          content:
+            application/json:
+              example:
+                - id: 1
+                  name: "admin"
+                  email: "admin@admin.com"
+                - id: 5
+                  name: "guest5"
+                  email: "guest5@guest.com"
+        '403':
+          $ref: "#/components/responses/forbiddenBoardAccess"
+    post:
+      tags:
+        - board-users
+      description: Добавить пользователей к доске
+      operationId: user_boards_create
+      parameters:
+        - $ref: "#/components/parameters/boardIdPathParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                formData:
+                  type: object
+                  properties:
+                    ids:
+                      type: array
+                      items:
+                        type: integer
+                      example:
+                        - 1
+                        - 2
+                        - 3
+      responses:
+        '201':
+          description: Пользователи успешно добавлены к доске
+          content:
+            application/json:
+              example:
+                users:
+                  not_exist:
+                    - 3
+        '403':
+          $ref: "#/components/responses/forbiddenBoardAccess"
+
+  /boards/{board_id}/users/{id}:
+    delete:
+      tags:
+        - board-users
+      description: Удалить пользователя из доски
+      operationId: user_boards_delete
+      parameters:
+        - $ref: "#/components/parameters/boardIdPathParam"
+        - name: id
+          in: path
+          required: true
+          description: Идентификатор пользователя
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Пользователь успешно удален из доски
+        '403':
+          $ref: "#/components/responses/forbiddenBoardAccess"
+
 components:
   parameters:
-    todoGroupId:
-      name: id
+    boardIdPathParam:
+      name: board_id
       in: path
       required: true
-      example: 5
-      description: Идентификатор группы
+      description: Идентификатор доски
       schema:
         type: integer
-        format: int64
-    todoId:
-      name: id
-      in: path
-      description: Идентификатор задачи
-      required: true
-      example: 4
-      schema:
-        type: integer
-        format: int64
-  schemas:
-    TodoItem:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: идентификатор задачи
-          example: 1
-        todoGroupId:
-          type: integer
-          format: int64
-          description: идентификатор статуса группы общего доступа
-          example: null
-        statusId:
-          type: integer
-          format: int64
-          description: идентификатор статуса выполнения
-          example: 1
-        userId:
-          type: integer
-          format: int64
-          description: идентификатор пользователя
-          example: 2
-        name:
-          type: string
-          description: наименование задачи
-          example: новая задача
-        description:
-          type: string
-          description: описание задачи
-          example: это новая задача
-        plannedCompletionAt:
-          type: string
-          format: date-time
-          description: плановая дата выполнения
-          example: '2023-06-28 00:00:00'
-        createdAt:
-          type: string
-          format: date-time
-          description: дата создания
-          example: '2023-06-30T12:45:39.000Z'
-        updatedAt:
-          type: string
-          format: date-time
-          description: дата изменения
-          example: '2023-06-30T12:45:39.000Z'
-    TodoItemForm:
-      type: object
-      properties:
-        name:
-          type: string
-          description: наименование задачи
-          example: новая задача
-        description:
-          type: string
-          description: описание задачи
-          example: это новая задача
-        plannedCompletionAt:
-          type: string
-          format: date-time
-          description: плановая дата выполнения
-          example: '2023-06-30 00:00:00'
-    Status:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: идентификатор
-          example: 1
-        name:
-          type: string
-          description: имя статуса
-          example: Новое
-        initialDefault:
-          type: integer
-          description: начальный статус задачи
-          example: 1
-        createdAt:
-          type: string
-          format: date-time
-          description: дата создания
-          example: '2023-06-29T15:23:53.000Z'
-        updatedAt:
-          type: string
-          format: date-time
-          description: дата изменения
-          example: '2023-06-29T15:23:53.000Z'
-    TodoGroup:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: идентификатор
-          example: 1
-        name:
-          type: string
-          description: имя
-          example: совместные задачи
-        createdAt:
-          type: string
-          format: date-time
-          description: дата создания
-          example: '2023-06-29T15:23:53.000Z'
-    TodoGroupInfo:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: идентификатор
-          example: 1
-        name:
-          type: string
-          description: имя
-          example: совместные задачи
-        createdAt:
-          type: string
-          format: date-time
-          description: дата создания
-          example: '2023-06-29T15:23:53.000Z'
-        description:
-          type: string
-          example: группа совместного доступа
-        user_email:
-          type: string
-          example: ace7upp@gmail.com
-        user_id:
-          type: number
-          example: 1
-        user_name:
-          type: string
-          example: admin
-    TogoGroupFormData:
-      type: object
-      properties:
-        name:
-          type: string
-          example: совместный доступ
-        description:
-          type: string
-          example: задачи для совместного доступа
-      required: [name, description]
-    UserOfGroup:
-      type: object
-      properties:
-        email:
-          type: string
-          example: guest1@guest.com
-        group_id:
-          type: integer
-          example: 6
-        id:
-          type: integer
-          example: 2
-        name:
-          type: string
-          example: guest
-    User:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: идентификатор пользователя
-          example: 1
-        name:
-          type: string
-          description: имя пользователя
-          example: admin
-        email:
-          type: string
-          description: адрес электронной почты
-          example: admin@admin.com
-        status:
-          type: integer
-          description: статус пользователя
-          example: 1
-        createdAt:
-          type: string
-          format: date-time
-          description: дата создания
-          example: '2023-06-29T15:23:53.000Z'
-        updatedAt:
-          type: string
-          format: date-time
-          description: дата изменения
-          example: '2023-06-29T15:23:53.000Z'
-    UserCreateForm:
-      type: object
-      properties:
-        confirm_password:
-          type: string
-          description: Подтверждение пароля
-          example: guest2
-        email:
-          type: string
-          description: Адрес электронной почты
-          example: guest2@guest.com
-        name:
-          type: string
-          description: Имя пользователя
-          example: someStrongPass
-        password:
-          type: string
-          description: Пароль
-          example: someStrongPass
-    UserDataForUpdate:
-      type: object
-      properties:
-        email:
-          type: string
-          description: Адрес электронной почты
-          example: guest2@guest.com
-        id:
-          type: integer
-          description: Идентификатор
-          example: 3
-        name:
-          type: string
-          description: Имя пользователя
-          example: guest2
   responses:
-    DeleteSucceed:
-      description: удачная операция
+    forbidden:
+      description: Доступ запрещен
       content:
         application/json:
-          schema:
-            type: object
-            properties:
-              success:
-                type: boolean
-                example: true
+          example:
+            cause: "Доступ запрещен"
+            type: "Forbidden"
+            data: []
+    badRequest:
+      description: Ошибка запроса
+      content:
+        application/json:
+          example:
+            cause: "Не соблюдено минимальное кол-во символов поля Имя"
+            type: "BadRequest"
+            data: [ ]
+    forbiddenBoardAccess:
+      description: Доступ к доске запрещен
+      content:
+        application/json:
+          example:
+            cause: "Доступ к доске запрещен"
+            type: "Forbidden"
+            data: [ ]
+    boardNotFound:
+      description: Доска не найдена
+      content:
+        application/json:
+          example:
+            cause: "Доска не найдена"
+            type: "NotFound"
+            data: [ ]
+    taskNotFound:
+      description: Задача не найдена
+      content:
+        application/json:
+          example:
+            cause: "Задача не найдена"
+            type: "NotFound"
+            data: [ ]
+    userNotFound:
+      description: Пользователь не найден
+      content:
+        application/json:
+          example:
+            cause: "Пользователь не найден"
+            type: "NotFound"
+            data: [ ]
