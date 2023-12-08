@@ -14,22 +14,22 @@ export default class Router
         this.router = BaseRouter();
     }
 
-    protected resolveMiddlewareMultiple(middlewareClasses: Function[]): Function
+    protected resolveMiddlewareMultiple(middlewares: Function[]|object[]): Function
     {
         let chainHandler,
             nextHandler;
         
-        for (const middlewareClass of middlewareClasses) {
+        for (const middleware of middlewares) {
 
             if (chainHandler === undefined) {
-                chainHandler = eval(`new middlewareClass`);
+                chainHandler = typeof middleware === 'object' ? middleware : eval(`new middleware`);
 
                 nextHandler = chainHandler;
 
                 continue;
             }
 
-            nextHandler.nextHandler = eval(`new middlewareClass`);
+            nextHandler.nextHandler = typeof middleware === 'object' ? middleware : eval(`new middleware`);
 
             nextHandler = nextHandler.nextHandler;
         }

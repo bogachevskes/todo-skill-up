@@ -4,9 +4,9 @@ export default class Route
     public path: string;
     public controller: Function;
     public action: string;
-    public middleware: Function[];
+    public middleware: Function[]|object[];
 
-    public constructor(method: string, path: string, controller: Function, action: string, middleware: Function[] = [])
+    public constructor(method: string, path: string, controller: Function, action: string, middleware: Function[]|object[] = [])
     {
         this.method = method;
         this.path = path;
