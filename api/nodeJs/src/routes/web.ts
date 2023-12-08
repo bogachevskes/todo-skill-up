@@ -13,6 +13,7 @@ import UserBoardsController from "../app/Http/Controllers/UserBoardsController";
 import CurrentUserOnlyMiddleware from "../app/Http/Middleware/CurrentUserOnlyMiddleware";
 import BoardsTasksStatusesController from "../app/Http/Controllers/BoardsTasksStatusesController";
 import TaskStatusExistInBoardMiddleware from "../app/Http/Middleware/TaskStatusExistInBoardMiddleware";
+import UserHasPermission from "../app/Http/Middleware/UserHasPermission";
 
 RoutesCollection.addGroup('v1', function () {
     RoutesCollection.add(
@@ -37,7 +38,6 @@ RoutesCollection.addGroup('v1', function () {
         new Route(
             'GET',
             '/users/match',
-            // TODO: доделать поиск всех юзеров по пробелам
             UserController,
             'actionMatch',
             [
@@ -62,8 +62,8 @@ RoutesCollection.addGroup('v1', function () {
             '/admin/users',
             AdminUserController,
             [
-                // TODO: добавить мидлвеер проверки разрешения
                 AuthOnlyMiddleware,
+                new UserHasPermission('/admin/users'),
             ],
         )
     );
@@ -121,7 +121,10 @@ RoutesCollection.addGroup('v1', function () {
                     method: 'PATCH',
                     middleware: [TaskStatusExistInBoardMiddleware],
                 },
-                // TODO: DELETE
+                {
+                    method: 'DELETE',
+                    middleware: [TaskStatusExistInBoardMiddleware],
+                },
             ],
         )
     );
