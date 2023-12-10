@@ -4,7 +4,7 @@ import BadRequest from '../../../Framework/Exceptions/BadRequest';
 import UserLogin from '../../Commands/UserLogin';
 import UserCreateRequest from "../FormRequest/User/UserCreateRequest";
 import UserRepository from "../../Repository/UserRepository";
-import UserLoginRequest from "../FormRequest/User/UserLoginRequest";
+import LoginRequest from "../FormRequest/Auth/LoginRequest";
 import User from "../../Entity/User";
 import Codes from "../../../Framework/Exceptions/base/Codes";
 
@@ -18,7 +18,7 @@ export default class AuthController
 
     public async actionLogin(req: Request, res: Response): Promise<Response> | never
     {
-        const form: UserLoginRequest =  new UserLoginRequest(req.body.formData);
+        const form: LoginRequest =  new LoginRequest(req.body.formData);
 
         await form.validate();
 
