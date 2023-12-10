@@ -33,6 +33,12 @@
                     >
                         Минимальное кол-во символов: {{ getNameMinLength }}
                     </p>
+                    <p
+                        v-if="$v.formData.name.required === true && $v.formData.name.regex === false"
+                        class="help is-danger"
+                    >
+                        Имя введено некорректно. Попробуйте другое имя
+                    </p>
                 </div>
                 <div class="field">
                     <label for="" class="label">Почта</label>
@@ -190,16 +196,6 @@ export default {
     },
     computed: {
         ...inputComputedMethods,
-        loginValid () {
-            if (
-                this.$v.formData.email.$invalid ||
-                this.$v.formData.password.$invalid
-            ) {
-                return false;
-            }
-
-            return true;
-        },
         registerValid () {
             return Boolean(this.$v.$invalid) === false;
         },
@@ -254,6 +250,9 @@ export default {
                 name: {
                     required,
                     minLength: minLength(this.getNameMinLength),
+                    regex: () => {
+                        return new RegExp(/^(?:[a-zA-Zа-яА-Я0-9_]+ ?)+[a-zA-Zа-яА-Я0-9_]+$/).test(this.formData.name);
+                    },
                 },
                 email: {
                     required,
