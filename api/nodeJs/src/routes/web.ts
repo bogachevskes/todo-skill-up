@@ -14,6 +14,7 @@ import CurrentUserOnlyMiddleware from "../app/Http/Middleware/CurrentUserOnlyMid
 import BoardsTasksStatusesController from "../app/Http/Controllers/BoardsTasksStatusesController";
 import TaskStatusExistInBoardMiddleware from "../app/Http/Middleware/TaskStatusExistInBoardMiddleware";
 import UserHasPermission from "../app/Http/Middleware/UserHasPermission";
+import TaskExistInBoardMiddleware from "../app/Http/Middleware/TaskExistInBoardMiddleware";
 
 RoutesCollection.addGroup('v1', function () {
     RoutesCollection.add(
@@ -111,19 +112,29 @@ RoutesCollection.addGroup('v1', function () {
             [
                 {
                     method: 'POST',
-                    middleware: [TaskStatusExistInBoardMiddleware],
+                    middleware: [
+                        TaskStatusExistInBoardMiddleware,
+                    ],
                 },
                 {
                     method: 'PUT',
-                    middleware: [TaskStatusExistInBoardMiddleware],
+                    middleware: [
+                        TaskStatusExistInBoardMiddleware,
+                        TaskExistInBoardMiddleware,
+                    ],
                 },
                 {
                     method: 'PATCH',
-                    middleware: [TaskStatusExistInBoardMiddleware],
+                    middleware: [
+                        TaskStatusExistInBoardMiddleware,
+                        TaskExistInBoardMiddleware,
+                    ],
                 },
                 {
                     method: 'DELETE',
-                    middleware: [TaskStatusExistInBoardMiddleware],
+                    middleware: [
+                        TaskExistInBoardMiddleware,
+                    ],
                 },
             ],
         )

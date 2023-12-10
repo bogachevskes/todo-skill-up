@@ -58,7 +58,7 @@ export default class TaskStatusRepository
     {
         const query = this.getQueryBuilder()
             .select('COUNT(ts.id) as exist')
-            .where('ts.id = :statusId AND ts.board_id = :boardId', { statusId, boardId});
+            .where('ts.id = :statusId AND ts.board_id = :boardId', {statusId, boardId});
 
         const result = await query.getRawOne();
 

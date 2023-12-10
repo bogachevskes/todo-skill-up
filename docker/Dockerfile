@@ -20,7 +20,7 @@ RUN yarn install --no-bin-links
 
 RUN yarn run build
 
-EXPOSE 80
+EXPOSE 3000
 
 # API
 FROM node:14.19-alpine as api
@@ -38,7 +38,7 @@ RUN yarn install --no-bin-links
 
 RUN yarn run build
 
-EXPOSE 80
+EXPOSE 8081
 
 # WS
 FROM node:14.19-alpine as ws
@@ -56,7 +56,7 @@ RUN yarn install --no-bin-links
 
 RUN yarn run build
 
-EXPOSE 80
+EXPOSE 8088
 
 # PHP-Builder
 FROM php:8.2-cli-alpine3.17 as php-builder

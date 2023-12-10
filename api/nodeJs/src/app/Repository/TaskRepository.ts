@@ -62,4 +62,15 @@ export default class TaskRepository
 
         return model;
     }
+
+    public async isTaskAssignedToBoard(boardId: number, taskId: number): Promise<boolean>
+    {
+        const query = this.getQueryBuilder()
+            .select('COUNT(id) as exist')
+            .where('board_id = :boardId AND id = :taskId', {boardId, taskId});
+
+        const result = await query.getRawOne();
+
+        return Boolean(Number(result['exist']));
+    }
 }
