@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import ValidationRequest from '../../../../Framework/FormRequest/Base/ValidationRequest';
-import { MESSAGE_ALPHA_NUM, MESSAGE_MIN_LENGTH, MESSAGE_EMAIL, MESSAGE_PASSWORD_CONFIRM, MESSAGE_EMAIL_EXISTS } from '../../../../Framework/FormRequest/Base/Messages';
+import { MESSAGE_MIN_LENGTH, MESSAGE_EMAIL, MESSAGE_PASSWORD_CONFIRM, MESSAGE_EMAIL_EXISTS } from '../../../../Framework/FormRequest/Base/Messages';
 import { USER_NAME_MIN_LENGTH, USER_NAME_MAX_LENGTH, USER_PASSWORD_MIN_LENGTH, USER_PASSWORD_MAX_LENGTH } from '../../../../Framework/FormRequest/Base/ValidationConstants';
 import { IsEmail, IsAlphanumeric, IsLength } from "validator.ts/decorator/Validation";
 import { ToString } from "validator.ts/decorator/Sanitization";
@@ -9,7 +9,6 @@ import User from '../../../Entity/User';
 
 export default class UserCreateRequest extends ValidationRequest
 {
-    @IsAlphanumeric({ message: MESSAGE_ALPHA_NUM })
     @IsLength(USER_NAME_MIN_LENGTH, USER_NAME_MAX_LENGTH, { message: `${MESSAGE_MIN_LENGTH} поля Имя` })
     @ToString()
     public name: string;
@@ -40,7 +39,12 @@ export default class UserCreateRequest extends ValidationRequest
     protected getCustomValidations(): Function[]
     {
         return [
-            async () => {
+            async() => {
+                const exp: RegExp = /^(?:[a-zA-Zа-яА-Я0-9_]+ ?)+[a-zA-Zа-яА-Я0-9_]+$/;
+
+                return this.validateManual(Boolean(this.name.match(exp)) === true, 'Имя введено некорректно. Попробуйте другое имя', 'email_uniq');
+            },
+            async() => {
                 this.validateCustom(
                     'equals',
                     MESSAGE_PASSWORD_CONFIRM,
@@ -56,7 +60,7 @@ export default class UserCreateRequest extends ValidationRequest
                     return this.validateManual(false, 'Ошибка формата пароля', 'password_format_error');
                 }
             },
-            async () => {
+            async() => {
                 const
                     user: User|null = await (new UserRepository).findByEmail(this.email);
 
