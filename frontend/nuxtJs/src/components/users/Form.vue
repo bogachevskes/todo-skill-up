@@ -31,8 +31,12 @@
                     class="help is-danger"
                 >
                     Минимальное кол-во символов: {{ getNameMinLength }}
-                    <br />
-                    Только буквы и цифры
+                </p>
+                <p
+                    v-if="$v.formData.name.required === true && $v.formData.name.regex === false"
+                    class="help is-danger"
+                >
+                    Имя введено некорректно. Попробуйте другое имя
                 </p>
             </div>
             <div class="field">
@@ -165,7 +169,6 @@ import {
     email,
     minLength,
     sameAs,
-    alphaNum,
 } from 'vuelidate/lib/validators';
 
 import {
@@ -229,8 +232,10 @@ export default {
             formData: {
                 name: {
                     required,
-                    alphaNum,
                     minLength: minLength(this.getNameMinLength),
+                    regex: () => {
+                        return new RegExp(/^(?:[a-zA-Zа-яА-Я0-9_]+ ?)+[a-zA-Zа-яА-Я0-9_]+$/).test(this.formData.name);
+                    },
                 },
                 email: {
                     required,

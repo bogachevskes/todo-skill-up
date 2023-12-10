@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import ValidationRequest from '../../../../Framework/FormRequest/Base/ValidationRequest';
-import { MESSAGE_ALPHA_NUM, MESSAGE_MIN_LENGTH, MESSAGE_EMAIL, MESSAGE_PASSWORD_CONFIRM, MESSAGE_EMAIL_EXISTS } from '../../../../Framework/FormRequest/Base/Messages';
+import { MESSAGE_MIN_LENGTH, MESSAGE_EMAIL, MESSAGE_PASSWORD_CONFIRM, MESSAGE_EMAIL_EXISTS } from '../../../../Framework/FormRequest/Base/Messages';
 import { USER_NAME_MIN_LENGTH, USER_NAME_MAX_LENGTH, USER_PASSWORD_MIN_LENGTH, USER_PASSWORD_MAX_LENGTH } from '../../../../Framework/FormRequest/Base/ValidationConstants';
 import {IsEmail, IsAlphanumeric, IsLength, NotEmpty} from "validator.ts/decorator/Validation";
 import { ToString, ToInt } from "validator.ts/decorator/Sanitization";
@@ -8,7 +8,6 @@ import UserRepository from '../../../Repository/UserRepository';
 
 export default class UserUpdateRequest extends ValidationRequest
 {
-    @IsAlphanumeric({ message: MESSAGE_ALPHA_NUM })
     @IsLength(USER_NAME_MIN_LENGTH, USER_NAME_MAX_LENGTH, { message: `${MESSAGE_MIN_LENGTH} поля Имя` })
     @ToString()
     public name: string;
@@ -56,6 +55,11 @@ export default class UserUpdateRequest extends ValidationRequest
     protected getCustomValidations(): Function[]
     {
         return [
+            async() => {
+                const exp: RegExp = /^(?:[a-zA-Zа-яА-Я0-9_]+ ?)+[a-zA-Zа-яА-Я0-9_]+$/;
+
+                return this.validateManual(Boolean(this.name.match(exp)) === true, 'Имя введено некорректно. Попробуйте другое имя', 'email_uniq');
+            },
             async () => {
                 if (! this.password) {
                     return null;

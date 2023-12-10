@@ -21,7 +21,7 @@ services:
     container_name: todo-skill-up-api
     command: ["yarn", "start"]
     environment:
-      APP_PORT: 80
+      APP_PORT: 8081
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
       DB_USER: ${DB_USER}
@@ -47,7 +47,7 @@ services:
     container_name: todo-skill-up-ws
     command: ["yarn", "run", "start:prod"]
     environment:
-      APP_PORT: 80
+      APP_PORT: 8088
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
       DB_USER: ${DB_USER}
