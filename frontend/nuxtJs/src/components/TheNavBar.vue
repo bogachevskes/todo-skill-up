@@ -7,7 +7,7 @@
                     TODO LIST
                 </a>
             </span>
-            <div class="navbar-end">
+            <div class="navbar-end" v-if="showInviteAction === true">
                 <div v-if="getPermissions.length > 0" class="navbar-item">
                     <div class="dropdown is-right" :class="{'is-active': actionsActive}" @click="actionsActive = actionsActive === false">
                         <div class="dropdown-trigger">
@@ -37,6 +37,12 @@ import TheInviteActions from './TheInviteActions';
 
 export default {
     name: 'TheNavBar',
+    props: {
+        showInviteAction: {
+            type: Boolean,
+            default: true,
+        },
+    },
     components: {
         TheInviteActions,
     },
