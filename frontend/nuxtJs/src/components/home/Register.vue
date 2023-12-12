@@ -148,7 +148,7 @@
                             type="checkbox"
                             @change="blurField('terms_agree')"
                         />
-                        Принимаю <a href="#">условия пользования сервисом.</a>
+                        <a href="/terms">Принимаю условия пользования сервисом</a>
                     </label>
                     <p
                         v-if="$v.terms_agree.$dirty && $v.terms_agree.$error"
@@ -241,6 +241,11 @@ export default {
                 });
 
             return this;
+        },
+    },
+    watch: {
+        'formData.email': function(newEmail) {
+            this.formData.email = newEmail.toLowerCase();
         },
     },
     /** лучше использовать функцией, можно использовать контекст vue */
