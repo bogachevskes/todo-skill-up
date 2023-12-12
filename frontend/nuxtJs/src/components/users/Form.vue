@@ -227,6 +227,11 @@ export default {
             this.confirmAction(this.formData);
         },
     },
+    watch: {
+        'formData.email': function(newEmail) {
+            this.formData.email = newEmail.toLowerCase();
+        },
+    },
     validations () {
         return {
             formData: {

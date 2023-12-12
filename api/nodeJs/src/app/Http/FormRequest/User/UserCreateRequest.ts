@@ -61,8 +61,10 @@ export default class UserCreateRequest extends ValidationRequest
                 }
             },
             async() => {
-                const
-                    user: User|null = await (new UserRepository).findByEmail(this.email);
+
+                this.email = this.email.toLowerCase();
+
+                const user: User|null = await (new UserRepository).findByEmail(this.email);
 
                 return this.validateManual(user === null, MESSAGE_EMAIL_EXISTS, 'email_uniq');
             },

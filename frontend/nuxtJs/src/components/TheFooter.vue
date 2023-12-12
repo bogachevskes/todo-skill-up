@@ -5,15 +5,17 @@
                 <div class="column is-5 is-5-widescreen">
                     <p>
                         <strong>TODO LIST</strong><br />
-                        разработчик Андрей Богачевский. Лицензия
-                        <a href="http://opensource.org/licenses/mit-license.php"
-                            >MIT</a
-                        >.<br />
-                        Контетнт сайта лицензирован
-                        <a
-                            href="http://creativecommons.org/licenses/by-nc-sa/4.0/"
-                            >CC BY NC SA 4.0</a
-                        >.
+                        <a href="https://github.com/bogachevskes" target="_blank">Разработчик Андрей Богачевский</a>
+                        <br>
+                        <a href="http://opensource.org/licenses/mit-license.php" target="_blank">Лицензия MIT</a>
+                        <br>
+                        <a target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+                            Контент сайта лицензирован CC BY NC SA 4.0
+                        </a>
+                        <br>
+                        <a target="_blank" href="/terms">Условия пользования сервисом</a>
+                        <br>
+                        <a target="_blank" href="/swagger-ui">Документация API</a>
                     </p>
                 </div>
             </div>

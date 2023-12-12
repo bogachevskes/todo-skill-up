@@ -166,6 +166,11 @@ export default {
                 });
         },
     },
+    watch: {
+        'formData.email': function(newEmail) {
+            this.formData.email = newEmail.toLowerCase();
+        },
+    },
     /** лучше использовать функцией, можно использовать контекст vue */
     validations () {
         return {

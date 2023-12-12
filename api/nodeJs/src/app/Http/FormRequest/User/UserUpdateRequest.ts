@@ -94,8 +94,9 @@ export default class UserUpdateRequest extends ValidationRequest
                 }
             },
             async () => {
-                const
-                    user = await (new UserRepository).findByEmail(this.email);
+                this.email = this.email.toLowerCase();
+
+                const user = await (new UserRepository).findByEmail(this.email);
 
                 return this.validateManual(user === null, MESSAGE_EMAIL_EXISTS, 'email_uniq');
             },
