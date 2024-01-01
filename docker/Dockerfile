@@ -103,6 +103,28 @@ COPY --from=php-builder --chown=${USER}:${GROUP} /app/vendor /app/vendor
 
 WORKDIR /app
 
+# API TESTS
+FROM php:8.2-cli-alpine3.17 as api-tests
+
+ARG USER='www-data'
+ARG GROUP='www-data'
+
+COPY ./docker/php/cli/conf.d/* $PHP_INI_DIR/conf.d
+COPY ./docker/php/php.ini-production $PHP_INI_DIR/php.ini
+
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+
+RUN pear update-channels && pecl update-channels \
+    && install-php-extensions @composer-2 opcache pdo_mysql
+
+USER ${USER}
+
+WORKDIR /app
+
+COPY --chown=${USER}:${GROUP} ./tests/composer.json ./tests/composer.lock /app/
+
+RUN composer --no-ansi --no-interaction install --no-progress
+
 # NGINX
 FROM nginx:1.20.2-alpine as nginx
 
