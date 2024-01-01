@@ -726,6 +726,7 @@ paths:
                   properties:
                     statusId:
                       type: integer
+                      example: 1
                     name:
                       type: string
                       example: "Реализовать авторизацию"
@@ -768,6 +769,7 @@ paths:
                   properties:
                     statusId:
                       type: integer
+                      example: 1
                     name:
                       type: string
                       example: "Реализовать авторизацию"
