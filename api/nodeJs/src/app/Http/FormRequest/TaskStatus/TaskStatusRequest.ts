@@ -9,7 +9,7 @@ export default class TaskStatusRequest extends ValidationRequest {
     @NotEmpty({message: 'Не задана доска статуса'})
     boardId: number;
 
-    @IsLength(USER_NAME_MIN_LENGTH, 300, { message: `${MESSAGE_MIN_LENGTH} поля Имя` })
+    @IsLength(USER_NAME_MIN_LENGTH, 25, { message: `${MESSAGE_MIN_LENGTH} поля Имя` })
     @ToString()
     name: string;
 }
