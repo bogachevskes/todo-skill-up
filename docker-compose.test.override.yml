@@ -11,4 +11,6 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       TZ: ${TZ}
+    ports:
+      - 127.0.0.1:${DB_TEST_OUTER_PORT}:${DB_PORT}
     command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_general_ci']
