@@ -11,7 +11,7 @@ services:
       - ./api/nodeJs/src:/app/src
       - ./api/nodeJs/runtime:/app/runtime
       - ./api/nodeJs/package.json:/app/package.json
-      - ./api/nodeJs/yarn.lock:/app/src/yarn.lock
+      - ./api/nodeJs/yarn.lock:/app/yarn.lock
 
   ws:
     command: ["yarn", "run", "start:dev"]
