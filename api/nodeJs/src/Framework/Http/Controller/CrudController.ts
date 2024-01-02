@@ -10,7 +10,7 @@ export default abstract class CrudController
         return this.throwDefaultForbidden();
     }
 
-    protected listItem(id: number, req: Request): Promise<object|[]>|never
+    protected listItem(id: number|string, req: Request): Promise<object|[]>|never
     {
         return this.throwDefaultForbidden();
     }
@@ -20,17 +20,17 @@ export default abstract class CrudController
         return this.throwDefaultForbidden();
     }
 
-    protected update(id: number, req: Request): Promise<void>|never
+    protected update(id: number|string, req: Request): Promise<void>|never
     {
         return this.throwDefaultForbidden();
     }
 
-    protected patch(id: number, req: Request): Promise<void>|never
+    protected patch(id: number|string, req: Request): Promise<void>|never
     {
         return this.throwDefaultForbidden();
     }
 
-    protected delete(id: number, req: Request): Promise<void>
+    protected delete(id: number|string, req: Request): Promise<void>
     {
         return this.throwDefaultForbidden();
     }
@@ -49,7 +49,7 @@ export default abstract class CrudController
     @AutoBind
     public async actionListItem(req: Request, res: Response): Promise<Response>
     {
-        const id: number = parseInt(req.params.id);
+        const id: number|string = req.params.id;
 
         return res.json(await this.listItem(id, req));
     }
@@ -72,7 +72,7 @@ export default abstract class CrudController
     @AutoBind
     public async actionUpdate(req: Request, res: Response): Promise<void>
     {
-        const id: number = parseInt(req.params.id);
+        const id: number|string = req.params.id;
 
         await this.update(id, req);
 
@@ -84,7 +84,7 @@ export default abstract class CrudController
     @AutoBind
     public async actionPatch(req: Request, res: Response): Promise<void>
     {
-        const id: number = parseInt(req.params.id);
+        const id: number|string = req.params.id;
 
         await this.patch(id, req);
 
@@ -96,7 +96,7 @@ export default abstract class CrudController
     @AutoBind
     public async actionDelete(req: Request, res: Response): Promise<void>
     {
-        const id: number = parseInt(req.params.id);
+        const id: number|string = req.params.id;
 
         await this.delete(id, req);
 
