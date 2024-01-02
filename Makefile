@@ -155,6 +155,7 @@ api-tests-publish-dev-dependencies:
 api-tests-run-tests:
 	@$(MAKE) restart
 	@$(MAKE) migrate
+	@$(MAKE) seed
 	@$(MAKE) api-tests-run cmd="./vendor/bin/codecept run --steps --debug"
 
 wait-db:
