@@ -16,7 +16,23 @@ class UsersSeeder extends AbstractSeed
             ],
         ];
 
-        $table = $this->table('users');
-        $table->insert($data)->save();
+        foreach ($data as $key => $user) {
+            $existingRecord = $this->getAdapter()
+                ->fetchRow("SELECT * FROM users WHERE email = \"{$user['email']}\"");
+
+            if ($existingRecord === false) {
+                continue;
+            }
+
+            unset($data[$key]);
+        }
+
+        if (empty($data) === true) {
+            return;
+        }
+
+        $this->table('users')
+            ->insert($data)
+            ->save();
     }
 }
