@@ -1,4 +1,5 @@
 import { SelectQueryBuilder } from 'typeorm';
+import Db from '../Components/Db';
 import Board from '../Entity/Board';
 import BoardUser from '../Entity/BoardUser';
 import BoardRequest from "../Http/FormRequest/Board/BoardRequest";
@@ -81,12 +82,16 @@ export default class BoardsRepository
         return await query.getRawMany();
     }
 
-    public createUserToBoardAssignment(boardId: number, userId: number): BoardUser
+    public createUserToBoardAssignment(boardId: number, userId: number, roleId: number|null = null): BoardUser
     {
         const model: BoardUser = new BoardUser;
 
         model.boardId = boardId;
         model.userId = userId;
+
+        if (roleId !== null) {
+            model.roleId = roleId;
+        }
 
         return model;
     }
@@ -98,5 +103,34 @@ export default class BoardsRepository
             .delete();
 
         await query.execute();
+    }
+
+    public async userIsBoardOwner(boardId: number, userId: number): Promise<boolean>
+    {
+        const result = await Db.count('ub.user_id as cnt')
+            .from({ub: 'boards_users'})
+            .leftJoin({ubr: 'boards_users_roles'}, 'ub.role_id', 'ubr.id')
+            .where({
+                'ub.board_id': boardId,
+                'ub.user_id': userId,
+                'ubr.name': 'owner',
+            });
+
+        return Boolean(Number(result[0]['cnt']));
+    }
+
+    public async getBoardOwner(boardId: number): Promise<object>
+    {
+        const res = await Db.select('u.id as id', 'u.name as name', 'u.email as email')
+            .from({ub: 'boards_users'})
+            .leftJoin({ubr: 'boards_users_roles'}, 'ub.role_id', 'ubr.id')
+            .leftJoin({u: 'users'}, 'ub.user_id', 'u.id')
+            .where({
+                'ub.board_id': boardId,
+                'ubr.name': 'owner',
+            })
+            .first();
+
+        return res;
     }
 }

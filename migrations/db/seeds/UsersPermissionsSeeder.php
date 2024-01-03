@@ -21,7 +21,23 @@ class UsersPermissionsSeeder extends AbstractSeed
             ]
         ];
 
-        $table = $this->table('auth_assignment');
-        $table->insert($data)->save();
+        foreach ($data as $key => $assignment) {
+            $existingRecord = $this->getAdapter()
+                ->fetchRow("SELECT * FROM auth_assignment WHERE item_name = \"{$assignment['item_name']}\" AND user_id = \"{$assignment['user_id']}\"");
+
+            if ($existingRecord === false) {
+                continue;
+            }
+
+            unset($data[$key]);
+        }
+
+        if (empty($data) === true) {
+            return;
+        }
+
+        $this->table('auth_assignment')
+            ->insert($data)
+            ->save();
     }
 }

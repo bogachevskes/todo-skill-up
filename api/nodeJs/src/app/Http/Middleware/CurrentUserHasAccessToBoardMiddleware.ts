@@ -5,12 +5,10 @@ import BoardsRepository from '../../Repository/BoardsRepository';
 import User from '../../Entity/User';
 import Forbidden from "../../../Framework/Exceptions/Forbidden";
 
-export default class UserHasAccessToBoardMiddleware extends Middleware
+export default class CurrentUserHasAccessToBoardMiddleware extends Middleware
 {
-    public constructor(
-        private boardIdAttribute: string = 'board_id',
-        private userIdAttribute: string = 'user_id',
-    ) {
+    public constructor(private boardIdAttribute: string = 'board_id')
+    {
         super();
     }
 
@@ -19,11 +17,11 @@ export default class UserHasAccessToBoardMiddleware extends Middleware
      */
     protected async handle(req: Request): Promise<void>
     {
-        const userId: number = Number(req.params[this.userIdAttribute]);
+        const user: User = req['user'];
 
-        const boardId: number = Number(req.params[this.boardIdAttribute]);
+        const boardId = req.params[this.boardIdAttribute];
 
-        if (await (new BoardsRepository).isUserExistsInBoard(boardId, userId) === false) {
+        if (await (new BoardsRepository).isUserExistsInBoard(Number(boardId), Number(user.id)) === false) {
             
             throw new Forbidden('Доступ к доске запрещен');
         }

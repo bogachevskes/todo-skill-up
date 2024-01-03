@@ -3,12 +3,20 @@ include .env
 ENV_MODE=${ENV}
 
 MIGRATOR_ENV_ARGS=# не применимо в окружении production
-DOCKER_UP_ENV_ARGS=# не применимо в окружении production
+DOCKER_BEFORE_UP_ARGS=# не применимо в окружении production
+DOCKER_AFTER_UP_ARGS=# не применимо в окружении production
 
 ifeq ($(ENV_MODE), development)
 
 MIGRATOR_ENV_ARGS=-v $(PWD)/migrations/db:/app/db
-DOCKER_UP_ENV_ARGS=-f docker-compose.yml -f docker-compose.local.override.yml
+DOCKER_BEFORE_UP_ARGS=-f docker-compose.yml -f docker-compose.local.override.yml
+
+endif
+
+ifeq ($(ENV_MODE), testing)
+
+MIGRATOR_ENV_ARGS=-v $(PWD)/migrations/db:/app/db
+DOCKER_BEFORE_UP_ARGS=-f docker-compose.yml -f docker-compose.local.override.yml -f docker-compose.test.override.yml
 
 endif
 
@@ -21,7 +29,7 @@ install:
 
 up:
 	@docker-compose -p ${DOCKER_PROJECT} \
-	${DOCKER_UP_ENV_ARGS} up -d
+	${DOCKER_BEFORE_UP_ARGS} up -d ${DOCKER_AFTER_UP_ARGS}
 
 down:
 	@docker-compose -p ${DOCKER_PROJECT} down --remove-orphans
@@ -71,6 +79,10 @@ docker-build-migrations:
 docker-build-swagger:
 	@docker build --target=swagger \
 	-t ${DOCKER_REGISTRY}/${DOCKER_SWAGGER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION} -f ./docker/Dockerfile .
+
+docker-build-api-tests:
+	@docker build --target=api-tests \
+	-t ${DOCKER_REGISTRY}/${DOCKER_API_TESTS_IMAGE_NAME}:${DOCKER_IMAGE_VERSION} -f ./docker/Dockerfile .
 
 frontend-publish-dev-dependencies:
 	@docker run -d --name frontend_dep_extractor ${DOCKER_REGISTRY}/${DOCKER_FRONTEND_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
@@ -123,10 +135,33 @@ create-migration:
 create-seed:
 	@$(MAKE) migrator-run cmd="seed:create $(name)"
 
+api-tests-run:
+	@$(MAKE) -s wait-db
+	@docker run --network=todo-skill-up_default \
+		-e "DB_HOST=${DB_HOST}" \
+		-e "DB_PORT=${DB_PORT}" \
+		-e "DB_USER=${DB_USER}" \
+		-e "DB_PASSWORD=${DB_PASSWORD}" \
+		-e "DB_NAME=${DB_NAME}" \
+		-v $(PWD)/tests:/app \
+		--rm ${DOCKER_REGISTRY}/${DOCKER_API_TESTS_IMAGE_NAME}:${DOCKER_IMAGE_VERSION} \
+		$(cmd)
+
+api-tests-publish-dev-dependencies:
+	@docker run -d --name api_tests_dep_extractor ${DOCKER_REGISTRY}/${DOCKER_API_TESTS_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
+	@docker cp api_tests_dep_extractor:/app/vendor $(PWD)/tests/vendor
+	@docker rm api_tests_dep_extractor
+
+api-tests-run-tests:
+	@$(MAKE) restart
+	@$(MAKE) migrate
+	@$(MAKE) seed
+	@$(MAKE) api-tests-run cmd="./vendor/bin/codecept run --steps --debug"
+
 wait-db:
 	@docker run --network=todo-skill-up_default \
 		--rm ${DOCKER_REGISTRY}/${DOCKER_COMMON_TOOLS_IMAGE_NAME}:${DOCKER_IMAGE_VERSION} \
-		wait-for mariadb:${DB_PORT} -t 0
+		wait-for ${DB_HOST}:${DB_PORT} -t 0
 
 wait-redis:
 	@docker run --network=todo-skill-up_default \
