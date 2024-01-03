@@ -29,13 +29,23 @@
 ## Установка приложения для исполнения в режиме разработки
 
 1. выполнить пункты раздела `Установка приложения для исполнения в продуктивном режиме`
-1. выполнить команду frontend-publish-dev-dependencies
-1. выполнить команду api-publish-dev-dependencies
-1. выполнить команду ws-publish-dev-dependencies
-1. выполнить команду migrator-publish-dev-dependencies
+1. выполнить команду `make seed`
+1. выполнить команду `make frontend-publish-dev-dependencies`
+1. выполнить команду `make api-publish-dev-dependencies`
+1. выполнить команду `make ws-publish-dev-dependencies`
+1. выполнить команду `make migrator-publish-dev-dependencies`
 1. в файле .env изменить значение переменной окружения `ENV=development`
 1. перезапустить сервисы командой `make restart`
 1. открыть приложение в браузере по адресу `http://localhost:{NGINX_PORT}`
+
+## Тестирование приложения
+
+1. выключить приложение `make down`
+1. выполнить команду `make docker-build-api-tests` для сборки контейнера тестов
+1. перевести окружение в режим тестирования переменной окружения `ENV=testing`
+1. установить соединения сервисов с тестовой базой данных переменной окружения `DB_HOST=mariadb-test`
+1. опубликовать зависимости сервиса тестирования `make api-tests-publish-dev-dependencies`
+1. выполнить тестирование приложения командой `make api-tests-run-tests`
 
 ## Основные `make`-команды
 
@@ -53,12 +63,13 @@
 - `api-publish-dev-dependencies` - опубликовать зависимости приложения API для разработки на локальной машине
 - `ws-publish-dev-dependencies` - опубликовать зависимости приложения вебсокет сервера для разработки на локальной машине
 - `migrator-publish-dev-dependencies` - опубликовать зависимости приложения миграций для разработки на локальной машине
+- `make api-tests-publish-dev-dependencies` - опубликовать зависимости приложения тестирования для разработки на локальной машине
 
 ## Переменные окружения
 
 
 ```dotenv
-# Режим окружения production/development
+# Режим окружения production/development/testing
 ENV=production
 
 # Имя проекта для docker compose
@@ -82,6 +93,8 @@ DOCKER_MIGRATIONS_IMAGE_NAME=todo-skill-up-migrations
 DOCKER_NGINX_IMAGE_NAME=todo-skill-up-nginx
 # Имя образа контейнера Swagger UI
 DOCKER_SWAGGER_IMAGE_NAME=todo-skill-up-swagger
+# Имя образа контейнера приложения тестов API
+DOCKER_API_TESTS_IMAGE_NAME=todo-skill-up-api-tests
 
 # Порт веб-сервера
 NGINX_PORT=8085
@@ -108,6 +121,8 @@ DB_ROOT_PASSWORD=secret
 DB_PORT=3306
 # Порт базы данных для обращений с хост-машины
 DB_OUTER_PORT=33061
+# Порт тестовой базы данных для обращений с хост-машины
+DB_TEST_OUTER_PORT=33062
 # Пользователь базы данных
 DB_USER=todo_skill_up
 # Пароль пользователя базы данных

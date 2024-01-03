@@ -7,7 +7,9 @@ export default class UserHasPermission extends Middleware
 {
     private permissionsRepository: PermissionsRepository;
 
-    public constructor(private permissionName: string)
+    public constructor(
+        private readonly permissionName: string,
+    )
     {
         super();
         this.permissionName = permissionName;

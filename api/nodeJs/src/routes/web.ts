@@ -2,7 +2,7 @@ import RoutesCollection from '../Framework/Http/Router/RoutesCollection';
 import RoutesResource from '../Framework/Http/Router/RoutesResource';
 import Route from '../Framework/Http/Router/Route';
 import AuthOnlyMiddleware from '../app/Http/Middleware/AuthOnlyMiddleware';
-import UserHasAccessToBoardMiddleware from '../app/Http/Middleware/UserHasAccessToBoardMiddleware';
+import CurrentUserHasAccessToBoardMiddleware from '../app/Http/Middleware/CurrentUserHasAccessToBoardMiddleware';
 import AuthController from '../app/Http/Controllers/AuthController';
 import AdminUserController from '../app/Http/Controllers/Admin/AdminUserController';
 import UserController from '../app/Http/Controllers/UserController';
@@ -15,6 +15,11 @@ import BoardsTasksStatusesController from "../app/Http/Controllers/BoardsTasksSt
 import TaskStatusExistInBoardMiddleware from "../app/Http/Middleware/TaskStatusExistInBoardMiddleware";
 import UserHasPermission from "../app/Http/Middleware/UserHasPermission";
 import TaskExistInBoardMiddleware from "../app/Http/Middleware/TaskExistInBoardMiddleware";
+import BoardHasStatusMiddleware from "../app/Http/Middleware/BoardHasStatusMiddleware";
+import BoardsUsersPermissionsController from "../app/Http/Controllers/BoardsUsersPermissionsController";
+import BoardsPermissionsController from "../app/Http/Controllers/BoardsPermissionsController";
+import CurrentUserHasBoardPermission from "../app/Http/Middleware/CurrentUserHasBoardPermission";
+import UserHasAccessToBoardMiddleware from "../app/Http/Middleware/UserHasAccessToBoardMiddleware";
 
 RoutesCollection.addGroup('v1', function () {
     RoutesCollection.add(
@@ -80,11 +85,24 @@ RoutesCollection.addGroup('v1', function () {
             [
                 {
                     method: 'PUT',
-                    middleware: [UserHasAccessToBoardMiddleware],
+                    middleware: [
+                        new CurrentUserHasAccessToBoardMiddleware('id'),
+                        new CurrentUserHasBoardPermission('manage-board', 'id'),
+                    ],
+                },
+                {
+                    method: 'PATCH',
+                    middleware: [
+                        new CurrentUserHasAccessToBoardMiddleware('id'),
+                        new CurrentUserHasBoardPermission('manage-board', 'id'),
+                    ],
                 },
                 {
                     method: 'DELETE',
-                    middleware: [UserHasAccessToBoardMiddleware],
+                    middleware: [
+                        new CurrentUserHasAccessToBoardMiddleware('id'),
+                        new CurrentUserHasBoardPermission('delete-board', 'id'),
+                    ],
                 },
             ],
         )
@@ -96,7 +114,29 @@ RoutesCollection.addGroup('v1', function () {
             BoardsTasksStatusesController,
             [
                 AuthOnlyMiddleware,
-                UserHasAccessToBoardMiddleware,
+                CurrentUserHasAccessToBoardMiddleware,
+            ],
+            [
+                {
+                    method: 'POST',
+                    middleware: [
+                        new CurrentUserHasBoardPermission('manage-board-statuses'),
+                    ],
+                },
+                {
+                    method: 'PUT',
+                    middleware: [
+                        BoardHasStatusMiddleware,
+                        new CurrentUserHasBoardPermission('manage-board-statuses'),
+                    ],
+                },
+                {
+                    method: 'DELETE',
+                    middleware: [
+                        BoardHasStatusMiddleware,
+                        new CurrentUserHasBoardPermission('delete-board-statuses'),
+                    ],
+                },
             ],
         )
     );
@@ -107,7 +147,7 @@ RoutesCollection.addGroup('v1', function () {
             BoardsTasksController,
             [
                 AuthOnlyMiddleware,
-                UserHasAccessToBoardMiddleware,
+                CurrentUserHasAccessToBoardMiddleware,
             ],
             [
                 {
@@ -146,7 +186,32 @@ RoutesCollection.addGroup('v1', function () {
             BoardsUsersController,
             [
                 AuthOnlyMiddleware,
+                CurrentUserHasAccessToBoardMiddleware,
+                new CurrentUserHasBoardPermission('manage-board-users'),
+            ],
+        )
+    );
+
+    RoutesCollection.add(
+        new RoutesResource(
+            '/boards/:board_id/permissions',
+            BoardsPermissionsController,
+            [
+                AuthOnlyMiddleware,
+                CurrentUserHasAccessToBoardMiddleware,
+                new CurrentUserHasBoardPermission('manage-board-users'),
+            ],
+        )
+    );
+
+    RoutesCollection.add(
+        new RoutesResource(
+            '/boards/:board_id/users/:user_id/permissions',
+            BoardsUsersPermissionsController,
+            [
+                AuthOnlyMiddleware,
                 UserHasAccessToBoardMiddleware,
+                new CurrentUserHasBoardPermission('manage-board-users'),
             ],
         )
     );

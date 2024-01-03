@@ -16,7 +16,23 @@ class PermissionsSeeder extends AbstractSeed
             ],
         ];
 
-        $table = $this->table('auth_item');
-        $table->insert($data)->save();
+        foreach ($data as $key => $permission) {
+            $existingRecord = $this->getAdapter()
+                ->fetchRow("SELECT * FROM auth_item WHERE name = \"{$permission['name']}\"");
+
+            if ($existingRecord === false) {
+                continue;
+            }
+
+            unset($data[$key]);
+        }
+
+        if (empty($data) === true) {
+            return;
+        }
+
+        $this->table('auth_item')
+            ->insert($data)
+            ->save();
     }
 }

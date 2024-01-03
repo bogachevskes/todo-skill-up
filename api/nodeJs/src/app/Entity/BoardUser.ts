@@ -22,6 +22,12 @@ export default class BoardUser extends BaseEntity
 
     @Column({
         unsigned: true,
+        comment: 'Роль пользователя доски',
+    })
+    public roleId: number;
+
+    @Column({
+        unsigned: true,
         comment: 'Пользователь',
     })
     public userId: number;

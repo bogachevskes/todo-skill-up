@@ -1,5 +1,5 @@
-import { getConnection } from 'typeorm';
-import { Request } from "express";
+import {getConnection} from 'typeorm';
+import {Request} from "express";
 import CrudController from "../../../Framework/Http/Controller/CrudController";
 import BadRequest from "../../../Framework/Exceptions/BadRequest";
 import Board from "../../Entity/Board";
@@ -19,12 +19,21 @@ export default class UserBoardsController extends CrudController
 
     protected async list(req: Request): Promise<any[]>
     {
-        return await this.boardsRepository.findByUserId(Number(req.params.user_id));
+        const boards: Board[] = await this.boardsRepository.findByUserId(Number(req.params.user_id));
+
+        for (const board of boards) {
+            board['owner'] = await this.boardsRepository.getBoardOwner(board.id);
+        }
+
+        return boards;
     }
 
     protected async listItem(id: number, req: Request): Promise<object|[]>|never
     {
-        return await this.findModel(id);
+        return {
+            ...await this.findModel(id),
+            owner: await this.boardsRepository.getBoardOwner(id),
+        };
     }
 
     /**
@@ -49,7 +58,7 @@ export default class UserBoardsController extends CrudController
 
                 const createdBoard: Board = await transactionalEntityManager.save(board);
 
-                const assignment: BoardUser = this.boardsRepository.createUserToBoardAssignment(createdBoard.id, userId);
+                const assignment: BoardUser = this.boardsRepository.createUserToBoardAssignment(createdBoard.id, userId, 1);
 
                 await transactionalEntityManager.save(assignment);
             });
