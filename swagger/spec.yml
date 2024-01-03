@@ -29,6 +29,10 @@ tags:
     description: Управление задачами доски
   - name: board-users
     description: Управление пользователями доски
+  - name: board-permissions
+    description: Управление разрешениями доски
+  - name: board-users-permissions
+    description: Управление разрешениями пользователя доски
 paths:
   /api/v1/auth/signin:
     post:
@@ -391,11 +395,19 @@ paths:
                   description: "Доска учета задач проекта автоматизации производства"
                   createdAt: "2023-12-04T13:46:15.000Z"
                   updatedAt: "2023-12-04T13:46:15.000Z"
+                  owner:
+                    id: 1
+                    name: guest
+                    email: guest@guest.com
                 - id: 15
                   name: "Доска проекта ID:678890"
                   description: "Доска учета задач проекта автоматизации документооборота"
                   createdAt: "2023-12-04T19:44:21.000Z"
                   updatedAt: "2023-12-04T19:44:21.000Z"
+                  owner:
+                    id: 1
+                    name: guest
+                    email: guest@guest.com
         '403':
           $ref: "#/components/responses/forbidden"
     post:
@@ -462,6 +474,10 @@ paths:
                 description: "Доска учета задач проекта автоматизации производства"
                 createdAt: "2023-12-04T13:46:15.000Z"
                 updatedAt: "2023-12-04T13:46:15.000Z"
+                owner:
+                  id: 1
+                  name: guest
+                  email: guest@guest.com
         '404':
           $ref: "#/components/responses/boardNotFound"
     put:
@@ -916,6 +932,123 @@ paths:
           description: Пользователь успешно удален из доски
         '403':
           $ref: "#/components/responses/forbiddenBoardAccess"
+
+  /api/v1/boards/{board_id}/permissions:
+    get:
+      tags:
+        - board-permissions
+      description: Получить разрешения доски
+      parameters:
+        - $ref: "#/components/parameters/boardIdPathParam"
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              example:
+                - delete-board
+                - delete-board-statuses
+                - manage-board
+                - manage-board-statuses
+                - manage-board-users
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              example:
+                cause: Доступ к доске запрещен
+                type: Forbidden
+                data: [ ]
+
+  /api/v1/boards/{board_id}/users/{user_id}/permissions:
+    get:
+      tags:
+        - board-users-permissions
+      description: Получение разрешений пользователя доски
+      parameters:
+        - $ref: "#/components/parameters/boardIdPathParam"
+        - name: user_id
+          in: path
+          required: true
+          description: Идентификатор пользователя
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              example:
+                - delete-board-statuses
+                - manage-board-statuses
+                - manage-board-users
+        '403':
+          description: Запрещено
+          content:
+            application/json:
+              example:
+                cause: Доступ к доске запрещен
+                type: Forbidden
+                data: []
+  /api/v1/boards/{board_id}/users/{user_id}/permissions/{permission}:
+    put:
+      tags:
+        - board-users-permissions
+      description: Назначение разрешения пользователю доски
+      parameters:
+        - $ref: "#/components/parameters/boardIdPathParam"
+        - name: user_id
+          in: path
+          required: true
+          description: Идентификатор пользователя
+          schema:
+            type: integer
+        - name: permission
+          in: path
+          required: true
+          description: Название разрешения
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Разрешение назначено
+        '400':
+          description: Неверный запрос
+          content:
+            application/json:
+              example:
+                cause: Невозможно назначить дополнительное разрешение владельцу доски
+                type: BadRequest
+                data: [ ]
+    delete:
+      tags:
+        - board-users-permissions
+      description: Удаление разрешения у пользователя доски
+      parameters:
+        - $ref: "#/components/parameters/boardIdPathParam"
+        - name: user_id
+          in: path
+          required: true
+          description: Идентификатор пользователя
+          schema:
+            type: integer
+        - name: permission
+          in: path
+          required: true
+          description: Название разрешения
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Успешное удаление
+        '400':
+          description: Неверный запрос
+          content:
+            application/json:
+              example:
+                cause: Невозможно удалить дополнительное разрешение у владельца доски
+                type: BadRequest
+                data: [ ]
 
 components:
   parameters:
