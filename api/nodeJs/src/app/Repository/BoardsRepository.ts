@@ -2,7 +2,9 @@ import { SelectQueryBuilder } from 'typeorm';
 import Db from '../Components/Db';
 import Board from '../Entity/Board';
 import BoardUser from '../Entity/BoardUser';
-import BoardRequest from "../Http/FormRequest/Board/BoardRequest";
+import BoardRequest from '../Http/FormRequest/Board/BoardRequest';
+import { Knex } from 'knex';
+import Transaction = Knex.Transaction;
 
 export default class BoardsRepository
 {
@@ -96,13 +98,16 @@ export default class BoardsRepository
         return model;
     }
 
-    public async revokeUserFromBoard(boardId: number, userId: number): Promise<void>
+    public async revokeUserFromBoard(boardId: number, userId: number, trx: Transaction|null = null): Promise<void>
     {
-        const query = BoardUser.createQueryBuilder('ub')
-            .where('board_id = :boardId and user_id = :userId', { boardId, userId })
-            .delete();
+        const runner  = trx === null ? Db : trx;
 
-        await query.execute();
+        await runner.table('boards_users')
+            .where({
+                'board_id': boardId,
+                'user_id': userId,
+            })
+            .del();
     }
 
     public async userIsBoardOwner(boardId: number, userId: number): Promise<boolean>
