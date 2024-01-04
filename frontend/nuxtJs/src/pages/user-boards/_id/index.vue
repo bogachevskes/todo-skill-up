@@ -238,9 +238,6 @@
                     });
             },
             userHasBoardPermission(permission) {
-                if (this.board.userPermissions === undefined) {
-                    return false;
-                }
 
                 return this.board.userPermissions.includes(permission);
             },
