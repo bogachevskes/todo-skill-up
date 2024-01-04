@@ -33,7 +33,7 @@ export default class CurrentUserHasBoardPermission extends Middleware
             return;
         }
 
-        throw new Forbidden('Нет доступа');
+        throw new Forbidden('Доступ запрещен');
     }
 
 }
