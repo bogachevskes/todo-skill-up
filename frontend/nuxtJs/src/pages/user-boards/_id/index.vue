@@ -64,28 +64,40 @@
                     <div class="column is-4">
                         <h1 class="title is-size-1">Задачи</h1>
                         <a href="/" type="button" class="button is-warning">К списку досок</a>
-                        <button class="button is-success ml-2" @click="handleStatusAdding">Добавить статус</button>
+                        <button
+                            v-if="userHasBoardPermission('manage-board-statuses')"
+                            class="button is-success ml-2"
+                            @click="handleStatusAdding"
+                        >
+                            Добавить статус
+                        </button>
                     </div>
                     <div class="column is-4">
                         <div class="box">
                             <div class="columns">
                                 <div class="column is-6">
-                                    <h3>Доска</h3>
-                                    <h4>{{board.name}}</h4>
-                                    <h5>{{ board.description }}</h5>
+                                    <h4>{{board.entity.name}}</h4>
+                                    <h5>{{ board.entity.description }}</h5>
                                 </div>
-                                <div class="column is-6">
-                                    Создал
+                                <div class="column is-6" v-if="board.entity.owner">
+                                    <span class="icon">
+                                        <i class="mdi mdi-account mdi-16px"></i>
+                                    </span> {{ board.entity.owner.email }}
                                     <br>
-                                    Не задано
-                                    <br>
-                                    {{ getDate(board.createdAt) }}
+                                    <span class="icon">
+                                        <i class="mdi mdi-calendar mdi-16px"></i>
+                                    </span> {{ getDate(board.entity.createdAt) }}
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="column is-4">
-                        <ManageUsers :users="users" :load-users="loadUsers" />
+                        <ManageUsers
+                            :users="users"
+                            :load-users="loadUsers"
+                            :boardPermissions="board.permissions"
+                            :userHasBoardPermission="userHasBoardPermission"
+                        />
                     </div>
                 </div>
                 <ManageTasks :load-task-status-groups="loadTaskStatusGroups" />
@@ -102,6 +114,7 @@
                         :move-task="moveTask"
                         :delete-task="deleteTask"
                         :edit-task="editTask"
+                        :userHasBoardPermission="userHasBoardPermission"
                         :handleStatusUpdating="handleStatusUpdating"
                         :handleTaskStatusDelete="handleTaskStatusDelete"
                     />
@@ -150,7 +163,11 @@
         },
         data() {
             return {
-                board: { },
+                board: {
+                    entity: {},
+                    permissions: [],
+                    userPermissions: [],
+                },
                 users: [],
                 taskStatusGroups: [],
                 statuses: [],
@@ -176,7 +193,25 @@
                 this.$axios
                     .$get(`/user/${this.getUserId}/boards/${this.$route.params.id}`)
                     .then((board) => {
-                        this.board = new Board(board);
+                        this.board.entity = new Board(board);
+                    });
+            },
+            loadUserBoardPermissions() {
+                this.$axios
+                    .$get(`/boards/${this.$route.params.id}/users/${this.getUserId}/permissions`)
+                    .then((permissions) => {
+                        this.board.userPermissions = permissions;
+
+                        if (this.userHasBoardPermission('manage-board-users') === true) {
+                            this.loadBoardPermissions();
+                        }
+                    });
+            },
+            loadBoardPermissions() {
+                this.$axios
+                    .$get(`/boards/${this.$route.params.id}/permissions`)
+                    .then((permissions) => {
+                        this.board.permissions = permissions;
                     });
             },
             loadUsers() {
@@ -201,6 +236,10 @@
                             this.statuses.push(new TaskStatus(taskStatusGroup.status));
                         }
                     });
+            },
+            userHasBoardPermission(permission) {
+
+                return this.board.userPermissions.includes(permission);
             },
             getDate(date) {
                 return DateHelper.format(date, 'DD.MM.YYYY HH:mm');
@@ -434,6 +473,7 @@
 
         mounted() {
             this.loadBoard();
+            this.loadUserBoardPermissions();
             this.loadTaskStatusGroups();
             this.loadUsers();
             this.initWsConnection();

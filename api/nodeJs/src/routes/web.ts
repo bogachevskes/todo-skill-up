@@ -20,6 +20,8 @@ import BoardsUsersPermissionsController from "../app/Http/Controllers/BoardsUser
 import BoardsPermissionsController from "../app/Http/Controllers/BoardsPermissionsController";
 import CurrentUserHasBoardPermission from "../app/Http/Middleware/CurrentUserHasBoardPermission";
 import UserHasAccessToBoardMiddleware from "../app/Http/Middleware/UserHasAccessToBoardMiddleware";
+import { NextFunction, Request, Response } from "express";
+import User from "../app/Entity/User";
 
 RoutesCollection.addGroup('v1', function () {
     RoutesCollection.add(
@@ -83,6 +85,13 @@ RoutesCollection.addGroup('v1', function () {
                 CurrentUserOnlyMiddleware,
             ],
             [
+                {
+                    method: 'GET',
+                    path: `/user/:user_id/boards/:id`,
+                    middleware: [
+                        new CurrentUserHasAccessToBoardMiddleware('id'),
+                    ],
+                },
                 {
                     method: 'PUT',
                     middleware: [
@@ -187,7 +196,20 @@ RoutesCollection.addGroup('v1', function () {
             [
                 AuthOnlyMiddleware,
                 CurrentUserHasAccessToBoardMiddleware,
-                new CurrentUserHasBoardPermission('manage-board-users'),
+            ],
+            [
+                {
+                    method: 'POST',
+                    middleware: [
+                        new CurrentUserHasBoardPermission('manage-board-users'),
+                    ],
+                },
+                {
+                    method: 'DELETE',
+                    middleware: [
+                        new CurrentUserHasBoardPermission('manage-board-users'),
+                    ],
+                },
             ],
         )
     );
@@ -211,7 +233,39 @@ RoutesCollection.addGroup('v1', function () {
             [
                 AuthOnlyMiddleware,
                 UserHasAccessToBoardMiddleware,
-                new CurrentUserHasBoardPermission('manage-board-users'),
+            ],
+            [
+                {
+                    method: 'GET',
+                    path: `/boards/:board_id/users/:user_id/permissions/:id`,
+                    middleware: [
+                        {
+                            handle: async function(req: Request, res: Response, next: NextFunction) {
+                                const user: User = req['user'];
+
+                                if (Number(user.id) === Number(req.params.user_id)) {
+                                    next();
+                                }
+
+                                await new CurrentUserHasBoardPermission('manage-board-users')
+                                    .execute(req, res, next);
+                            },
+                        },
+
+                    ],
+                },
+                {
+                    method: 'PUT',
+                    middleware: [
+                        new CurrentUserHasBoardPermission('manage-board-users'),
+                    ],
+                },
+                {
+                    method: 'DELETE',
+                    middleware: [
+                        new CurrentUserHasBoardPermission('manage-board-users'),
+                    ],
+                },
             ],
         )
     );
