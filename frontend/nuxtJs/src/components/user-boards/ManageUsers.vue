@@ -8,25 +8,35 @@
                 <div class="card-content" style="padding: 10px">
                     <div class="content">
                         <button
+                            v-if="userHasBoardPermission('manage-board-users')"
                             class="button is-success is-small mt-1"
-                            @click="activateModal"
+                            @click="activateModal(modal.addUsers)"
                         >
                             Добавить
                         </button>
                         <button
+                            v-if="userHasBoardPermission('manage-board-users') && Number(user.id) !== Number(getUserId)"
                             v-for="(user, index) in users"
                             :key="index"
                             class="button is-small is-warning mr-1 mt-1"
-                            @click="removeUser(user)"
+                            @click="handleUserEdit(user)"
                             :disabled="Number(user.id) === Number(getUserId)"
                         >
-                            {{ Number(user.id) === Number(getUserId) ? 'Вы' : user.email }}
+                            {{ user.email }}
                         </button>
+                        <span
+                            v-if="userHasBoardPermission('manage-board-users') === false && Number(user.id) !== Number(getUserId)"
+                            class="tag is-info"
+                            v-for="(user, index) in users"
+                            :key="index"
+                        >
+                            {{ user.email }}
+                        </span>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="modal" :class="{ 'is-active': modal.isActive }">
+        <div class="modal" :class="{ 'is-active': modal.addUsers.isActive }">
             <div class="modal-background"></div>
             <div class="modal-card">
                 <header class="modal-card-head">
@@ -34,7 +44,7 @@
                     <button
                         class="delete"
                         aria-label="close"
-                        @click="deactivateModal"
+                        @click="deactivateModal(modal.addUsers)"
                     ></button>
                 </header>
                 <section class="modal-card-body">
@@ -72,7 +82,7 @@
                     <button
                         v-if="formData.ids.length > 0"
                         class="button is-success"
-                        :class="{ 'is-loading': modal.isLoading }"
+                        :class="{ 'is-loading': modal.addUsers.isLoading }"
                         :disabled="false"
                         @click="handleUserAdding"
                     >
@@ -80,11 +90,90 @@
                     </button>
                     <button
                         class="button is-danger"
-                        :class="{ 'is-hidden': modal.isLoading }"
-                        @click="deactivateModal"
+                        :class="{ 'is-hidden': modal.addUsers.isLoading }"
+                        @click="deactivateModal(modal.addUsers)"
                     >
                         Отменить
                     </button>
+                </footer>
+            </div>
+        </div>
+        <div v-if="modal.manageUser.isActive" class="modal is-active">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">
+                        Разрешения пользователя {{ userOnEdit.entity.name }}
+                    </p>
+                    <button
+                        class="delete"
+                        aria-label="close"
+                        @click="deactivateModal(modal.manageUser)"
+                    ></button>
+                </header>
+                <section class="modal-card-body">
+                    <ul>
+                        <li
+                            v-for="(permission, index) in Object.keys(userOnEdit.permissions)"
+                            :key="index"
+                        >
+                            <b-switch
+                                v-model="userOnEdit.permissions[permission].active"
+                                type="success"
+                                size="large"
+                                :true-value="1"
+                                :false-value="0"
+                                @input="setPermissionActiveState($event, permission)"
+                            >
+                            <span class="has-text-black">
+                                {{ userOnEdit.permissions[permission].name }}
+                            </span>
+                            </b-switch>
+                        </li>
+                    </ul>
+                </section>
+                <footer class="modal-card-foot">
+                    <button
+                        v-if="modal.manageUser.onPreDelete === false"
+                        class="button is-danger"
+                        @click="modal.manageUser.onPreDelete = true"
+                    >
+                        <span class="icon">
+                            <i class="mdi mdi-account mdi-24px"></i>
+                        </span>
+                        <span>
+                            Удалить пользователя
+                        </span>
+                    </button>
+
+                    <section v-if="modal.manageUser.onPreDelete === true">
+                        <div class="has-text-black mb-3">
+                            Введите <span class="tag md-text">{{ userOnEdit.entity.name }}</span>
+                        </div>
+                        <div class="is-flex">
+                            <div class="field mr-2 is-justify-content-center">
+                                <div class="control">
+                                    <input
+                                        class="input"
+                                        placeholder="Имя пользователя"
+                                        v-model="modal.manageUser.nameConfirm"
+                                    />
+                                </div>
+                            </div>
+                            <button
+                                class="button is-danger is-justify-content-center"
+                                @click="removeUser(userOnEdit.entity)"
+                                :disabled="nameConfirmedOnDelete !== true"
+                            >
+                                <span class="icon">
+                                    <i class="mdi mdi-delete mdi-24px"></i>
+                                </span>
+                                <span>
+                                    Удалить
+                                </span>
+                            </button>
+                        </div>
+                    </section>
                 </footer>
             </div>
         </div>
@@ -100,6 +189,13 @@ export default {
             type: Array,
             default: [],
         },
+        boardPermissions: {
+            type: Array,
+            default: [],
+        },
+        userHasBoardPermission: {
+            type: Function,
+        },
         loadUsers: {
             type: Function,
             default: null,
@@ -107,6 +203,10 @@ export default {
     },
     data () {
         return {
+            userOnEdit: {
+                entity: null,
+                permissions: [],
+            },
             formData: {
                 ids: [],
             },
@@ -114,18 +214,40 @@ export default {
                 email: null,
             },
             modal: {
-                isActive: false,
-                isLoading: false,
+                addUsers: {
+                    isActive: false,
+                    isLoading: false,
+                },
+                manageUser: {
+                    isActive: false,
+                    onPreDelete: false,
+                    nameConfirm: null,
+                },
             },
             userMatches: [],
             usersToAdd: [],
+            boardPermissionsTranslations: {
+                'delete-board': 'Удаление досок',
+                'delete-board-statuses': 'Удаление статусов досок',
+                'manage-board': 'Управление досками',
+                'manage-board-statuses': 'Управление статусами досок',
+                'manage-board-users': 'Управление пользователями досок',
+            },
         };
     },
     computed: {
         ...mapGetters('user', ['getUserId']),
+        nameConfirmedOnDelete() {
+            if (this.modal.manageUser.nameConfirm === null) {
+
+                return false;
+            }
+
+            return this.modal.manageUser.nameConfirm.trim() === this.userOnEdit.entity.name;
+        },
     },
     watch: {
-        'searchData.email' (value) {
+        'searchData.email'(value) {
             if (value.length < 5) {
                 return;
             }
@@ -134,13 +256,57 @@ export default {
                 .$get(`/users/match/?email=${this.searchData.email}`)
                 .then((res) => (this.userMatches = res.items));
         },
+        'modal.manageUser.isActive'(value) {
+            if (value === true) {
+                return;
+            }
+
+            this.modal.manageUser.onPreDelete = false;
+            this.modal.manageUser.nameConfirm = null;
+        }
     },
     methods: {
-        activateModal() {
-            this.modal.isActive = true;
+        isCurrentUser(userId) {
+            return Number(this.getUserId) === Number(userId);
         },
-        deactivateModal () {
-            this.modal.isActive = 0;
+        setPermissionActiveState(val, id) {
+            if (Boolean(val) === true) {
+                this.$axios
+                    .put(`/boards/${this.$route.params.id}/users/${this.userOnEdit.entity.id}/permissions/${id}`);
+
+                return;
+            }
+
+            this.$axios
+                .delete(`/boards/${this.$route.params.id}/users/${this.userOnEdit.entity.id}/permissions/${id}`);
+        },
+        activateModal(modal) {
+            modal.isActive = true;
+        },
+        deactivateModal(modal) {
+            modal.isActive = false;
+        },
+        handleUserEdit(user) {
+            this.userOnEdit.entity = user;
+
+            for (const permission of this.boardPermissions) {
+                this.userOnEdit.permissions[permission] = {
+                    name: this.boardPermissionsTranslations[permission] || null,
+                    active: 0,
+                };
+            }
+
+            this.$axios
+                .$get(`/boards/${this.$route.params.id}/users/${this.userOnEdit.entity.id}/permissions`)
+                .then((permissions) => {
+
+                    for (const permission of permissions) {
+
+                        this.userOnEdit.permissions[permission].active = 1;
+                    }
+
+                    this.activateModal(this.modal.manageUser);
+                });
         },
         addUser(user) {
             if (this.formData.ids.includes(user.id)) {
@@ -167,6 +333,7 @@ export default {
                 )
                 .then((res) => {
                     this.loadUsers();
+                    this.deactivateModal(this.modal.manageUser);
                 });
         },
         handleUserAdding() {
@@ -179,7 +346,7 @@ export default {
                 )
                 .then((res) => {
                     this.modal.isLoading = false;
-                    this.deactivateModal();
+                    this.deactivateModal(this.modal.addUsers);
                     this.loadUsers();
                 });
         },
@@ -187,4 +354,12 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+    .tag.md-text {
+        background-color: #f5f5f5;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-family: monospace; /* Моноширинный шрифт */
+    }
+</style>

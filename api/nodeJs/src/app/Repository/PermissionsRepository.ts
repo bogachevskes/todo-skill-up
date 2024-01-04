@@ -1,4 +1,6 @@
 import Db from '../Components/Db';
+import { Knex } from 'knex';
+import Transaction = Knex.Transaction;
 
 export default class PermissionsRepository
 {
@@ -96,6 +98,18 @@ export default class PermissionsRepository
         await Db.table('auth_assignment')
             .where({
                 'item_name': permissionId,
+                'user_id': userId,
+                'object_id': boardId,
+            })
+            .del();
+    }
+
+    public async revokeAllBoardUserPermission(boardId: number, userId: number, trx: Transaction|null = null)
+    {
+        const runner  = trx === null ? Db : trx;
+
+        await runner.table('auth_assignment')
+            .where({
                 'user_id': userId,
                 'object_id': boardId,
             })

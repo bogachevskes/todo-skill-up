@@ -7,16 +7,22 @@ import UserRepository from "../../Repository/UserRepository";
 import BoardUsersRequest from "../FormRequest/BoardUsers/BoardUsersRequest";
 import BoardsRepository from "../../Repository/BoardsRepository";
 import NotFound from "../../../Framework/Exceptions/NotFound";
+import PermissionsRepository from "../../Repository/PermissionsRepository";
+import Db from '../../Components/Db';
+import { Knex } from 'knex';
+import Transaction = Knex.Transaction;
 
 export default class BoardsUsersController extends CrudController
 {
     protected userRepository: UserRepository;
     protected boardRepository: BoardsRepository;
+    protected permissionsRepository: PermissionsRepository;
 
     public constructor() {
         super();
         this.userRepository = new UserRepository;
         this.boardRepository = new BoardsRepository;
+        this.permissionsRepository = new PermissionsRepository;
     }
 
     /**
@@ -68,6 +74,18 @@ export default class BoardsUsersController extends CrudController
      */
     protected async delete(id: number, req: Request): Promise<void>
     {
-        await this.boardRepository.revokeUserFromBoard(Number(req.params.board_id), id);
+        await Db.transaction(async (trx: Transaction) => {
+            try {
+
+                await this.boardRepository.revokeUserFromBoard(Number(req.params.board_id), id, trx);
+                await this.permissionsRepository.revokeAllBoardUserPermission(Number(req.params.board_id), id, trx);
+
+                await trx.commit();
+
+            } catch (err) {
+                await trx.rollback();
+                throw err;
+            }
+        });
     }
 }

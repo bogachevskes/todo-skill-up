@@ -14,10 +14,18 @@
                     Добавить задачу
                 </button>
                 <span class="is-pulled-right">
-                    <button class="button is-warning is-small" @click="handleStatusUpdating(group.status)">
+                    <button
+                        v-if="userHasBoardPermission('manage-board-statuses')"
+                        class="button is-warning is-small"
+                        @click="handleStatusUpdating(group.status)"
+                    >
                         <b-icon icon="pencil" />
                     </button>
-                    <button class="button is-danger is-small" @click="handleTaskStatusDelete(group.status)">
+                    <button
+                        v-if="userHasBoardPermission('delete-board-statuses')"
+                        class="button is-danger is-small"
+                        @click="handleTaskStatusDelete(group.status)"
+                    >
                         <b-icon icon="delete" />
                     </button>
                 </span>
@@ -68,6 +76,9 @@ export default {
         Task,
     },
     props: {
+        userHasBoardPermission: {
+            type: Function,
+        },
         handleStatusUpdating: {
             type: Function,
         },

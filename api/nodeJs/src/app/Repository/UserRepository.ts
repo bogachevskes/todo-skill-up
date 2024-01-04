@@ -97,7 +97,7 @@ export default class UserRepository
     {
         const query = this.getQueryBuilder()
             .select(['u.id as id', 'u.email as email'])
-            .where('u.name LIKE :name OR u.email LIKE :email', {
+            .where('deleted_at IS NULL AND (u.name LIKE :name OR u.email LIKE :email)', {
                 name: `%${condition['name']}%`,
                 email: `%${condition['email']}%`,
             })
