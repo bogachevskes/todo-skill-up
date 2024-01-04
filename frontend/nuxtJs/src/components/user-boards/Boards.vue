@@ -13,7 +13,16 @@
                         <div class="content">
                             <div @click="$router.push(`/user-boards/${preview.id}`)">
                                 <h1 class="title has-text-black">{{preview.name}}</h1>
-                                <h2 class="subtitle has-text-grey">{{preview.description}}</h2>
+                                <h2 class="subtitle has-text-grey mb-2">{{preview.description}}</h2>
+                                <p class="is-small mb-3" v-if="preview.owner">
+                                    <span class="icon">
+                                        <i class="mdi mdi-account mdi-16px"></i>
+                                    </span> {{ preview.owner.email }}
+                                    <br>
+                                    <span class="icon">
+                                        <i class="mdi mdi-calendar mdi-16px"></i>
+                                    </span> {{ printDate(preview.createdAt) }}
+                                </p>
                             </div>
                             <button class="button is-warning" @click="handleUpdate(preview)">Изменить</button>
                             <button class="button is-danger" @click="handleDelete(preview.id)">Удалить</button>
@@ -127,6 +136,7 @@ import {mapGetters} from "vuex";
 import Board from '@/plugins/models/Board';
 import { required, minLength } from 'vuelidate/lib/validators';
 import { inputMethods, validationMixinAsset } from '@/libs/libStack';
+import DateHelper from '@/plugins/helpers/DateHelper';
 
 export default {
     mixins: [validationMixinAsset],
@@ -153,6 +163,11 @@ export default {
     },
     methods: {
         ...inputMethods,
+        printDate(date) {
+            return DateHelper.format(
+                date,
+            );
+        },
         handleCreate() {
             this.modal.isActive = true;
             this.options.mode = 'create';
