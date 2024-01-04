@@ -682,7 +682,7 @@ class ApiCest
 
         $I->sendGet('/v1/user/' . $this->data['actors']['owner']['user_id'] . '/boards/1');
 
-        $I->seeResponseCodeIs(404);
+        $I->seeResponseCodeIs(403);
     }
 
     public function testBoardsUsersPermissions(ApiTester $I): void
