@@ -4,7 +4,6 @@ namespace tests\integration\api\users;
 
 use Tests\Support\ApiTester;
 
-// протестировано
 class UsersPermissionsCest
 {
     private array $schemas = [
