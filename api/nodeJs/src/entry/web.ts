@@ -3,10 +3,19 @@ import * as TypeOrmConnection from 'typeorm';
 import RedisConnection from '../app/Services/RedisConnection';
 import Router from '../Framework/Http/Router/Router';
 import Kernel from '../Framework/Http/Kernel';
-import Routes from '../routes/web';
 import Middleware from '../config/middleware';
 import ErrorMiddleware from '../config/errorMiddleware';
 import ConfigService from '../Framework/Utils/ConfigService';
+import AuthOnlyMiddleware from "../app/Http/Middleware/AuthOnlyMiddleware";
+import DIContainer from "../Framework/Container/DIContainer";
+import PasswordHasher from "../app/Components/Security/PasswordHasher";
+
+DIContainer.create({
+    AuthOnlyMiddleware: AuthOnlyMiddleware,
+    PasswordHasher: PasswordHasher,
+});
+
+import Routes from '../routes/web';
 
 const router = new Router();
 

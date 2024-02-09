@@ -22,6 +22,7 @@ import CurrentUserHasBoardPermission from "../app/Http/Middleware/CurrentUserHas
 import UserHasAccessToBoardMiddleware from "../app/Http/Middleware/UserHasAccessToBoardMiddleware";
 import { NextFunction, Request, Response } from "express";
 import User from "../app/Entity/User";
+import DIContainer from "../Framework/Container/DIContainer";
 
 RoutesCollection.addGroup('v1', function () {
     RoutesCollection.add(
@@ -49,7 +50,7 @@ RoutesCollection.addGroup('v1', function () {
             UserController,
             'actionMatch',
             [
-                AuthOnlyMiddleware
+                DIContainer.getDefinition(AuthOnlyMiddleware),
             ]
         ),
     );
@@ -59,7 +60,7 @@ RoutesCollection.addGroup('v1', function () {
             '/user/:user_id/permissions',
             UserPermissionsController,
             [
-                AuthOnlyMiddleware,
+                DIContainer.getDefinition(AuthOnlyMiddleware),
                 CurrentUserOnlyMiddleware,
             ],
         ),
@@ -70,7 +71,7 @@ RoutesCollection.addGroup('v1', function () {
             '/admin/users',
             AdminUserController,
             [
-                AuthOnlyMiddleware,
+                DIContainer.getDefinition(AuthOnlyMiddleware),
                 new UserHasPermission('/admin/users'),
             ],
         )
@@ -81,7 +82,7 @@ RoutesCollection.addGroup('v1', function () {
             '/user/:user_id/boards',
             UserBoardsController,
             [
-                AuthOnlyMiddleware,
+                DIContainer.getDefinition(AuthOnlyMiddleware),
                 CurrentUserOnlyMiddleware,
             ],
             [
@@ -122,7 +123,7 @@ RoutesCollection.addGroup('v1', function () {
             '/boards/:board_id/statuses',
             BoardsTasksStatusesController,
             [
-                AuthOnlyMiddleware,
+                DIContainer.getDefinition(AuthOnlyMiddleware),
                 CurrentUserHasAccessToBoardMiddleware,
             ],
             [
@@ -155,7 +156,7 @@ RoutesCollection.addGroup('v1', function () {
             '/boards/:board_id/tasks',
             BoardsTasksController,
             [
-                AuthOnlyMiddleware,
+                DIContainer.getDefinition(AuthOnlyMiddleware),
                 CurrentUserHasAccessToBoardMiddleware,
             ],
             [
@@ -194,7 +195,7 @@ RoutesCollection.addGroup('v1', function () {
             '/boards/:board_id/users',
             BoardsUsersController,
             [
-                AuthOnlyMiddleware,
+                DIContainer.getDefinition(AuthOnlyMiddleware),
                 CurrentUserHasAccessToBoardMiddleware,
             ],
             [
@@ -219,7 +220,7 @@ RoutesCollection.addGroup('v1', function () {
             '/boards/:board_id/permissions',
             BoardsPermissionsController,
             [
-                AuthOnlyMiddleware,
+                DIContainer.getDefinition(AuthOnlyMiddleware),
                 CurrentUserHasAccessToBoardMiddleware,
                 new CurrentUserHasBoardPermission('manage-board-users'),
             ],
@@ -231,7 +232,7 @@ RoutesCollection.addGroup('v1', function () {
             '/boards/:board_id/users/:user_id/permissions',
             BoardsUsersPermissionsController,
             [
-                AuthOnlyMiddleware,
+                DIContainer.getDefinition(AuthOnlyMiddleware),
                 UserHasAccessToBoardMiddleware,
             ],
             [

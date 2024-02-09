@@ -100,13 +100,15 @@ export default class RoutesCollection
                 middleware = existingRoute['middleware'] || [];
             }
 
+            const middlewares = resource.middleware.concat(middleware);
+
             this.add(
                 new Route(
                     route['method'],
                     path,
                     resource.controller,
                     action,
-                    resource.middleware.concat(middleware)
+                    middlewares,
                 )
             );
         });
