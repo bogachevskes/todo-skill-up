@@ -4,7 +4,6 @@ namespace tests\integration\api\auth;
 
 use Tests\Support\ApiTester;
 
-// протестировано
 class SignUpCest
 {
     private array $schemas = [
