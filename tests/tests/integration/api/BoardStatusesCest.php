@@ -2,69 +2,30 @@
 
 namespace tests\integration\api;
 
-use Tests\Support\ApiTester;
+use Tests\Support\{
+    ApiTester,
+    UserTrait,
+    HashTrait,
+    UserBoardTrait,
+    BoardStatusTrait,
+};
 
 class BoardStatusesCest
 {
-    private function createUser(ApiTester $I, int $nameId): array
-    {
-        $user = [
-            'name' => "boardStatusesCestGuest$nameId",
-            'email' => "board.statuses.cest.guest$nameId@todo-list.com",
-            'password' => base64_encode('secret'),
-        ];
-
-        $I->haveInDatabase('users', $user);
-
-        $userId = $I->grabFromDatabase('users', 'id', ['email' => $user['email']]);
-
-        return [
-            $userId,
-            $user['email'],
-        ];
-    }
-
-    private function createBoardStatus(ApiTester $I, int $nameId, int $userId): array
-    {
-        $board = [
-            'name' => "board status cest name $nameId",
-            'description' => "board status cest description $nameId",
-        ];
-
-        $I->haveInDatabase('boards', $board);
-
-        $boardId = $I->grabFromDatabase('boards', 'id', ['name' => $board['name']]);
-
-        $I->haveInDatabase('boards_users', [
-            'board_id' => $boardId,
-            'user_id' => $userId,
-            'role_id' => 1,
-        ]);
-
-        $status = [
-            'board_id' => $boardId,
-            'name' => "board status cest name $nameId",
-        ];
-
-        $I->haveInDatabase('task_statuses', $status);
-
-        $statusId = $I->grabFromDatabase('task_statuses', 'id', ['name' => $status['name']]);
-
-        return [
-            $boardId,
-            $statusId,
-        ];
-    }
+    use UserTrait, HashTrait, UserBoardTrait, BoardStatusTrait;
 
     public function testCreateBoardStatus(ApiTester $I): void
     {
         $I->wantTo('Создать статус доски задач');
 
-        [$userId, $email] = $this->createUser($I, 1);
-        [$boardId] = $this->createBoardStatus($I, 1, $userId);
+        [$boardOwnerUserId, $boardOwnerUserEmail] = $this->createUser($I, 1);
 
-        $I->haveHttpHeader('X-BASE-AUTH', $email);
+        $boardId = $this->createBoard($I, $boardOwnerUserId);
+
+        $this->assignUserToBoardAsOwner($I, $boardId, $boardOwnerUserId);
+
         $I->haveHttpHeader('Content-Type', 'application/json');
+        $I->haveHttpHeader('X-BASE-AUTH', $boardOwnerUserEmail);
 
         $status = [
             'name' => 'Название 1',
@@ -82,12 +43,15 @@ class BoardStatusesCest
     {
         $I->wantTo('Проверить контракт ответа статусов доски');
 
-        [$userId, $email] = $this->createUser($I, 2);
+        [$boardOwnerUserId, $boardOwnerUserEmail] = $this->createUser($I, 2);
 
-        [$boardId] = $this->createBoardStatus($I, 2, $userId);
+        $boardId = $this->createBoard($I, $boardOwnerUserId);
 
-        $I->haveHttpHeader('X-BASE-AUTH', $email);
-        $I->haveHttpHeader('Content-Type', 'application/json');
+        $this->assignUserToBoardAsOwner($I, $boardId, $boardOwnerUserId);
+
+        $this->createBoardStatus($I, $boardId);
+
+        $I->haveHttpHeader('X-BASE-AUTH', $boardOwnerUserEmail);
 
         $I->sendGet("/v1/boards/$boardId/statuses");
 
@@ -104,12 +68,16 @@ class BoardStatusesCest
     {
         $I->wantTo('Изменить статус задач доски');
 
-        [$userId, $email] = $this->createUser($I, 3);
+        [$boardOwnerUserId, $boardOwnerUserEmail] = $this->createUser($I);
 
-        [$boardId, $statusId] = $this->createBoardStatus($I, 3, $userId);
+        $boardId = $this->createBoard($I, $boardOwnerUserId);
 
-        $I->haveHttpHeader('X-BASE-AUTH', $email);
+        $this->assignUserToBoardAsOwner($I, $boardId, $boardOwnerUserId);
+
+        $statusId = $this->createBoardStatus($I, $boardId);
+
         $I->haveHttpHeader('Content-Type', 'application/json');
+        $I->haveHttpHeader('X-BASE-AUTH', $boardOwnerUserEmail);
 
         $updatedStatus = [
             'name' => 'Измененное название 3',
@@ -127,12 +95,15 @@ class BoardStatusesCest
     {
         $I->wantTo('Удалить статус задач доски');
 
-        [$userId, $email] = $this->createUser($I, 4);
+        [$boardOwnerUserId, $boardOwnerUserEmail] = $this->createUser($I);
 
-        [$boardId, $statusId] = $this->createBoardStatus($I, 4, $userId);
+        $boardId = $this->createBoard($I, $boardOwnerUserId);
 
-        $I->haveHttpHeader('X-BASE-AUTH', $email);
-        $I->haveHttpHeader('Content-Type', 'application/json');
+        $this->assignUserToBoardAsOwner($I, $boardId, $boardOwnerUserId);
+
+        $statusId = $this->createBoardStatus($I, $boardId);
+
+        $I->haveHttpHeader('X-BASE-AUTH', $boardOwnerUserEmail);
 
         $I->sendDelete("/v1/boards/$boardId/statuses/$statusId");
 
