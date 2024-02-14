@@ -2,61 +2,30 @@
 
 namespace tests\integration\api;
 
-use Tests\Support\ApiTester;
+use Tests\Support\{
+    ApiTester,
+    UserTrait,
+    HashTrait,
+    UserBoardTrait,
+};
 
 class UserBoardsCest
 {
-    private function createUser(ApiTester $I, int $nameId): array
-    {
-        $user = [
-            'name' => "boardStatusesCestGuest$nameId",
-            'email' => "board.statuses.cest.guest$nameId@todo-list.com",
-            'password' => base64_encode('secret'),
-        ];
-
-        $I->haveInDatabase('users', $user);
-
-        $userId = $I->grabFromDatabase('users', 'id', ['email' => $user['email']]);
-
-        return [
-            $userId,
-            $user['email'],
-        ];
-    }
-
-    private function createBoard(ApiTester $I, int $nameId, int $userId): int
-    {
-        $board = [
-            'name' => "user board cest name $nameId",
-            'description' => "user board cest description $nameId",
-        ];
-
-        $I->haveInDatabase('boards', $board);
-
-        $boardId = $I->grabFromDatabase('boards', 'id', ['name' => $board['name']]);
-
-        $boardUser = [
-            'board_id' => $boardId,
-            'user_id' => $userId,
-            'role_id' => 1,
-        ];
-
-        $I->haveInDatabase('boards_users', $boardUser);
-
-        return $boardId;
-    }
+    use UserTrait, HashTrait, UserBoardTrait;
 
     public function testUserBoardsSchema(ApiTester $I): void
     {
         $I->wantTo('Проверить контракт ответа досок пользователя');
 
-        [$userId, $email] = $this->createUser($I, 1);
+        [$boardOwnerUserId, $boardOwnerUserEmail] = $this->createUser($I);
 
-        $this->createBoard($I, 1, $userId);
+        $boardId = $this->createBoard($I, $boardOwnerUserId);
 
-        $I->haveHttpHeader('X-BASE-AUTH', $email);
+        $this->assignUserToBoardAsOwner($I, $boardId, $boardOwnerUserId);
 
-        $I->sendGet("/v1/user/$userId/boards");
+        $I->haveHttpHeader('X-BASE-AUTH', $boardOwnerUserEmail);
+
+        $I->sendGet("/v1/user/$boardOwnerUserId/boards");
 
         $I->seeResponseCodeIs(200);
         $I->seeResponseMatchesJsonType([
@@ -77,14 +46,15 @@ class UserBoardsCest
     {
         $I->wantTo('Проверить контракт ответа доски пользователя');
 
-        [$userId, $email] = $this->createUser($I, 2);
+        [$boardOwnerUserId, $boardOwnerUserEmail] = $this->createUser($I);
 
-        $boardId = $this->createBoard($I, 2, $userId);
+        $boardId = $this->createBoard($I, $boardOwnerUserId);
 
-        $I->haveHttpHeader('X-BASE-AUTH', $email);
-        $I->haveHttpHeader('Content-Type', 'application/json');
+        $this->assignUserToBoardAsOwner($I, $boardId, $boardOwnerUserId);
 
-        $I->sendGet("/v1/user/$userId/boards/$boardId");
+        $I->haveHttpHeader('X-BASE-AUTH', $boardOwnerUserEmail);
+
+        $I->sendGet("/v1/user/$boardOwnerUserId/boards/$boardId");
 
         $I->seeResponseCodeIs(200);
         $I->seeResponseMatchesJsonType([
@@ -105,25 +75,25 @@ class UserBoardsCest
     {
         $I->wantTo('Создать доску задач');
 
-        [$userId, $email] = $this->createUser($I, 3);
+        [$boardOwnerUserId, $boardOwnerUserEmail] = $this->createUser($I);
 
-        $I->haveHttpHeader('X-BASE-AUTH', $email);
         $I->haveHttpHeader('Content-Type', 'application/json');
+        $I->haveHttpHeader('X-BASE-AUTH', $boardOwnerUserEmail);
 
-        $data = [
-            'name' => 'Проект ISD:124467',
-            'description' => 'Задачи проекта ISD:124467 запроса ISBN:456568',
+        $board = [
+            'name' => $this->generateHash(15),
+            'description' => $this->generateHash(25),
         ];
 
-        $I->sendPost("/v1/user/$userId/boards", [
-            'formData' => $data,
+        $I->sendPost("/v1/user/$boardOwnerUserId/boards", [
+            'formData' => $board,
         ]);
 
         $I->seeResponseCodeIs(201);
-        $I->seeInDatabase('boards', $data);
+        $I->seeInDatabase('boards', $board);
         $I->seeInDatabase('boards_users', [
-            'board_id' => $I->grabFromDatabase('boards', 'id', ['name' => $data['name']]),
-            'user_id' => $userId,
+            'board_id' => $I->grabFromDatabase('boards', 'id', ['name' => $board['name']]),
+            'user_id' => $boardOwnerUserId,
             'role_id' => 1,
         ]);
     }
@@ -132,19 +102,21 @@ class UserBoardsCest
     {
         $I->wantTo('Изменить доску задач');
 
-        [$userId, $email] = $this->createUser($I, 4);
+        [$boardOwnerUserId, $boardOwnerUserEmail] = $this->createUser($I);
 
-        $boardId = $this->createBoard($I, 4, $userId);
+        $boardId = $this->createBoard($I, $boardOwnerUserId);
 
-        $I->haveHttpHeader('X-BASE-AUTH', $email);
+        $this->assignUserToBoardAsOwner($I, $boardId, $boardOwnerUserId);
+
         $I->haveHttpHeader('Content-Type', 'application/json');
+        $I->haveHttpHeader('X-BASE-AUTH', $boardOwnerUserEmail);
 
         $updatedBoard = [
-            'name' => '(изменено) Проект ISD:124470',
-            'description' => '(изменено) Задачи проекта ISD:124470 запроса ISBN:456570',
+            'name' => $this->generateHash(15),
+            'description' => $this->generateHash(25),
         ];
 
-        $I->sendPut("/v1/user/$userId/boards/$boardId", [
+        $I->sendPut("/v1/user/$boardOwnerUserId/boards/$boardId", [
             'formData' => $updatedBoard,
         ]);
 
@@ -156,18 +128,20 @@ class UserBoardsCest
     {
         $I->wantTo('Частично изменить доску задач');
 
-        [$userId, $email] = $this->createUser($I, 5);
+        [$boardOwnerUserId, $boardOwnerUserEmail] = $this->createUser($I);
 
-        $boardId = $this->createBoard($I, 5, $userId);
+        $boardId = $this->createBoard($I, $boardOwnerUserId);
 
-        $I->haveHttpHeader('X-BASE-AUTH', $email);
+        $this->assignUserToBoardAsOwner($I, $boardId, $boardOwnerUserId);
+
         $I->haveHttpHeader('Content-Type', 'application/json');
+        $I->haveHttpHeader('X-BASE-AUTH', $boardOwnerUserEmail);
 
         $updatedBoard = [
-            'description' => '(изменено) Задачи проекта ISD:124470 запроса ISBN:45657',
+            'description' => $this->generateHash(25),
         ];
 
-        $I->sendPatch("/v1/user/$userId/boards/$boardId", [
+        $I->sendPatch("/v1/user/$boardOwnerUserId/boards/$boardId", [
             'formData' => $updatedBoard,
         ]);
 
@@ -179,14 +153,15 @@ class UserBoardsCest
     {
         $I->wantTo('Удалить доску задач');
 
-        [$userId, $email] = $this->createUser($I, 6);
+        [$boardOwnerUserId, $boardOwnerUserEmail] = $this->createUser($I);
 
-        $boardId = $this->createBoard($I, 6, $userId);
+        $boardId = $this->createBoard($I, $boardOwnerUserId);
 
-        $I->haveHttpHeader('X-BASE-AUTH', $email);
-        $I->haveHttpHeader('Content-Type', 'application/json');
+        $this->assignUserToBoardAsOwner($I, $boardId, $boardOwnerUserId);
 
-        $I->sendDelete("/v1/user/$userId/boards/$boardId");
+        $I->haveHttpHeader('X-BASE-AUTH', $boardOwnerUserEmail);
+
+        $I->sendDelete("/v1/user/$boardOwnerUserId/boards/$boardId");
 
         $I->seeResponseCodeIs(204);
         $I->dontSeeInDatabase('boards', ['id' => $boardId]);
