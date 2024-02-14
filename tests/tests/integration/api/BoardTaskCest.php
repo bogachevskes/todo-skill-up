@@ -2,87 +2,38 @@
 
 namespace tests\integration\api;
 
-use Tests\Support\ApiTester;
+use Tests\Support\{
+    ApiTester,
+    UserTrait,
+    HashTrait,
+    UserBoardTrait,
+    BoardStatusTrait,
+    BoardTaskTrait,
+};
 
 class BoardTaskCest
 {
-    private function createUser(ApiTester $I, int $nameId): array
-    {
-        $user = [
-            'name' => "boardStatusesCestGuest$nameId",
-            'email' => "board.statuses.cest.guest$nameId@todo-list.com",
-            'password' => base64_encode('secret'),
-        ];
-
-        $I->haveInDatabase('users', $user);
-
-        $userId = $I->grabFromDatabase('users', 'id', ['email' => $user['email']]);
-
-        return [
-            $userId,
-            $user['email'],
-        ];
-    }
-
-    private function createBoardTask(ApiTester $I, int $nameId, int $userId): array
-    {
-        $board = [
-            'name' => "board task cest name $nameId",
-            'description' => "board task cest description $nameId",
-        ];
-
-        $I->haveInDatabase('boards', $board);
-
-        $boardId = $I->grabFromDatabase('boards', 'id', ['name' => $board['name']]);
-
-        $I->haveInDatabase('boards_users', [
-            'board_id' => $boardId,
-            'user_id' => $userId,
-            'role_id' => 1,
-        ]);
-
-        $status = [
-            'board_id' => $boardId,
-            'name' => "board task cest name $nameId",
-        ];
-
-        $I->haveInDatabase('task_statuses', $status);
-
-        $statusId = $I->grabFromDatabase('task_statuses', 'id', ['name' => $status['name']]);
-
-        $task = [
-            'board_id' => $boardId,
-            'status_id' => $statusId,
-            'name' => "task name $nameId",
-            'description' => "task description $nameId",
-            'planned_completion_at' => '2023-12-12 00:00:00.000',
-        ];
-
-        $I->haveInDatabase('tasks', $task);
-
-        $taskId = $I->grabFromDatabase('tasks', 'id', ['name' => $task['name']]);
-
-        return [
-            $boardId,
-            $statusId,
-            $taskId,
-        ];
-    }
+    use UserTrait, HashTrait, UserBoardTrait, BoardStatusTrait, BoardTaskTrait;
 
     public function testCreateBoardTask(ApiTester $I): void
     {
         $I->wantTo('Создать задачу доски');
 
-        [$userId, $email] = $this->createUser($I, 1);
-        [$boardId, $statusId] = $this->createBoardTask($I, 1, $userId);
+        [$boardOwnerUserId, $boardOwnerUserEmail] = $this->createUser($I);
 
-        $I->haveHttpHeader('X-BASE-AUTH', $email);
+        $boardId = $this->createBoard($I, $boardOwnerUserId);
+
+        $this->assignUserToBoardAsOwner($I, $boardId, $boardOwnerUserId);
+
+        $statusId = $this->createBoardStatus($I, $boardId);
+
         $I->haveHttpHeader('Content-Type', 'application/json');
+        $I->haveHttpHeader('X-BASE-AUTH', $boardOwnerUserEmail);
 
         $newTask = [
             'statusId' => $statusId,
-            'name' => 'Реализовать авторизацию',
-            'description' => 'Реализовать сервис авторизации в соответствии с корп. требованиями',
+            'name' => $this->generateHash(25),
+            'description' => $this->generateHash(35),
             'plannedCompletionAt' => '2023-12-12T00:00:00.000Z',
         ];
 
@@ -104,11 +55,17 @@ class BoardTaskCest
     {
         $I->wantTo('Проверить контракт ответа задач доски');
 
-        [$userId, $email] = $this->createUser($I, 2);
-        [$boardId] = $this->createBoardTask($I, 2, $userId);
+        [$boardOwnerUserId, $boardOwnerUserEmail] = $this->createUser($I);
 
-        $I->haveHttpHeader('X-BASE-AUTH', $email);
-        $I->haveHttpHeader('Content-Type', 'application/json');
+        $boardId = $this->createBoard($I, $boardOwnerUserId);
+
+        $this->assignUserToBoardAsOwner($I, $boardId, $boardOwnerUserId);
+
+        $statusId = $this->createBoardStatus($I, $boardId);
+
+        $this->createBoardTask($I, $boardId, $statusId);
+
+        $I->haveHttpHeader('X-BASE-AUTH', $boardOwnerUserEmail);
 
         $I->sendGet("/v1/boards/$boardId/tasks");
 
@@ -136,25 +93,27 @@ class BoardTaskCest
 
     public function testUpdateBoardTask(ApiTester $I): void
     {
-        [$userId, $email] = $this->createUser($I, 3);
-        [$boardId, $statusId, $taskId] = $this->createBoardTask($I, 3, $userId);
+        $I->wantTo('Изменить доску');
 
-        $additionalStatus = [
-            'board_id' => $boardId,
-            'name' => 'task cest name extra 1',
-        ];
+        [$boardOwnerUserId, $boardOwnerUserEmail] = $this->createUser($I);
 
-        $I->haveInDatabase('task_statuses', $additionalStatus);
+        $boardId = $this->createBoard($I, $boardOwnerUserId);
 
-        $additionalStatusId = $I->grabFromDatabase('task_statuses', 'id', ['name' => $additionalStatus['name']]);
+        $this->assignUserToBoardAsOwner($I, $boardId, $boardOwnerUserId);
 
-        $I->haveHttpHeader('X-BASE-AUTH', $email);
+        $statusId = $this->createBoardStatus($I, $boardId);
+
+        $taskId = $this->createBoardTask($I, $boardId, $statusId);
+
+        $additionalStatusId = $this->createBoardStatus($I, $boardId);
+
         $I->haveHttpHeader('Content-Type', 'application/json');
+        $I->haveHttpHeader('X-BASE-AUTH', $boardOwnerUserEmail);
 
         $updatedTask = [
             'statusId' => $additionalStatusId,
-            'name' => 'Измененное имя',
-            'description' => 'Измененное описание',
+            'name' => $this->generateHash(15),
+            'description' => $this->generateHash(25),
             'plannedCompletionAt' => '2023-12-14T00:00:00.000Z',
         ];
 
@@ -176,20 +135,20 @@ class BoardTaskCest
     {
         $I->wantTo('Изменить доску частично');
 
-        [$userId, $email] = $this->createUser($I, 4);
-        [$boardId, $statusId, $taskId] = $this->createBoardTask($I, 4, $userId);
+        [$boardOwnerUserId, $boardOwnerUserEmail] = $this->createUser($I);
 
-        $additionalStatus = [
-            'board_id' => $boardId,
-            'name' => 'task cest name extra 1',
-        ];
+        $boardId = $this->createBoard($I, $boardOwnerUserId);
 
-        $I->haveInDatabase('task_statuses', $additionalStatus);
+        $this->assignUserToBoardAsOwner($I, $boardId, $boardOwnerUserId);
 
-        $additionalStatusId = $I->grabFromDatabase('task_statuses', 'id', ['name' => $additionalStatus['name']]);
+        $statusId = $this->createBoardStatus($I, $boardId);
 
-        $I->haveHttpHeader('X-BASE-AUTH', $email);
+        $taskId = $this->createBoardTask($I, $boardId, $statusId);
+
+        $additionalStatusId = $this->createBoardStatus($I, $boardId);
+
         $I->haveHttpHeader('Content-Type', 'application/json');
+        $I->haveHttpHeader('X-BASE-AUTH', $boardOwnerUserEmail);
 
         $I->sendPatch("/v1/boards/$boardId/tasks/$taskId", ['formData' => ['statusId' => $additionalStatusId]]);
 
@@ -204,11 +163,17 @@ class BoardTaskCest
     {
         $I->wantTo('Удалить задачу из доски');
 
-        [$userId, $email] = $this->createUser($I, 5);
-        [$boardId, $statusId, $taskId] = $this->createBoardTask($I, 5, $userId);
+        [$boardOwnerUserId, $boardOwnerUserEmail] = $this->createUser($I);
 
-        $I->haveHttpHeader('X-BASE-AUTH', $email);
-        $I->haveHttpHeader('Content-Type', 'application/json');
+        $boardId = $this->createBoard($I, $boardOwnerUserId);
+
+        $this->assignUserToBoardAsOwner($I, $boardId, $boardOwnerUserId);
+
+        $statusId = $this->createBoardStatus($I, $boardId);
+
+        $taskId = $this->createBoardTask($I, $boardId, $statusId);
+
+        $I->haveHttpHeader('X-BASE-AUTH', $boardOwnerUserEmail);
 
         $I->sendDelete("/v1/boards/$boardId/tasks/$taskId");
 
