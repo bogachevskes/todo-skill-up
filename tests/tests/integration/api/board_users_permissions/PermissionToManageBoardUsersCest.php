@@ -15,6 +15,32 @@ class PermissionToManageBoardUsersCest
 {
     use HashTrait, UserTrait, UserBoardTrait, FailSchemeTrait, BoardPermissionsTrait;
 
+    public function testUserAssignedToBoardHasGetAccessToBoardUsers(ApiTester $I): void
+    {
+        $I->wantTo('Проверить наличие доступа на получение списка пользователей доски у пользователя, добавленного в доску');
+
+        [$boardOwnerUserId] = $this->createUser($I);
+
+        $boardId = $this->createBoard($I, $boardOwnerUserId);
+
+        $this->assignUserToBoardAsOwner($I, $boardId, $boardOwnerUserId);
+
+        [$existingInBoardUserId, $existingInBoardUserEmail] = $this->createUser($I);
+
+        $this->assignUserToBoard($I, $boardId, $existingInBoardUserId);
+
+        $I->haveHttpHeader('X-BASE-AUTH', $existingInBoardUserEmail);
+
+        $I->sendGet("/v1/boards/$boardId/users");
+
+        $I->seeResponseCodeIs(200);
+        $I->seeResponseMatchesJsonType([
+            'id' => 'integer',
+            'name' => 'string',
+            'email' => 'string',
+        ]);
+    }
+
     public function testUserAssignedToBoardHasPostAccessWithManagePermissionToBoardUsers(ApiTester $I): void
     {
         $I->wantTo('Проверить наличие доступа на добавление пользователей в доску у пользователя, добавленного в доску, с разрешением управления пользователями доски');
