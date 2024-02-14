@@ -227,32 +227,26 @@ RoutesCollection.addGroup('v1', function () {
         )
     );
 
+    /**
+     * TODO:
+     * Выполнить доработки
+     * https://github.com/bogachevskes/todo-skill-up/issues/48
+     */
     RoutesCollection.add(
         new RoutesResource(
             '/boards/:board_id/users/:user_id/permissions',
             BoardsUsersPermissionsController,
             [
                 DIContainer.getDefinition(AuthOnlyMiddleware),
+                CurrentUserHasAccessToBoardMiddleware,
                 UserHasAccessToBoardMiddleware,
             ],
             [
                 {
                     method: 'GET',
-                    path: `/boards/:board_id/users/:user_id/permissions/:id`,
+                    path: `/boards/:board_id/users/:user_id/permissions`,
                     middleware: [
-                        {
-                            handle: async function(req: Request, res: Response, next: NextFunction) {
-                                const user: User = req['user'];
-
-                                if (Number(user.id) === Number(req.params.user_id)) {
-                                    next();
-                                }
-
-                                await new CurrentUserHasBoardPermission('manage-board-users')
-                                    .execute(req, res, next);
-                            },
-                        },
-
+                        new CurrentUserHasBoardPermission('manage-board-users'),
                     ],
                 },
                 {
