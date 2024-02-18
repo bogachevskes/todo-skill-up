@@ -13,28 +13,25 @@ import User from "../app/Entity/User";
 import NotFound from "../Framework/Exceptions/NotFound";
 import UserRepository from "../app/Repository/UserRepository";
 
-class AuthOnlyMiddleware extends BaseMiddleware
-{
-    async handle(req: Request): Promise<void>
-    {
-        const email: string = String(req.get('X-BASE-AUTH'));
-
-        const user: User|null = await (new UserRepository).findByEmail(email);
-
-        if (user === null) {
-            throw new NotFound('Пользователь не найден');
-        }
-
-        req['user'] = user;
-    }
-}
-
 DIContainer.create({
-    AuthOnlyMiddleware: AuthOnlyMiddleware,
+    AuthOnlyMiddleware: class extends BaseMiddleware {
+        async handle(req: Request): Promise<void>
+        {
+            const email: string = String(req.get('X-BASE-AUTH'));
+
+            const user: User|null = await (new UserRepository).findByEmail(email);
+
+            if (user === null) {
+                throw new NotFound('Пользователь не найден');
+            }
+
+            req['user'] = user;
+        }
+    },
     PasswordHasher: class {
         async hash(input: string, length: number = 12): Promise<string>
         {
-            return Buffer.from(input).toString("base64");
+            return Buffer.from(input).toString('base64');
         }
 
         async verify(input: string, hash: string): Promise<boolean>
