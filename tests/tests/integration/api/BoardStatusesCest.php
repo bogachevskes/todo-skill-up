@@ -28,7 +28,7 @@ class BoardStatusesCest
         $I->haveHttpHeader('X-BASE-AUTH', $boardOwnerUserEmail);
 
         $status = [
-            'name' => 'Название 1',
+            'name' => $this->generateHash(),
         ];
 
         $I->sendPost("/v1/boards/$boardId/statuses", [
@@ -80,7 +80,7 @@ class BoardStatusesCest
         $I->haveHttpHeader('X-BASE-AUTH', $boardOwnerUserEmail);
 
         $updatedStatus = [
-            'name' => 'Измененное название 3',
+            'name' => $this->generateHash(),
         ];
 
         $I->sendPut("/v1/boards/$boardId/statuses/$statusId", [
