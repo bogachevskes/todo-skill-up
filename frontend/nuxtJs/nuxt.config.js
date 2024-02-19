@@ -58,6 +58,7 @@ export default {
             browserBaseURL: `${process.env.APP_BASE_URL}/api/v1`,
         },
         WS_APP_URL: process.env.WS_APP_URL,
+        APP_VERSION: process.env.APP_VERSION,
     },
 
     // Build Configuration: https://go.nuxtjs.dev/config-build

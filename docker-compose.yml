@@ -7,6 +7,7 @@ services:
     container_name: todo-skill-up-frontend
     command: ["yarn", "start"]
     environment:
+      APP_VERSION: ${DOCKER_IMAGE_VERSION}
       APP_BASE_URL: ${APP_BASE_URL}
       WS_APP_URL: ${WS_APP_URL}
     logging:
