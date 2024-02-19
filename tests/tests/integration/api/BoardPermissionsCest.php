@@ -65,10 +65,7 @@ class BoardPermissionsCest
         ];
 
         foreach ($notBoardPermission as $permission) {
-            $I->haveInDatabase('auth_item', [
-                'name' => $permission['name'],
-                'type' => $permission['type'],
-            ]);
+            $I->haveInDatabase('auth_item', $permission);
         }
 
         $I->sendGet("/v1/boards/$boardId/permissions");
