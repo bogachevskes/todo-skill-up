@@ -2,64 +2,53 @@
 
 namespace tests\integration\api\users;
 
-use Tests\Support\ApiTester;
+use Tests\Support\{
+    ApiTester,
+    FailSchemeTrait,
+    UserTrait,
+    HashTrait,
+};
 
 class UsersPermissionsCest
 {
-    private array $schemas = [
-        'failScheme' => [
-            'type' => 'object',
-            'properties' => [
-                'cause' => ['type' => 'string'],
-                'type' => ['type' => 'string'],
-                'data' => ['type' => 'array'],
-            ],
-            'required' => ['cause', 'type', 'data'],
-            'additionalProperties' => false,
-        ],
-    ];
+    use FailSchemeTrait, UserTrait, HashTrait;
 
     public function testListCurrentUserPermissions(ApiTester $I): void
     {
         $I->wantTo('Получить разрешения пользователя');
 
-        $user = [
-            'name' => 'guest110',
-            'email' => 'guest110@todo-list.com',
-            'password' => base64_encode('secret'),
-        ];
+        [$permissionsOwnerUserId, $permissionsOwnerUserEmail] = $this->createUser($I);
 
-        $I->haveInDatabase('users', $user);
-
-        $userId = $I->grabFromDatabase('users', 'id', ['email' => $user['email']]);
+        $role = $this->generateHash();
+        $permission = $this->generateHash();
 
         $I->haveInDatabase('auth_item', [
-            'name' => 'role1',
-            'type' => 2,
+            'name' => $role,
+            'type' => 1,
         ]);
 
         $I->haveInDatabase('auth_item', [
-            'name' => 'permission1',
+            'name' => $permission,
             'type' => 2,
         ]);
 
         $I->haveInDatabase('auth_item_child', [
-            'parent' => 'role1',
-            'child' => 'permission1',
+            'parent' => $role,
+            'child' => $permission,
         ]);
 
         $I->haveInDatabase('auth_assignment', [
-            'item_name' => 'role1',
-            'user_id' => $userId,
+            'item_name' => $role,
+            'user_id' => $permissionsOwnerUserId,
         ]);
 
-        $I->haveHttpHeader('X-BASE-AUTH', $user['email']);
+        $I->haveHttpHeader('X-BASE-AUTH', $permissionsOwnerUserEmail);
 
-        $I->sendGet("/v1/user/$userId/permissions");
+        $I->sendGet("/v1/user/$permissionsOwnerUserId/permissions");
 
         $I->seeResponseCodeIs(200);
         $I->seeResponseContainsJson([
-            'permission1',
+            $permission,
         ]);
     }
 
@@ -67,37 +56,37 @@ class UsersPermissionsCest
     {
         $I->wantTo('Получить ошибку недоступности разрешений другого пользователя');
 
-        $owner = [
-            'name' => 'guest111',
-            'email' => 'guest111@todo-list.com',
-            'password' => base64_encode('secret'),
-        ];
+        [$guestUserId, $guestUserEmail] = $this->createUser($I);
 
-        $user = [
-            'name' => 'guest112',
-            'email' => 'guest112@todo-list.com',
-            'password' => base64_encode('secret'),
-        ];
+        [$permissionsOwnerUserId, $permissionsOwnerUserEmail] = $this->createUser($I);
 
-        $I->haveInDatabase('users', $owner);
-        $I->haveInDatabase('users', $user);
-
-        $userId = $I->grabFromDatabase('users', 'id', ['email' => $user['email']]);
+        $role = $this->generateHash();
+        $permission = $this->generateHash();
 
         $I->haveInDatabase('auth_item', [
-            'name' => 'permission2',
+            'name' => $role,
+            'type' => 1,
+        ]);
+
+        $I->haveInDatabase('auth_item', [
+            'name' => $permission,
             'type' => 2,
         ]);
 
-        $I->haveInDatabase('auth_assignment', [
-            'item_name' => 'permission2',
-            'user_id' => $userId,
+        $I->haveInDatabase('auth_item_child', [
+            'parent' => $role,
+            'child' => $permission,
         ]);
 
-        $I->haveHttpHeader('X-BASE-AUTH', $owner['email']);
+        $I->haveInDatabase('auth_assignment', [
+            'item_name' => $role,
+            'user_id' => $permissionsOwnerUserId,
+        ]);
 
-        $I->sendGet("/v1/user/$userId/permissions");
+        $I->haveHttpHeader('X-BASE-AUTH', $guestUserEmail);
+
+        $I->sendGet("/v1/user/$permissionsOwnerUserId/permissions");
         $I->seeResponseCodeIs(403);
-        $I->seeResponseIsValidOnJsonSchemaString(json_encode($this->schemas['failScheme']));
+        $I->seeResponseIsValidOnJsonSchemaString(json_encode($this->failScheme));
     }
 }
