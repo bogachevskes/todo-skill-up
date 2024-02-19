@@ -246,7 +246,19 @@ RoutesCollection.addGroup('v1', function () {
                     method: 'GET',
                     path: `/boards/:board_id/users/:user_id/permissions`,
                     middleware: [
-                        new CurrentUserHasBoardPermission('manage-board-users'),
+                        class {
+                            public async execute(req: Request, res: Response, next: NextFunction): Promise<void>
+                            {
+                                const user: User = req['user'];
+
+                                if (Number(user.id) === Number(req.params.user_id)) {
+                                    next();
+                                }
+
+                                await new CurrentUserHasBoardPermission('manage-board-users')
+                                    .execute(req, res, next);
+                            }
+                        },
                     ],
                 },
                 {
