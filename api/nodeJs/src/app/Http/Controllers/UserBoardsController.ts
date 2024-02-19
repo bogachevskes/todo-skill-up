@@ -7,14 +7,20 @@ import NotFound from "../../../Framework/Exceptions/NotFound";
 import BoardsRepository from "../../Repository/BoardsRepository";
 import BoardRequest from "../FormRequest/Board/BoardRequest";
 import BoardUser from "../../Entity/BoardUser";
+import PermissionsRepository from "../../Repository/PermissionsRepository";
+import Db from "../../Components/Db";
+import {Knex} from "knex";
+import Transaction = Knex.Transaction;
 
 export default class UserBoardsController extends CrudController
 {
     private boardsRepository: BoardsRepository;
+    private permissionsRepository: PermissionsRepository;
 
     public constructor() {
         super();
         this.boardsRepository = new BoardsRepository;
+        this.permissionsRepository = new PermissionsRepository;
     }
 
     protected async list(req: Request): Promise<any[]>
@@ -100,7 +106,19 @@ export default class UserBoardsController extends CrudController
     {
         await this.findModel(id);
 
-        await this.boardsRepository.deleteById(id);
+        await Db.transaction(async (trx: Transaction) => {
+            try {
+
+                await this.boardsRepository.deleteById(id, trx);
+                await this.permissionsRepository.revokeAllBoardPermissionsAssignedToUsers(id, trx);
+
+                await trx.commit();
+
+            } catch (err) {
+                await trx.rollback();
+                throw err;
+            }
+        });
     }
 
     protected async findModel(id: number): Promise<Board | never>

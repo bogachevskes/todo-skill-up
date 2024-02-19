@@ -42,13 +42,15 @@ export default class BoardsRepository
         return query.getMany();
     }
 
-    public async deleteById(id: number): Promise<void>
+    public async deleteById(id: number, trx: Transaction|null = null): Promise<void>
     {
-        const query = this.getQueryBuilder()
-            .where('id = :id', { id })
-            .delete();
+        const runner  = trx === null ? Db : trx;
 
-        await query.execute();
+        await runner.table('boards')
+            .where({
+                'id': id,
+            })
+            .del();
     }
 
     public createNew(data: BoardRequest): Board
