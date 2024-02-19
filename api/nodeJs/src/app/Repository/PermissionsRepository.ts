@@ -117,4 +117,22 @@ export default class PermissionsRepository
             })
             .del();
     }
+
+    public async revokeAllBoardPermissionsAssignedToUsers(boardId: number, trx: Transaction|null = null): Promise<void>
+    {
+        const runner  = trx === null ? Db : trx;
+
+        await runner.table('auth_assignment')
+            .where({
+                'object_id': boardId,
+            })
+            .andWhere(function() {
+                this.whereIn('item_name', function() {
+                    this.select('name')
+                        .from('auth_item')
+                        .where('type', 3);
+                });
+            })
+            .del();
+    }
 }
