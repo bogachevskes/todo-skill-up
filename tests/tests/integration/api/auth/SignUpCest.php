@@ -2,22 +2,16 @@
 
 namespace tests\integration\api\auth;
 
-use Tests\Support\ApiTester;
+use Tests\Support\{
+    ApiTester,
+    FailSchemeTrait,
+    HashTrait,
+    UserTrait,
+};
 
 class SignUpCest
 {
-    private array $schemas = [
-        'failScheme' => [
-            'type' => 'object',
-            'properties' => [
-                'cause' => ['type' => 'string'],
-                'type' => ['type' => 'string'],
-                'data' => ['type' => 'array'],
-            ],
-            'required' => ['cause', 'type', 'data'],
-            'additionalProperties' => false,
-        ],
-    ];
+    use FailSchemeTrait, HashTrait, UserTrait;
 
     public function testSignupUser(ApiTester $I): void
     {
@@ -27,8 +21,8 @@ class SignUpCest
 
         $body = [
             'formData' => [
-                'name' => 'guest1',
-                'email' => 'guest1@todo-list.com',
+                'name' => $this->generateHash(),
+                'email' => $this->generateHash() . '@todo-list.com',
                 'password' => 'secret',
             ],
         ];
@@ -46,7 +40,7 @@ class SignUpCest
 
         $body = [
             'formData' => [
-                'name' => 'guest1',
+                'name' => $this->generateHash(),
                 'password' => 'secret',
             ],
         ];
@@ -54,7 +48,7 @@ class SignUpCest
         $I->sendPut('/v1/auth/signup', $body);
 
         $I->seeResponseCodeIs(400);
-        $I->seeResponseIsValidOnJsonSchemaString(json_encode($this->schemas['failScheme']));
+        $I->seeResponseIsValidOnJsonSchemaString(json_encode($this->failScheme));
     }
 
     public function testSignupFailOnNotValidEmail(ApiTester $I): void
@@ -65,8 +59,8 @@ class SignUpCest
 
         $body = [
             'formData' => [
-                'name' => 'guest1',
-                'email' => 'not_valid_email',
+                'name' => $this->generateHash(),
+                'email' => $this->generateHash(15),
                 'password' => 'secret',
             ],
         ];
@@ -74,153 +68,154 @@ class SignUpCest
         $I->sendPut('/v1/auth/signup', $body);
 
         $I->seeResponseCodeIs(400);
-        $I->seeResponseIsValidOnJsonSchemaString(json_encode($this->schemas['failScheme']));
+        $I->seeResponseIsValidOnJsonSchemaString(json_encode($this->failScheme));
     }
 
     public function testSignupFailOnTheSameEmail(ApiTester $I): void
     {
         $I->wantTo('Не пройти регистрацию пользователя по существующему email');
 
-        $data = [
-            'name' => 'guest2',
-            'email' => 'guest2@todo-list.com',
-            'password' => 'secret',
-        ];
+        [$existingUserId, $existingUserEmail] = $this->createUser($I);
 
-        $I->haveInDatabase('users', $data);
         $I->haveHttpHeader('Content-Type', 'application/json');
 
         $body = [
-            'formData' => $data,
+            'formData' => [
+                'name' => 'any_name',
+                'email' => $existingUserEmail,
+                'password' => 'secret',
+            ],
         ];
+
+        $I->haveHttpHeader('Content-Type', 'application/json');
 
         $I->sendPut('/v1/auth/signup', $body);
 
         $I->seeResponseCodeIs(400);
-        $I->seeResponseIsValidOnJsonSchemaString(json_encode($this->schemas['failScheme']));
+        $I->seeResponseIsValidOnJsonSchemaString(json_encode($this->failScheme));
     }
 
     public function testSignupFailOnEmptyName(ApiTester $I): void
     {
         $I->wantTo('Не пройти регистрацию пользователя без имени');
 
-        $I->haveHttpHeader('Content-Type', 'application/json');
-
         $body = [
-            'email' => 'guest3@todo-list.com',
+            'email' => $this->generateHash() . '@todo-list.com',
             'password' => 'secret',
         ];
+
+        $I->haveHttpHeader('Content-Type', 'application/json');
 
         $I->sendPut('/v1/auth/signup', $body);
 
         $I->seeResponseCodeIs(400);
-        $I->seeResponseIsValidOnJsonSchemaString(json_encode($this->schemas['failScheme']));
+        $I->seeResponseIsValidOnJsonSchemaString(json_encode($this->failScheme));
     }
 
     public function testSignupFailOnShortName(ApiTester $I): void
     {
         $I->wantTo('Не пройти регистрацию пользователя с именем меньше 5 символов');
 
-        $I->haveHttpHeader('Content-Type', 'application/json');
-
         $body = [
-            'name' => 'tttt',
-            'email' => 'guest31@todo-list.com',
+            'name' => $this->generateHash(4),
+            'email' => $this->generateHash() . '@todo-list.com',
             'password' => 'secret',
         ];
+
+        $I->haveHttpHeader('Content-Type', 'application/json');
 
         $I->sendPut('/v1/auth/signup', $body);
 
         $I->seeResponseCodeIs(400);
-        $I->seeResponseIsValidOnJsonSchemaString(json_encode($this->schemas['failScheme']));
+        $I->seeResponseIsValidOnJsonSchemaString(json_encode($this->failScheme));
     }
 
     public function testSignupFailOnTooLongName(ApiTester $I): void
     {
         $I->wantTo('Не пройти регистрацию пользователя с именем более 50 символов');
 
-        $I->haveHttpHeader('Content-Type', 'application/json');
-
         $body = [
-            'name' => str_repeat('t', 51),
-            'email' => 'guest32@todo-list.com',
+            'name' => $this->generateHash(51),
+            'email' => $this->generateHash() . '@todo-list.com',
             'password' => 'secret',
         ];
+
+        $I->haveHttpHeader('Content-Type', 'application/json');
 
         $I->sendPut('/v1/auth/signup', $body);
 
         $I->seeResponseCodeIs(400);
-        $I->seeResponseIsValidOnJsonSchemaString(json_encode($this->schemas['failScheme']));
+        $I->seeResponseIsValidOnJsonSchemaString(json_encode($this->failScheme));
     }
 
     public function testSignupFailOnNotValidName(ApiTester $I): void
     {
         $I->wantTo('Не пройти регистрацию пользователя с некорректным именем');
 
-        $I->haveHttpHeader('Content-Type', 'application/json');
-
         $body = [
             'name' => '$pecial_Ch@racters 123 !',
-            'email' => 'guest33@todo-list.com',
+            'email' => $this->generateHash() . '@todo-list.com',
             'password' => 'secret',
         ];
+
+        $I->haveHttpHeader('Content-Type', 'application/json');
 
         $I->sendPut('/v1/auth/signup', $body);
 
         $I->seeResponseCodeIs(400);
-        $I->seeResponseIsValidOnJsonSchemaString(json_encode($this->schemas['failScheme']));
+        $I->seeResponseIsValidOnJsonSchemaString(json_encode($this->failScheme));
     }
 
     public function testSignupFailOnEmptyPassword(ApiTester $I): void
     {
         $I->wantTo('Не пройти регистрацию пользователя без пароля');
 
-        $I->haveHttpHeader('Content-Type', 'application/json');
-
         $body = [
-            'name' => 'guest6',
-            'email' => 'guest6@todo-list.com',
+            'name' => $this->generateHash(),
+            'email' => $this->generateHash() . '@todo-list.com',
         ];
+
+        $I->haveHttpHeader('Content-Type', 'application/json');
 
         $I->sendPut('/v1/auth/signup', $body);
 
         $I->seeResponseCodeIs(400);
-        $I->seeResponseIsValidOnJsonSchemaString(json_encode($this->schemas['failScheme']));
+        $I->seeResponseIsValidOnJsonSchemaString(json_encode($this->failScheme));
     }
 
     public function testSignupFailOnShortPassword(ApiTester $I): void
     {
         $I->wantTo('Не пройти регистрацию пользователя с паролем меньше 5 символов');
 
-        $I->haveHttpHeader('Content-Type', 'application/json');
-
         $body = [
-            'name' => 'guest6',
-            'email' => 'guest6@todo-list.com',
-            'password' => 'tttt',
+            'name' => $this->generateHash(),
+            'email' => $this->generateHash() . '@todo-list.com',
+            'password' => $this->generateHash(4),
         ];
+
+        $I->haveHttpHeader('Content-Type', 'application/json');
 
         $I->sendPut('/v1/auth/signup', $body);
 
         $I->seeResponseCodeIs(400);
-        $I->seeResponseIsValidOnJsonSchemaString(json_encode($this->schemas['failScheme']));
+        $I->seeResponseIsValidOnJsonSchemaString(json_encode($this->failScheme));
     }
 
     public function testSignupFailOnTooLongPassword(ApiTester $I): void
     {
         $I->wantTo('Не пройти регистрацию пользователя с паролем более 50 символов');
 
-        $I->haveHttpHeader('Content-Type', 'application/json');
-
         $body = [
-            'name' => 'guest6',
-            'email' => 'guest6@todo-list.com',
-            'password' => str_repeat('t', 51),
+            'name' => $this->generateHash(),
+            'email' => $this->generateHash() . '@todo-list.com',
+            'password' => $this->generateHash(51),
         ];
+
+        $I->haveHttpHeader('Content-Type', 'application/json');
 
         $I->sendPut('/v1/auth/signup', $body);
 
         $I->seeResponseCodeIs(400);
-        $I->seeResponseIsValidOnJsonSchemaString(json_encode($this->schemas['failScheme']));
+        $I->seeResponseIsValidOnJsonSchemaString(json_encode($this->failScheme));
     }
 }
