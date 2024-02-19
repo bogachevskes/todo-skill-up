@@ -7,7 +7,8 @@
   "scripts": {
     "console": "node ./dist/server/entry/console.js",
     "build": "rm -rf ./dist && mkdir ./dist && ./node_modules/typescript/bin/tsc -p ./tsconfig.build.json",
-    "start": "node ./dist/server/entry/web.js"
+    "start": "node ./dist/server/entry/web.js",
+    "start:test": "node ./dist/server/entry/web-test.js"
   },
   "dependencies": {
     "@types/bluebird": "^3.5.32",

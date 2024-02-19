@@ -43,6 +43,12 @@ ps:
 logs:
 	@docker-compose logs -f $(target)
 
+deploy: \
+	docker-build \
+	up\
+	migrate \
+	seed
+
 docker-build: \
 	docker-build-common-tools \
 	docker-build-frontend \
@@ -151,6 +157,9 @@ api-tests-publish-dev-dependencies:
 	@docker run -d --name api_tests_dep_extractor ${DOCKER_REGISTRY}/${DOCKER_API_TESTS_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
 	@docker cp api_tests_dep_extractor:/app/vendor $(PWD)/tests/vendor
 	@docker rm api_tests_dep_extractor
+
+api-tests-build:
+	@$(MAKE) api-tests-run cmd="./vendor/bin/codecept build"
 
 api-tests-run-tests:
 	@$(MAKE) restart

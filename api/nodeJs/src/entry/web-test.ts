@@ -4,20 +4,46 @@ import RedisConnection from '../app/Services/RedisConnection';
 import Router from '../Framework/Http/Router/Router';
 import Kernel from '../Framework/Http/Kernel';
 import Middleware from '../config/middleware';
+import BaseMiddleware from '../Framework/Http/Middleware/Middleware';
 import ErrorMiddleware from '../config/errorMiddleware';
 import ConfigService from '../Framework/Utils/ConfigService';
-import AuthOnlyMiddleware from "../app/Http/Middleware/AuthOnlyMiddleware";
 import DIContainer from "../Framework/Container/DIContainer";
-import PasswordHasher from "../app/Components/Security/PasswordHasher";
+import {Request} from "express";
+import User from "../app/Entity/User";
+import NotFound from "../Framework/Exceptions/NotFound";
+import UserRepository from "../app/Repository/UserRepository";
 
 DIContainer.create({
-    AuthOnlyMiddleware: AuthOnlyMiddleware,
-    PasswordHasher: PasswordHasher,
+    AuthOnlyMiddleware: class extends BaseMiddleware {
+        async handle(req: Request): Promise<void>
+        {
+            const email: string = String(req.get('X-BASE-AUTH'));
+
+            const user: User|null = await (new UserRepository).findByEmail(email);
+
+            if (user === null) {
+                throw new NotFound('Пользователь не найден');
+            }
+
+            req['user'] = user;
+        }
+    },
+    PasswordHasher: class {
+        async hash(input: string, length: number = 12): Promise<string>
+        {
+            return Buffer.from(input).toString('base64');
+        }
+
+        async verify(input: string, hash: string): Promise<boolean>
+        {
+            return await this.hash(input) === hash;
+        }
+    },
 });
 
 import Routes from '../routes/web';
 
-const router = new Router();
+const router: Router = new Router();
 
 router.configureRoutes(
         Routes.all()

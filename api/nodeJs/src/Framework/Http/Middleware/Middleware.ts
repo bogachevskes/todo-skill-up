@@ -34,8 +34,8 @@ export default abstract class Middleware implements MiddlewareInterface
             
             return;
         }
-        
-        if (this.nextHandler !== undefined) {
+
+        if (this.nextHandler !== undefined && 'execute' in this.nextHandler) {
 
             await this.nextHandler.execute(req, res, next);
         }
