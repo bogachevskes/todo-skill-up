@@ -21,7 +21,7 @@ namespace Tests\Support;
 */
 class ApiTester extends \Codeception\Actor
 {
-    use _generated\ApiTesterActions;
+    use \Tests\Support\_generated\ApiTesterActions;
 
     /**
      * Define custom actions here

@@ -7,7 +7,7 @@
             </div>
         </div>
         <div class="columns is-multiline">
-            <div v-for="(preview, index) in this.boards" :key="index" class="column is-3">
+            <div v-for="(preview, index) in boards" :key="index" class="column is-3">
                 <div class="card">
                     <div class="card-content">
                         <div class="content">
@@ -24,8 +24,8 @@
                                     </span> {{ printDate(preview.createdAt) }}
                                 </p>
                             </div>
-                            <button class="button is-warning" @click="handleUpdate(preview)">Изменить</button>
-                            <button class="button is-danger" @click="handleDelete(preview.id)">Удалить</button>
+                            <button v-if="refreshBoardsUserPermissions > 0 && userHasBoardPermission(preview.id, 'manage-board')" class="button is-warning" @click="handleUpdate(preview)">Изменить</button>
+                            <button v-if="refreshBoardsUserPermissions > 0 && userHasBoardPermission(preview.id, 'delete-board')" class="button is-danger" @click="handleDelete(preview.id)">Удалить</button>
                         </div>
                     </div>
                 </div>
@@ -147,6 +147,8 @@ export default {
                 mode: 'create',
             },
             boards: [],
+            boardsUserPermissions: { },
+            refreshBoardsUserPermissions: 0,
             modal: {
                 isActive: false,
                 isLoading: false,
@@ -195,7 +197,29 @@ export default {
                         this.boards.push(new Board(board));
                     }
 
+                    this.loadBoardsUserPermissions();
                 });
+        },
+        loadBoardsUserPermissions() {
+            this.boards.forEach((board) => {
+
+                this.$axios
+                    .$get(`/boards/${board.id}/users/${this.getUserId}/permissions`)
+                    .then((permissions) => {
+                        this.boardsUserPermissions[board.id] = permissions;
+
+                        this.refreshBoardsUserPermissions++;
+                    });
+            });
+        },
+        userHasBoardPermission(boardId, permission) {
+
+            if (this.boardsUserPermissions.hasOwnProperty(boardId) === false) {
+
+                return false;
+            }
+
+            return this.boardsUserPermissions[boardId].includes(permission);
         },
         flushFormData () {
             for (const item in this.formData) {

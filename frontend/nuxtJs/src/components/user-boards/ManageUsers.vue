@@ -26,7 +26,7 @@
                         </button>
                         <span
                             v-if="userHasBoardPermission('manage-board-users') === false && Number(user.id) !== Number(getUserId)"
-                            class="tag is-info"
+                            class="tag is-info mr-1"
                             v-for="(user, index) in users"
                             :key="index"
                         >

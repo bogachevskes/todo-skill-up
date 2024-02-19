@@ -100,9 +100,6 @@ paths:
                     password:
                       type: string
                       example: secret
-                    confirm_password:
-                      type: string
-                      example: secret
       responses:
         '200':
           description: Пользователь создан
@@ -234,9 +231,6 @@ paths:
                     password:
                       type: string
                       example: secret
-                    confirm_password:
-                      type: string
-                      example: secret
       responses:
         '201':
           description: Пользователь успешно создан
@@ -308,9 +302,6 @@ paths:
                       type: integer
                       example: 1
                     password:
-                      type: string
-                      example: secret
-                    confirm_password:
                       type: string
                       example: secret
       responses:

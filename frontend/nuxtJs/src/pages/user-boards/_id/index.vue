@@ -415,7 +415,7 @@
                         this.removeTaskFromCurrentList(entity);
 
                         const newGroup = this.taskStatusGroups.find((group) => {
-                            return Number(group.status.id) === entity.statusId;
+                            return Number(group.status.id) === Number(entity.statusId);
                         });
 
                         const task = (new TasksFactory).make([entity])[0];

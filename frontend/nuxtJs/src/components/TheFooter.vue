@@ -4,7 +4,10 @@
             <div class="columns">
                 <div class="column is-5 is-5-widescreen">
                     <p>
-                        <strong>TODO LIST</strong><br />
+                        <strong>TODO LIST</strong>
+                        <br>
+                        Версия <a href="https://github.com/bogachevskes/todo-skill-up/releases">{{ $config.APP_VERSION }}</a>
+                        <br>
                         <a href="https://github.com/bogachevskes" target="_blank">Разработчик Андрей Богачевский</a>
                         <br>
                         <a href="http://opensource.org/licenses/mit-license.php" target="_blank">Лицензия MIT</a>
