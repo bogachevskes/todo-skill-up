@@ -49,8 +49,8 @@ checkout-latest-tag:
 	git checkout $$latest_tag
 
 set-latest-version-to-env:
-	latest_tag=$$(git describe --tags $$(git rev-list --tags --max-count=1)); \
-	sed -i '' "s/^DOCKER_IMAGE_VERSION=.*/DOCKER_IMAGE_VERSION=$$latest_tag/" .env
+	latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1)); \
+	sed -i "s/^DOCKER_IMAGE_VERSION=.*/DOCKER_IMAGE_VERSION=$latest_tag/" .env
 
 deploy: \
 	checkout-latest-tag \
