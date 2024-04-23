@@ -904,7 +904,7 @@ paths:
         '403':
           $ref: "#/components/responses/forbiddenBoardAccess"
 
-  /boards/{board_id}/users/{id}:
+  /api/v1/boards/{board_id}/users/{id}:
     delete:
       tags:
         - board-users
