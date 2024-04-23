@@ -77,8 +77,6 @@ class SignUpCest
 
         [$existingUserId, $existingUserEmail] = $this->createUser($I);
 
-        $I->haveHttpHeader('Content-Type', 'application/json');
-
         $body = [
             'formData' => [
                 'name' => 'any_name',
