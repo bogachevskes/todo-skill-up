@@ -5,6 +5,11 @@
 Формат основан на [стандарте формата CHANGELOG](https://keepachangelog.com/en/1.0.0/),
 и придерживается [правил версионирования](https://semver.org/spec/v2.0.0.html).
 
+## [ [4.6.2](https://github.com/bogachevskes/todo-skill-up/releases/tag/4.6.1) ] - 15.05.2024
+
+- Изменено:
+  - Добавлена возможность обращения к сервису БД с удаленной машины
+
 ## [ [4.6.1](https://github.com/bogachevskes/todo-skill-up/releases/tag/4.6.1) ] - 23.04.2024
 
 - Исправлено:

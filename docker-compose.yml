@@ -119,7 +119,7 @@ services:
     volumes:
       - mysql:/var/lib/mysql
     ports:
-      - 127.0.0.1:${DB_OUTER_PORT}:${DB_PORT}
+      - ${DB_OUTER_PORT}:${DB_PORT}
     command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_general_ci']
     logging:
       driver: "json-file"
