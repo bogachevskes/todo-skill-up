@@ -1,0 +1,120 @@
+.ant-btn>.anticon {
+    display: inline-flex !important;
+}
+
+.app-skeleton {
+    height: calc(100vh - 243px);
+}
+
+.app-skeleton .ant-skeleton-title {
+    height: 100% !important;
+}
+
+.ant-table-column-sorter {
+    min-width: 12px;
+}
+
+.ant-table-filter-trigger {
+    min-width: 20px;
+}
+
+.ant-picker-cell-inner {
+    text-align: center;
+}
+
+.ant-page-layout-view {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.ant-page-layout .app-settings {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    border-radius: 6px;
+    top: auto;
+    transform: unset;
+}
+
+.ant-page-layout .mobile-flex-column {
+    @include mobile {
+        flex-direction: column;
+    }
+}
+
+.ant-page-layout .tablet-flex-column {
+    @include tablet {
+        flex-direction: column;
+    }
+}
+
+.ant-page-layout .mobile-w-full {
+    @include mobile {
+        width: 100%;
+    }
+}
+
+.ant-page-layout .tablet-w-full {
+    @include tablet {
+        width: 100%;
+    }
+}
+
+.ant-page-layout .mobile-text-center {
+    @include mobile {
+        text-align: center;
+    }
+}
+
+.ant-page-layout .mobile-justify-center {
+    @include mobile {
+        justify-content: center;
+    }
+}
+
+.mobile-xs-hidden {
+    @include mobile-xs {
+        display: none;
+    }
+}
+
+.mobile-visible {
+    @include mobile {
+        display: block;
+    }
+}
+
+.tablet-hidden {
+    @include tablet {
+        display: none;
+    }
+}
+
+.tablet-flex-row {
+    @include tablet {
+        flex-direction: row;
+    }
+}
+
+.tablet-visible {
+    @include tablet {
+        display: block;
+    }
+}
+
+@include mobile {
+    .ant-tooltip {
+        display: none;
+    }
+}
+
+.ant-form-item-required::after {
+  color: red;
+  content: "*";
+  margin-left: 4px;
+}
+
+.ant-form-item-required {
+  margin-bottom: 6px;
+}
