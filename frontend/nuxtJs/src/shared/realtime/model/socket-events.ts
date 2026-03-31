@@ -1,0 +1,1 @@
+export const SOCKET_AUTH_ERRORS = ['NotFoundException', 'ForbiddenException', 'JsonWebTokenError'];

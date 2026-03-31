@@ -1,0 +1,52 @@
+.ant-the-sider-bottom {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+}
+
+.boards-card {
+    width: calc((100% / 4) - (16px * 3 / 4));
+}
+
+.custom-text-ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@include desktop {
+    .boards-card {
+       width: calc(33.333333% - 11px);
+    }
+}
+
+@include tablet {
+    .boards-card {
+        width: calc(50% - 8px);
+    }
+
+    .ant-layout-sider {
+        display: none;
+    }
+}
+
+@include mobile {
+    .boards-card {
+        width: 100%;
+    }
+
+    .open.header__toggler {
+        display: none;
+    }
+
+    .board-column .header {
+        padding: 0.75rem;
+        padding-bottom: 0;
+    }
+
+    .user-action-btn {
+        span:not(.anticon) {
+            display: none;
+        }
+    }
+}

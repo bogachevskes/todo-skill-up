@@ -1,0 +1,18 @@
+.ant-layout-sider-collapsed .board-info {
+    opacity: 0;
+}
+
+@include tablet {
+    .board-info {
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+    }
+}
+
+@include mobile {
+    .board-info {
+        flex-direction: column;
+        width: 100%;
+    }
+}
