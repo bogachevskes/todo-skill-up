@@ -5,7 +5,7 @@ COPY ./docker/common/wait-for /usr/local/bin/wait-for
 RUN apk --no-cache add bash && chmod +x /usr/local/bin/wait-for
 
 # FRONTEND
-FROM node:14.19-alpine as frontend
+FROM node:23-alpine3.22 as frontend
 
 ARG USER='node'
 ARG GROUP='node'
@@ -16,7 +16,7 @@ WORKDIR /app
 
 COPY --chown=${USER}:${GROUP} ./frontend/nuxtJs/ /app
 
-RUN yarn install --no-bin-links
+RUN yarn install --ignore-engines
 
 RUN yarn run build
 
