@@ -79,6 +79,7 @@ docker-build-nginx:
 
 docker-build-frontend:
 	@docker build --target=frontend \
+	--build-arg FRONTEND_CLIENT_DIR=${FRONTEND_CLIENT_DIR} \
 	-t ${DOCKER_REGISTRY}/${DOCKER_FRONTEND_IMAGE_NAME}:${DOCKER_IMAGE_VERSION} -f ./docker/Dockerfile .
 
 docker-build-api:
@@ -102,9 +103,9 @@ docker-build-api-tests:
 	-t ${DOCKER_REGISTRY}/${DOCKER_API_TESTS_IMAGE_NAME}:${DOCKER_IMAGE_VERSION} -f ./docker/Dockerfile .
 
 frontend-publish-dev-dependencies:
-	@if [ -d $(PWD)/frontend/nuxtJs/node_modules ]; then rm -r $(PWD)/frontend/nuxtJs/node_modules; fi
+	@if [ -d $(PWD)/frontend/${FRONTEND_CLIENT_DIR}/node_modules ]; then rm -r $(PWD)/frontend/${FRONTEND_CLIENT_DIR}/node_modules; fi
 	@docker run --rm -d --name frontend_dep_extractor ${DOCKER_REGISTRY}/${DOCKER_FRONTEND_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
-	@docker cp frontend_dep_extractor:/app/node_modules $(PWD)/frontend/nuxtJs/node_modules
+	@docker cp frontend_dep_extractor:/app/node_modules $(PWD)/frontend/${FRONTEND_CLIENT_DIR}/node_modules
 	@docker stop frontend_dep_extractor
 
 ws-publish-dev-dependencies:
