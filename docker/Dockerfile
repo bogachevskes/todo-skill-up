@@ -9,12 +9,13 @@ FROM node:23-alpine3.22 as frontend
 
 ARG USER='node'
 ARG GROUP='node'
+ARG FRONTEND_CLIENT_DIR='nuxtJs'
 
 USER ${USER}
 
 WORKDIR /app
 
-COPY --chown=${USER}:${GROUP} ./frontend/nuxtJs/ /app
+COPY --chown=${USER}:${GROUP} ./frontend/${FRONTEND_CLIENT_DIR}/ /app
 
 RUN yarn install --ignore-engines
 
