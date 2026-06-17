@@ -4,52 +4,46 @@ import { BoardDetailsPage, BoardsListPage } from '@/pages/boards';
 import { HomePage } from '@/pages/home';
 import { NotFoundPage } from '@/pages/not-found';
 
-import { useRuntimeConfig } from '#imports';
-
 import type { RouterConfig } from '@nuxt/schema';
 
 const routerOptions: RouterConfig = {
-  routes: () => {
-    const config = useRuntimeConfig();
-
-    return [
-      {
-        component: HomePage,
-        name: 'home',
-        path: `${config.public.basePath}`,
+  routes: () => [
+    {
+      component: HomePage,
+      name: 'home',
+      path: '/',
+    },
+    {
+      component: BoardsListPage,
+      meta: {
+        middleware: 'auth',
       },
-      {
-        component: BoardsListPage,
-        meta: {
-          middleware: 'auth',
-        },
-        name: 'boardsList',
-        path: `${config.public.basePath}/boards`,
+      name: 'boardsList',
+      path: '/boards',
+    },
+    {
+      component: BoardDetailsPage,
+      meta: {
+        middleware: 'auth',
       },
-      {
-        component: BoardDetailsPage,
-        meta: {
-          middleware: 'auth',
-        },
-        name: 'singleBoard',
-        path: `${config.public.basePath}/boards/:id`,
-      },
-      {
-        component: SignInPage,
-        name: 'signin',
-        path: `${config.public.basePath}/signin`,
-      },
-      {
-        component: SignUpPage,
-        name: 'signUp',
-        path: `${config.public.basePath}/signup`,
-      },
-      {
-        component: NotFoundPage,
-        path: '/:pathMatch(.*)*',
-      },
-    ];
-  },
+      name: 'singleBoard',
+      path: '/boards/:id',
+    },
+    {
+      component: SignInPage,
+      name: 'signin',
+      path: '/signin',
+    },
+    {
+      component: SignUpPage,
+      name: 'signUp',
+      path: '/signup',
+    },
+    {
+      component: NotFoundPage,
+      path: '/:pathMatch(.*)*',
+    },
+  ],
 };
 
 export default routerOptions;
