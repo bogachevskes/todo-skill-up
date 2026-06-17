@@ -2,7 +2,7 @@
   <a-card
     class="boards-card flex flex-col"
     hoverable
-    @click="router.push(`${config.public.basePath}boards/${item.id}`)"
+    @click="router.push(`/boards/${item.id}`)"
   >
     <template #title>
       <div class="flex gap-2 items-center justify-between">
@@ -69,9 +69,8 @@ import dayjs from 'dayjs';
 
 import type { IBoard } from '~/entities/board';
 
-import { useRouter, useRuntimeConfig } from '#imports';
+import { useRouter } from '#imports';
 
-const config = useRuntimeConfig();
 const [, token] = useToken();
 const router = useRouter();
 

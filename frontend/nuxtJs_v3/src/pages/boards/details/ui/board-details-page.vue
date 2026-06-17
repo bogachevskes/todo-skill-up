@@ -10,12 +10,12 @@
     <template #breadcrumbs>
       <a-breadcrumb class="font-normal">
         <a-breadcrumb-item>
-          <RouterLink :to="`${config.public.basePath}`">
+          <RouterLink :to="'/'">
             Главная
           </RouterLink>
         </a-breadcrumb-item>
         <a-breadcrumb-item>
-          <RouterLink :to="`${config.public.basePath}boards`">
+          <RouterLink :to="'/boards'">
             Доски
           </RouterLink>
         </a-breadcrumb-item>
@@ -149,7 +149,7 @@ import { TaskForm } from '@/features/task-editor';
 import { useApi } from '@/shared/network';
 import { TheLayout } from '@/widgets/layout-shell';
 
-import { useCookie, useRoute, useRuntimeConfig } from '#imports';
+import { useCookie, useRoute } from '#imports';
 
 import {
   useBoardData, useBoardPermissions,
@@ -158,7 +158,6 @@ import {
 
 const { onTaskCreated, onTaskDeleted, onTaskStateChanged } = useBoardSocket();
 const route = useRoute();
-const config = useRuntimeConfig();
 const userId = useCookie('userId');
 const [, token] = useToken();
 const boardId = route.params?.id;

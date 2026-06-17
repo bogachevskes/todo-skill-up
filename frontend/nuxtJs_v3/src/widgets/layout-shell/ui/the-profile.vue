@@ -9,12 +9,12 @@
     v-else
     class="flex items-center gap-2"
   >
-    <a-button @click="router.push(`${config.public.basePath}signup`)">
+    <a-button @click="router.push('/signup')">
       Регистрация
     </a-button>
     <a-button
       type="primary"
-      @click="router.push(`${config.public.basePath}signin`)"
+      @click="router.push('/signin')"
     >
       Вход
     </a-button>
@@ -22,14 +22,13 @@
 </template>
 
 <script setup lang="ts">
-import { useCookie, useRouter, useRuntimeConfig } from '#imports';
-const config = useRuntimeConfig();
+import { useCookie, useRouter } from '#imports';
 const router = useRouter();
 
 const token = useCookie('token');
 
 const logout = (): void => {
   token.value = null;
-  router.push(`${config.public.basePath}signin`);
+  router.push('/signin');
 };
 </script>

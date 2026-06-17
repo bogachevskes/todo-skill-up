@@ -3,7 +3,7 @@
     <template #breadcrumbs>
       <a-breadcrumb class="font-normal">
         <a-breadcrumb-item>
-          <RouterLink :to="`${config.public.basePath}`">
+          <RouterLink :to="'/'">
             Главная
           </RouterLink>
         </a-breadcrumb-item>
@@ -76,13 +76,12 @@ import { checkErrorStatus } from '@/shared/feedback';
 import { useApi } from '@/shared/network';
 import { TheLayout } from '@/widgets/layout-shell';
 
-import { definePageMeta, useAsyncData, useCookie, useRuntimeConfig } from '#imports';
+import { definePageMeta, useAsyncData, useCookie } from '#imports';
 
 definePageMeta({
   middleware: 'auth',
 });
 
-const config = useRuntimeConfig();
 const userId = useCookie('userId');
 const isLoadDelete = ref(false);
 const isShowModalDelete = ref(false);

@@ -9,7 +9,7 @@
     <div class="mx-auto h-full flex items-center justify-between">
       <div class="flex items-end gap-3">
         <router-link
-          :to="`${config.public.basePath}`"
+          :to="'/'"
           class="flex items-center gap-2"
         >
           <the-logo
@@ -42,12 +42,8 @@
 <script setup lang="ts">
 import { useToken } from 'ant-design-vue/es/theme/internal';
 
-import { useRuntimeConfig } from '#imports';
-
 import TheLogo from './the-logo.vue';
 import TheProfile from './the-profile.vue';
-
-const config = useRuntimeConfig();
 
 withDefaults(
   defineProps<{

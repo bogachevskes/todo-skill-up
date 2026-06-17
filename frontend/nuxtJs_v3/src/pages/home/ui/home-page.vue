@@ -19,7 +19,7 @@
             <a-button
               size="large"
               type="primary"
-              @click="router.push(`${config.public.basePath}boards`)"
+              @click="router.push('/boards')"
             >
               Начать
             </a-button>
@@ -41,11 +41,10 @@ import lottie from 'lottie-web';
 import { kanbanAnimationData } from '@/shared/illustration';
 import { TheLayout } from '@/widgets/layout-shell';
 
-import { useRouter, useRuntimeConfig } from '#imports';
+import { useRouter } from '#imports';
 
 const { Text } = Typography;
 
-const config = useRuntimeConfig();
 const router = useRouter();
 const animationContainer = ref<HTMLDivElement | null>(null);
 

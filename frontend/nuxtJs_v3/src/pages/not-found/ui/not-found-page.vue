@@ -7,7 +7,7 @@
     <template #breadcrumbs>
       <a-breadcrumb class="font-normal">
         <a-breadcrumb-item>
-          <RouterLink :to="`${config.public.basePath}`">
+          <RouterLink :to="'/'">
             Главная
           </RouterLink>
         </a-breadcrumb-item>
@@ -21,7 +21,4 @@
 import { NoFoundIllustration } from '@/shared/illustration';
 import { TheLayout } from '@/widgets/layout-shell';
 
-import { useRuntimeConfig } from '#imports';
-
-const config = useRuntimeConfig();
 </script>

@@ -17,7 +17,7 @@
     <template #breadcrumbs>
       <a-breadcrumb class="font-normal">
         <a-breadcrumb-item>
-          <RouterLink :to="`${config.public.basePath}`">
+          <RouterLink :to="'/'">
             Главная
           </RouterLink>
         </a-breadcrumb-item>
@@ -30,11 +30,7 @@
 <script setup lang="ts">
 import { TheLayout } from '@/widgets/layout-shell';
 
-import { useRuntimeConfig } from '#imports';
-
-const config = useRuntimeConfig();
-
 const goHome = (): void => {
-  document.location.href = config.public.basePath;
+  document.location.href = '/';
 };
 </script>

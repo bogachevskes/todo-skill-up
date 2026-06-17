@@ -88,7 +88,7 @@
         >
           Принимаю <a
             class="underline"
-            :href="`${config.public.basePath}terms`"
+            href="/terms"
           >условия пользования</a>
           сервисом
         </a-checkbox>
@@ -110,7 +110,7 @@
         </a-button>
         <a-button
           style="margin-left: 10px"
-          @click="router.push(`${config.public.basePath}`)"
+          @click="router.push('/')"
         >
           Отменить
         </a-button>
@@ -120,7 +120,7 @@
     <template #breadcrumbs>
       <a-breadcrumb class="font-normal">
         <a-breadcrumb-item>
-          <RouterLink :to="`${config.public.basePath}`">
+          <RouterLink :to="'/'">
             Главная
           </RouterLink>
         </a-breadcrumb-item>
@@ -140,10 +140,9 @@ import { useApi } from '~/shared/network';
 import { EMAIL_PATTERN, ERROR_EMAIL, ERROR_MESSAGE } from '~/shared/validation';
 import { TheLayout } from '~/widgets/layout-shell';
 
-import { useCookie, useRouter, useRuntimeConfig } from '#imports';
+import { useCookie, useRouter } from '#imports';
 
 const router = useRouter();
-const config = useRuntimeConfig();
 const [, token] = useToken();
 
 const errors = ref<{ [key: string]: string }>({});
@@ -217,7 +216,7 @@ const login = async (): Promise<void> => {
       cookieToken.value = response.token;
       cookieUser.value = `${response.userId}`;
 
-      router.push(`${config.public.basePath}boards`);
+      router.push('/boards');
       return;
     }
 
