@@ -107,6 +107,12 @@ NGINX_PORT=8085
 APP_BASE_URL=http://localhost:${NGINX_PORT}
 # URL приложения веб-сокетов
 WS_APP_URL=ws://localhost:${NGINX_PORT}
+# Базовый путь клиентской части приложения
+NUXT_PUBLIC_BASE_PATH=/
+# URL API для клиентской части приложения
+NUXT_PUBLIC_API_URL=http://localhost:${NGINX_PORT}/api/v1
+# URL веб-сокетов для клиентской части приложения
+NUXT_PUBLIC_WEB_SOCKET_URL=ws://localhost:${NGINX_PORT}
 
 # Временная зона
 TZ=Europe/Moscow
