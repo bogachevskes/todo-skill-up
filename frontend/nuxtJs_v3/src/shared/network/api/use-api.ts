@@ -10,7 +10,7 @@ export const useApi = async <TResponse>(
 
   const apiFetch = $fetch.create({
     ...API_CONFIG,
-    baseURL: config.public.apiUrl,
+    baseURL: `${config.public.apiUrl}/api/v1`,
   });
 
   return apiFetch<TResponse>(url, params);
