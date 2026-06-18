@@ -39,8 +39,8 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      apiUrl: process.env.NUXT_PUBLIC_API_URL,
-      webSocketUrl: process.env.NUXT_PUBLIC_WEB_SOCKET_URL,
+      apiUrl: process.env.APP_BASE_URL,
+      webSocketUrl: process.env.WS_APP_URL,
     },
   },
 

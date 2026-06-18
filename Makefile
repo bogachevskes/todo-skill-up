@@ -81,8 +81,8 @@ docker-build-frontend:
 	@docker build --target=frontend \
 	--build-arg FRONTEND_CLIENT_DIR=${DOCKER_FRONTEND_CLIENT_DIR} \
 	--build-arg FRONTEND_NODE_VERSION=${DOCKER_FRONTEND_NODE_VERSION} \
-	--build-arg NUXT_PUBLIC_API_URL=${APP_BASE_URL} \
-	--build-arg NUXT_PUBLIC_WEB_SOCKET_URL=${WS_APP_URL} \
+	--build-arg APP_BASE_URL=${APP_BASE_URL} \
+	--build-arg WS_APP_URL=${WS_APP_URL} \
 	-t ${DOCKER_REGISTRY}/${DOCKER_FRONTEND_IMAGE_NAME}:${DOCKER_IMAGE_VERSION} -f ./docker/Dockerfile .
 
 docker-build-api:

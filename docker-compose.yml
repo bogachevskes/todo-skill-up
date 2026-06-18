@@ -9,8 +9,7 @@ services:
     environment:
       APP_VERSION: ${DOCKER_IMAGE_VERSION}
       APP_BASE_URL: ${APP_BASE_URL}
-      NUXT_PUBLIC_API_URL: ${APP_BASE_URL}
-      NUXT_PUBLIC_WEB_SOCKET_URL: ${WS_APP_URL}
+      WS_APP_URL: ${WS_APP_URL}
     logging:
       driver: "json-file"
       options:
