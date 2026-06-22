@@ -34,11 +34,12 @@
       >
         Контент сайта лицензирован CC BY NC SA 4.0
       </a>
-      <a
+      <RouterLink
         class="block"
-        target="_blank"
-        href="/terms"
-      >Условия пользования сервисом</a>
+        to="/terms"
+      >
+        Условия пользования сервисом
+      </RouterLink>
     </div>
 
     <div class="footer-column mobile-w-full">
