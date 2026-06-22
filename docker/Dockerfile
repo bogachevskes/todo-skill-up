@@ -1,3 +1,5 @@
+ARG FRONTEND_NODE_VERSION=14.19-alpine
+
 # COMMON TOOLS
 FROM alpine:3.18.4 as common-tools
 
@@ -5,18 +7,22 @@ COPY ./docker/common/wait-for /usr/local/bin/wait-for
 RUN apk --no-cache add bash && chmod +x /usr/local/bin/wait-for
 
 # FRONTEND
-FROM node:14.19-alpine as frontend
+FROM node:${FRONTEND_NODE_VERSION} as frontend
 
 ARG USER='node'
 ARG GROUP='node'
+ARG FRONTEND_CLIENT_DIR='nuxtJs'
+ARG APP_BASE_URL
+ARG WS_APP_URL
+ARG APP_VERSION
 
 USER ${USER}
 
 WORKDIR /app
 
-COPY --chown=${USER}:${GROUP} ./frontend/nuxtJs/ /app
+COPY --chown=${USER}:${GROUP} ./frontend/${FRONTEND_CLIENT_DIR}/ /app
 
-RUN yarn install --no-bin-links
+RUN yarn install --ignore-engines
 
 RUN yarn run build
 

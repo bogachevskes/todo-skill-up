@@ -1,0 +1,13 @@
+.text-left a {
+    text-decoration: underline;
+}
+
+.footer-column {
+    width: calc((100% / 4) - (16px * 3 / 4));
+}
+
+@media (max-width: 1030px) {
+  .footer-column {
+    width: 100%;
+  }
+}

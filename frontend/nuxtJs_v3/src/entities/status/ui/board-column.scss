@@ -1,0 +1,46 @@
+.board-column {
+  @apply min-h-[80vh] min-w-[300px] max-w-[300px] h-full rounded-xl flex overflow-hidden;
+  &_folded {
+    @apply w-9 min-w-9 flex-row;
+  }
+  &_open {
+    @apply flex-col;
+  }
+}
+.header {
+  @apply w-full flex flex-row gap-3 p-2 items-center;
+  &_folded {
+    @apply w-10 flex-col;
+  }
+  &_open {
+    @apply flex-row;
+  }
+  &__toggler {
+    @apply cursor-pointer flex items-center justify-center;
+  }
+  &__title {
+    @apply flex-1 text-sm;
+    &_folded {
+      writing-mode: vertical-rl;
+    }
+  }
+}
+.body {
+  @apply relative flex flex-col gap-3 items-center justify-start p-3 h-[65vh] overflow-y-scroll;
+  &_folded {
+    @apply w-0 h-[65vh];
+  }
+
+  &::-webkit-scrollbar {
+    @apply w-0
+  }
+}
+.folded {
+  @apply rotate-180;
+}
+.open {
+  @apply rotate-90;
+}
+.is-loading {
+  @apply h-[65vh] w-full flex items-center justify-center;
+}
