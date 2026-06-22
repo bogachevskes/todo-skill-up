@@ -5,6 +5,12 @@
 Формат основан на [стандарте формата CHANGELOG](https://keepachangelog.com/en/1.0.0/),
 и придерживается [правил версионирования](https://semver.org/spec/v2.0.0.html).
 
+## [ [4.8.0](https://github.com/bogachevskes/todo-skill-up/releases/tag/4.8.0) ] - 22.06.2026
+
+- Реализовано:
+  - Добавлена страница "Лицензионное соглашение и правила использования сервиса"
+  - Добавлена глобально локаль RU
+
 ## [ [4.7.0](https://github.com/bogachevskes/todo-skill-up/releases/tag/4.7.0) ] - 22.06.2026
 
 - Реализовано:

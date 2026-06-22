@@ -3,6 +3,7 @@ import { SignUpPage } from '@/pages/auth/sign-up';
 import { BoardDetailsPage, BoardsListPage } from '@/pages/boards';
 import { HomePage } from '@/pages/home';
 import { NotFoundPage } from '@/pages/not-found';
+import { TermsPage } from '@/pages/terms';
 
 import type { RouterConfig } from '@nuxt/schema';
 
@@ -38,6 +39,11 @@ const routerOptions: RouterConfig = {
       component: SignUpPage,
       name: 'signUp',
       path: '/signup',
+    },
+    {
+      component: TermsPage,
+      name: 'terms',
+      path: '/terms',
     },
     {
       component: NotFoundPage,
