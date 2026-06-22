@@ -179,9 +179,10 @@ api-tests-run:
 
 api-tests-publish-dev-dependencies:
 	@if [ -d $(PWD)/tests/vendor ]; then rm -r $(PWD)/tests/vendor; fi
-	@docker run --rm -d --name api_tests_dep_extractor ${DOCKER_REGISTRY}/${DOCKER_API_TESTS_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
+	@docker rm -f api_tests_dep_extractor 2>/dev/null || true
+	@docker create --name api_tests_dep_extractor ${DOCKER_REGISTRY}/${DOCKER_API_TESTS_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
 	@docker cp api_tests_dep_extractor:/app/vendor $(PWD)/tests/vendor
-	@docker stop api_tests_dep_extractor
+	@docker rm api_tests_dep_extractor
 
 api-tests-build:
 	@$(MAKE) api-tests-run cmd="./vendor/bin/codecept build"
