@@ -86,9 +86,16 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - formData
               properties:
                 formData:
                   type: object
+                  required:
+                    - name
+                    - email
+                    - password
+                    - confirm_password
                   properties:
                     name:
                       type: string
@@ -98,6 +105,9 @@ paths:
                       format: email
                       example: guest@guest.com
                     password:
+                      type: string
+                      example: secret
+                    confirm_password:
                       type: string
                       example: secret
       responses:

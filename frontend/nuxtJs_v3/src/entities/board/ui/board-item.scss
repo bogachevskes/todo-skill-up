@@ -1,0 +1,13 @@
+.is-active-icon {
+    @apply w-5 h-5;
+
+    svg {
+        @apply w-full h-full;
+    }
+}
+
+.boards-card {
+    .ant-card-body {
+        flex-grow: 1;
+    }
+}

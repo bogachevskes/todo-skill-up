@@ -4,7 +4,7 @@ services:
   frontend:
     command: ["yarn", "run", "dev"]
     volumes:
-      - ./frontend/nuxtJs/src:/app/src
+      - ./frontend/${DOCKER_FRONTEND_CLIENT_DIR}/src:/app/src
 
   api:
     volumes:

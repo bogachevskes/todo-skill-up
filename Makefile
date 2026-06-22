@@ -79,6 +79,11 @@ docker-build-nginx:
 
 docker-build-frontend:
 	@docker build --target=frontend \
+	--build-arg FRONTEND_CLIENT_DIR=${DOCKER_FRONTEND_CLIENT_DIR} \
+	--build-arg FRONTEND_NODE_VERSION=${DOCKER_FRONTEND_NODE_VERSION} \
+	--build-arg APP_BASE_URL=${APP_BASE_URL} \
+	--build-arg WS_APP_URL=${WS_APP_URL} \
+	--build-arg APP_VERSION=${DOCKER_IMAGE_VERSION} \
 	-t ${DOCKER_REGISTRY}/${DOCKER_FRONTEND_IMAGE_NAME}:${DOCKER_IMAGE_VERSION} -f ./docker/Dockerfile .
 
 docker-build-api:
@@ -102,16 +107,18 @@ docker-build-api-tests:
 	-t ${DOCKER_REGISTRY}/${DOCKER_API_TESTS_IMAGE_NAME}:${DOCKER_IMAGE_VERSION} -f ./docker/Dockerfile .
 
 frontend-publish-dev-dependencies:
-	@if [ -d $(PWD)/frontend/nuxtJs/node_modules ]; then rm -r $(PWD)/frontend/nuxtJs/node_modules; fi
-	@docker run --rm -d --name frontend_dep_extractor ${DOCKER_REGISTRY}/${DOCKER_FRONTEND_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
-	@docker cp frontend_dep_extractor:/app/node_modules $(PWD)/frontend/nuxtJs/node_modules
-	@docker stop frontend_dep_extractor
+	@if [ -d $(PWD)/frontend/$(DOCKER_FRONTEND_CLIENT_DIR)/node_modules ]; then rm -r $(PWD)/frontend/$(DOCKER_FRONTEND_CLIENT_DIR)/node_modules; fi
+	@docker rm -f frontend_dep_extractor 2>/dev/null || true
+	@docker create --name frontend_dep_extractor ${DOCKER_REGISTRY}/${DOCKER_FRONTEND_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
+	@docker cp frontend_dep_extractor:/app/node_modules $(PWD)/frontend/$(DOCKER_FRONTEND_CLIENT_DIR)/node_modules
+	@docker rm frontend_dep_extractor
 
 ws-publish-dev-dependencies:
 	@if [ -d $(PWD)/websocket/nestJs/node_modules ]; then rm -r $(PWD)/websocket/nestJs/node_modules; fi
-	@docker run --rm -d --name ws_dep_extractor ${DOCKER_REGISTRY}/${DOCKER_WS_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
+	@docker rm -f ws_dep_extractor 2>/dev/null || true
+	@docker create --name ws_dep_extractor ${DOCKER_REGISTRY}/${DOCKER_WS_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
 	@docker cp ws_dep_extractor:/app/node_modules $(PWD)/websocket/nestJs/node_modules
-	@docker stop ws_dep_extractor
+	@docker rm ws_dep_extractor
 
 api-cli-exec:
 	@docker-compose -p ${DOCKER_PROJECT} \
@@ -122,9 +129,10 @@ api-cli-run-console:
 
 api-publish-dev-dependencies:
 	@if [ -d $(PWD)/api/nodeJs/node_modules ]; then rm -r $(PWD)/api/nodeJs/node_modules; fi
-	@docker run --rm -d --name api_dep_extractor ${DOCKER_REGISTRY}/${DOCKER_API_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
+	@docker rm -f api_dep_extractor 2>/dev/null || true
+	@docker create --name api_dep_extractor ${DOCKER_REGISTRY}/${DOCKER_API_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
 	@docker cp api_dep_extractor:/app/node_modules $(PWD)/api/nodeJs/node_modules
-	@docker stop api_dep_extractor
+	@docker rm api_dep_extractor
 
 migrator-run:
 	@$(MAKE) -s wait-db
@@ -140,9 +148,10 @@ migrator-run:
 
 migrator-publish-dev-dependencies:
 	@if [ -d $(PWD)/migrations/vendor ]; then rm -r $(PWD)/migrations/vendor; fi
-	@docker run --rm -d --name migrator_dep_extractor ${DOCKER_REGISTRY}/${DOCKER_MIGRATIONS_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
+	@docker rm -f migrator_dep_extractor 2>/dev/null || true
+	@docker create --name migrator_dep_extractor ${DOCKER_REGISTRY}/${DOCKER_MIGRATIONS_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
 	@docker cp migrator_dep_extractor:/app/vendor $(PWD)/migrations/vendor
-	@docker stop migrator_dep_extractor
+	@docker rm migrator_dep_extractor
 
 migrate:
 	@$(MAKE) migrator-run cmd="migrate"
@@ -170,9 +179,10 @@ api-tests-run:
 
 api-tests-publish-dev-dependencies:
 	@if [ -d $(PWD)/tests/vendor ]; then rm -r $(PWD)/tests/vendor; fi
-	@docker run --rm -d --name api_tests_dep_extractor ${DOCKER_REGISTRY}/${DOCKER_API_TESTS_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
+	@docker rm -f api_tests_dep_extractor 2>/dev/null || true
+	@docker create --name api_tests_dep_extractor ${DOCKER_REGISTRY}/${DOCKER_API_TESTS_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}
 	@docker cp api_tests_dep_extractor:/app/vendor $(PWD)/tests/vendor
-	@docker stop api_tests_dep_extractor
+	@docker rm api_tests_dep_extractor
 
 api-tests-build:
 	@$(MAKE) api-tests-run cmd="./vendor/bin/codecept build"
