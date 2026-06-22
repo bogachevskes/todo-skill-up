@@ -83,6 +83,7 @@ docker-build-frontend:
 	--build-arg FRONTEND_NODE_VERSION=${DOCKER_FRONTEND_NODE_VERSION} \
 	--build-arg APP_BASE_URL=${APP_BASE_URL} \
 	--build-arg WS_APP_URL=${WS_APP_URL} \
+	--build-arg APP_VERSION=${DOCKER_IMAGE_VERSION} \
 	-t ${DOCKER_REGISTRY}/${DOCKER_FRONTEND_IMAGE_NAME}:${DOCKER_IMAGE_VERSION} -f ./docker/Dockerfile .
 
 docker-build-api:

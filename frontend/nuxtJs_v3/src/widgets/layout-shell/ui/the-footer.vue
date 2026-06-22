@@ -7,7 +7,7 @@
         <a
           target="_blank"
           href="https://github.com/bogachevskes/todo-skill-up/releases"
-        >4.6.1</a>
+        >{{ config.public.appVersion }}</a>
       </div>
     </div>
 
@@ -90,11 +90,13 @@ import {
   THEME_LIST,
   type ThemeName,
 } from '@/shared/theme';
+import { useRuntimeConfig } from '#imports';
 
 const setTheme = inject(SET_THEME_KEY);
 const themes = THEME_LIST;
 
 const [, token] = useToken();
+const config = useRuntimeConfig();
 
 const changeTheme = (name: ThemeName): void => {
   if (setTheme === undefined) {

@@ -41,6 +41,7 @@ export default defineNuxtConfig({
     public: {
       apiUrl: process.env.APP_BASE_URL,
       webSocketUrl: process.env.WS_APP_URL,
+      appVersion: process.env.APP_VERSION,
     },
   },
 
@@ -58,11 +59,11 @@ export default defineNuxtConfig({
         },
         {
           name: 'description',
-          content: '' 
+          content: ''
         },
         {
           name: 'format-detection',
-          content: 'telephone=no' 
+          content: 'telephone=no'
         },
       ],
     },

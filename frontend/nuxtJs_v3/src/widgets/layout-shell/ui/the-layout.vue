@@ -1,5 +1,5 @@
 <template>
-  <a-config-provider :theme="currentThemeConfig">
+  <a-config-provider :theme="currentThemeConfig" :locale="ru">
     <a-layout
       :page-title="props.title"
       :is-has-sider="props.isHasSider"
@@ -71,6 +71,7 @@
 <script setup lang="ts">
 import { useToken } from 'ant-design-vue/es/theme/internal';
 import { computed, provide, ref } from 'vue';
+import ru from 'ant-design-vue/es/locale/ru_RU';
 
 import {
   CURRENT_THEME_KEY,
